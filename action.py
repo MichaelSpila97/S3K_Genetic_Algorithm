@@ -1,6 +1,9 @@
 import keyboard
 import time
+import random
+
 from enum import Enum
+
 
 class action_name(Enum):
     move_left = 'left'
@@ -17,29 +20,53 @@ class action_name(Enum):
 
 class Action:
 
-    def generate_action():
-        return action_name.jump_shield.value
 
-    def generate_delay():
-        return 0.1
-
-    def __init__(self, action = generate_action(),delay = generate_delay()):
+    def __init__(self, action, delay):
         self.action = action
         self.delay = delay
 
+
     def execute_action(self):
-        if(self.action != 'wait'):
 
-                if(isinstance(self.action, list)):
-                    keyboard.press(self.action[0])
-                    time.sleep(self.delay)
-                    keyboard.release(self.action[0])
+        print(f' action name: {self.action}')
+        print(f' action delay: {self.delay}')
 
-                    time.sleep(self.delay)
-                    keyboard.press(self.action[1])
-                    keyboard.release(self.action[1])
+        if  self.action == action_name.wait:
+            time.sleep(self.delay)
 
-                else:
-                    keyboard.press(self.action)
-                    time.sleep(self.delay)
-                    keyboard.release(self.action)
+        elif self.action == action_name.spindash:
+            keyboard.press(self.action.value[0])
+            time.sleep(self.delay)
+
+            for x in range(0,3):
+                keyboard.press(self.action.value[1])
+                time.sleep(0.3)
+                keyboard.release(self.action.value[1])
+                time.sleep(0.1)
+
+            keyboard.release(self.action.value[0])
+
+
+        elif self.action == action_name.jump_shield:
+
+            keyboard.press(self.action.value[0])
+            time.sleep(self.delay)
+            keyboard.release(self.action.value[0])
+            time.sleep(0.1)
+            keyboard.press(self.action.value[1])
+            time.sleep(0.1)
+            keyboard.release(self.action.value[1])
+
+        elif isinstance(self.action.value, list):
+            keyboard.press(self.action.value[0])
+            time.sleep(0.2)
+            keyboard.press(self.action.value[1])
+            time.sleep(self.delay)
+            keyboard.release(self.action.value[1])
+            keyboard.release(self.action.value[0])
+            
+        else:
+
+            keyboard.press(self.action.value)
+            time.sleep(self.delay)
+            keyboard.release(self.action.value)
