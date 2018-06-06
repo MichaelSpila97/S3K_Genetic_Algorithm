@@ -20,14 +20,6 @@ class Static_Obj_Pos(Enum):
     #needs diffrent method
     lives = (500,101,528,1045)
 
-def update_core_stats(root, labels):
-
-    labels[0].configure (text = score_grab())
-    labels[1].configure (text = ring_grab())
-
-    root.after('500', update_core_stats,root, labels)
-
-
 def score_grab():
     #print('Grabbing score')
     score_num_map = {'385':0, '367': 1,'444':2,'380':3,'545':4,
@@ -101,8 +93,6 @@ def calc_num_id(im):
 
     #print(pixtot)
     return pixtot
-
-
 
 
 

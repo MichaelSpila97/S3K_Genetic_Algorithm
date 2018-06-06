@@ -1,55 +1,11 @@
-from tkinter import *
-from enum import Enum
 
 import eyes
 import time
-import keyboard
-
-class Keyboard_inputs(Enum):
-    move_left = 'left'
-    move_right = 'right'
-    move_up = 'up'
-    move_down = 'down'
-
-    jump = 'a'
-    spin_dash = 'down, down, down, a'
-
-
-def main():
-    print(keyboard.record())
-    #root = Tk()
-
-    #frame = Frame(root, width=100, height=50)
-    #frame.pack()
-
-    #score_L = Label(root, text= "The Game Has not Started Yet")
-    #score_L.pack()
-
-    #ring_L = Label(root, text ='')
-    #ring_L.pack()
-
-    #labels = [score_L, ring_L]
-    #root.after('500', update_core_stats, root, labels)
-    #root.mainloop()
-
-
-
-
-def update_core_stats(root, labels):
-    playGame()
-    if gameStarted():
-        playGame()
-        updated_score = eyes.score_grab()
-        updated_rings = eyes.ring_grab()
-
-        labels[0].configure (text = 'Current Score: ' + str(validate_score(updated_score)))
-        labels[1].configure (text = 'Current Rings: ' + str(validate_rings(updated_rings)))
-
-    ##root.after('500', update_core_stats,root, labels)
-
 
 curr_rings = 0
 curr_score = 0
+game_started = False
+
 
 def validate_score(score):
     global curr_score
@@ -76,9 +32,6 @@ def validate_rings(rings):
         curr_rings = int(rings)
         return curr_rings
 
-
-game_started = False
-
 def gameStarted():
 
     global game_started
@@ -90,12 +43,3 @@ def gameStarted():
             game_started = True
 
     return game_started
-
-def playGame():
-
-
-    print(keyboard.record())
-
-
-if __name__ == '__main__':
-    main()
