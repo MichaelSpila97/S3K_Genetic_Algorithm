@@ -10,29 +10,32 @@ what needs to be polished/Upgraded or what need to be created.
 
 Completed:
 
-          1) Basic Snap Shot Function and Recognition for the Score and Ring outputs
-          2) Validation of Ring and Score count
+          1) Basic Snap Shot Function and Recognition for:
+               a) Rings
+               b) Score
+               c) Lives
+               d) Act Beginning and End
+               
+          2) Validation of Ring,Score, lives and Act values
           3) Recogniton that Sonic 3 & Knuckles is ready to play
           4) Function/Functions to handles the generation of action
 
 Needs work:
 
           1) Need to add Snap Shot Function and Recogition for:
-            a) Lives*
-            b) End of an Stage and/or Act
-            c) Beginning a New Level
-            d) Soinc(Mabye..)
-
+            a) Soinc(Mabye..)
           2) Documentation
           3) Better File Names
           4) Add variable in act class to faciliate the varition of the multiple action delays in spindash and jump_sheild
           
 Needs Created:
 
-          1) Place to store game session data
-          2) Way to detect enemies and object on screens
-          3) Function/Function to load previous game session data
-          4) Good Gui for easy control of the project for running tests
+          1) Functions/Functions to load/save data off each play attempt made by the computer*
+          2) Model for evaluating the fitness of a computers play attempt 
+          3) Fuctions/Function to score said model 
+          4) Functions/Function to create new computer AI off of the fittess AI data from the last generation
+          5) Way to detect enemies and object on screens
+          6) Good Gui for easy control of the project for running tests
 
 
  What is currently being worked on = *
