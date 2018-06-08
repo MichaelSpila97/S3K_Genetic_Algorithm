@@ -9,8 +9,6 @@ import random
 ng = random.Random()
 
 
-
-
 def generate_action():
 
     return ng.choice(list(action.action_name))
@@ -23,7 +21,7 @@ def main():
 
     keyboard.wait('esc')
 
-    while True:
+    while brain.curr_lives > 0:
 
         gaction = generate_action()
         delay = generate_delay()
@@ -33,10 +31,6 @@ def main():
         new_action = action.Action(gaction, delay)
 
         new_action.execute_action()
-
-
-
-
 
 if __name__ == '__main__':
     main()
