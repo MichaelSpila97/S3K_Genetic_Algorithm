@@ -1,0 +1,4 @@
+*.pyc
+*.png
+Snaps/
+__pycache__/
