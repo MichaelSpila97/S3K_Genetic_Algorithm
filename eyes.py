@@ -96,33 +96,20 @@ def calc_num_total(num_map, box):
     curr_box = [box[0], box[1],box[2],box[3]]
 
     while True:
+
         num_image = ImageGrab.grab(curr_box)
 
-        if num_map.get('492') == 0:
-            num_id = cal_live_num_id(num_image)
-        else:
-            num_id = calc_num_id(num_image)
+        num_id = count_decider(num_image, num_map)
 
         num = num_map.get(str(num_id))
 
-        if isinstance(num, list) and current_place == 1:
-            eval_lives_first = brain.curr_lives%10
-            if eval_lives_first  in range (5,10):
-                num = num[1]
-            else:
-                num= num[0]
-
-        elif isinstance(num, list) and current_place == 10:
-            eval_lives_tens = brain.curr_lives/10
-            if eval_lives_tens  in range (5,10):
-                num = num[1]
-            else:
-                num = num[0]
+        if isinstance(num, list):
+            num = check_if_two_or_seven(num, current_place)
 
         if num == None:
             break
 
-        else:
+        elif isinstance(num, int):
             total = (num *current_place) + total
             current_place = current_place *10
 
@@ -134,16 +121,45 @@ def calc_num_total(num_map, box):
     else:
         return(total)
 
+
+def count_decider(num_image , num_map):
+    num = 0
+
+    if num_map.get('152') == 0:
+        num = calc_live_num_id(num_image)
+
+    else:
+        num = calc_num_id(num_image)
+
+    return num
+
+def check_if_two_or_seven(num, current_place):
+    live_num = 0
+
+    if  current_place == 1:
+        live_num = brain.curr_lives%10
+
+    elif current_place == 10:
+        live_num = brain.curr_lives/10
+
+    if live_num in range (5,10):
+        live_num = num[1]
+    else:
+        live_num = num[0]
+
+    return live_num
+
 def calc_num_id(im):
     pixel = list(im.getdata());
     pixtot = 0
+
     for i in pixel:
         if  (i[0] == 224 and i[1] == 224 and i[2]==225) or (i[0] == 160 and i[1] == 160 and i[2]==225):
             pixtot = pixtot + 1
 
     return pixtot
 
-def cal_live_num_id(im):
+def calc_live_num_id(im):
     pixel = list(im.getdata());
     pixtot = 0
 
