@@ -6,6 +6,7 @@ from enum import Enum
 
 import os
 import time
+import brain
 
 class Static_Obj_Pos(Enum):
     #Fixed:
@@ -17,11 +18,13 @@ class Static_Obj_Pos(Enum):
     score = (712,47, 729, 85)
     rings = (604, 202, 621, 241)
 
-    #needs diffrent method
-    lives = (500,101,528,1045)
+    lives = (501,1011,518,1044)
+
+    act_b = (1410,774,1449,813)
+    act_e = (1374,290,1413,329)
 
 def score_grab():
-    #print('Grabbing score')
+
     score_num_map = {'385':0, '367': 1,'444':2,'380':3,'545':4,
     '425': 5,'460': 6,'350': 7,'475':8,'455': 9}
 
@@ -30,14 +33,11 @@ def score_grab():
     score_total = calc_num_total(score_num_map, score_box)
 
     if score_total == None:
-        #print(f'Could not obtain score')
         return('Could not obtain score')
     else:
-        #print(f'Current Score: {score_total}')
         return(score_total)
 
 def ring_grab():
-    #print('Grabbing rings')
 
     ring_num_map = {'402':0, '376': 1,'456':2,'388':3,
     '557':4,'428': 5,'468': 6,'359': 7,'483':8,'458': 9}
@@ -47,37 +47,87 @@ def ring_grab():
     ring_total = calc_num_total(ring_num_map, ring_box)
 
     if ring_total == None:
-        #print(f'Could not obtain ring count')
         return('Could not obtain ring count')
     else:
-        #print(f'Current ring count: {ring_total}')
         return(ring_total)
+
+
+def live_grab():
+    live_num_map = {'152': 0, '191': 1, '141': [2,7], '137' : 3, '253': 4, '157': 5, '177': 6, '197': 8, '181': 9}
+
+    lives_box = Static_Obj_Pos.lives.value
+
+    lives_total = calc_num_total(live_num_map, lives_box)
+
+    if lives_total == None:
+        return('Could not obtain lives count')
+    else:
+        return(lives_total)
+
+def act_beginning_grab():
+    act_beg_map = {'739': 1, '638': 2}
+
+    act_beg_box = Static_Obj_Pos.act_b.value
+
+    act_beg_total = calc_num_total(act_beg_map, act_beg_box)
+
+    if act_beg_total == None:
+        return('Could not obtain the beginning of the act')
+    else:
+        return(act_beg_total)
+
+def act_end_grab():
+    act_end_map = {'734': 1, '638': 2}
+
+    act_end_box = Static_Obj_Pos.act_e.value
+
+    act_end_total = calc_num_total(act_end_map, act_end_box)
+
+    if act_end_total == None:
+        return('Could not obtain the end of the act')
+    else:
+        return(act_end_total)
 
 def calc_num_total(num_map, box):
     current_place = 1
     total = 0
     num_id = 0
+    num = 0
     curr_box = [box[0], box[1],box[2],box[3]]
 
     while True:
         num_image = ImageGrab.grab(curr_box)
-        num_id = calc_num_id(num_image)
-        num_id = num_map.get(str(num_id))
 
+        if num_map.get('492') == 0:
+            num_id = cal_live_num_id(num_image)
+        else:
+            num_id = calc_num_id(num_image)
 
-        if num_id == None:
+        num = num_map.get(str(num_id))
+
+        if isinstance(num, list) and current_place == 1:
+            eval_lives_first = brain.curr_lives%10
+            if eval_lives_first  in range (5,10):
+                num = num[1]
+            else:
+                num= num[0]
+
+        elif isinstance(num, list) and current_place == 10:
+            eval_lives_tens = brain.curr_lives/10
+            if eval_lives_tens  in range (5,10):
+                num = num[1]
+            else:
+                num = num[0]
+
+        if num == None:
             break
 
         else:
-            total = num_id *current_place + total
+            total = (num *current_place) + total
             current_place = current_place *10
-
 
         curr_box[0] = curr_box[0] - 36
         curr_box[2] = curr_box[2] - 36
-
-    #print(total)
-    #print(current_place)
 
     if total == 0 and current_place == 1:
         return(None)
@@ -88,14 +138,20 @@ def calc_num_id(im):
     pixel = list(im.getdata());
     pixtot = 0
     for i in pixel:
+        if  (i[0] == 224 and i[1] == 224 and i[2]==225) or (i[0] == 160 and i[1] == 160 and i[2]==225):
+            pixtot = pixtot + 1
+
+    return pixtot
+
+def cal_live_num_id(im):
+    pixel = list(im.getdata());
+    pixtot = 0
+
+    for i in pixel:
         if  i[0] == 224 and i[1] == 224 and i[2]==225:
             pixtot = pixtot + 1
 
-    #print(pixtot)
     return pixtot
-
-
-
 #time_num_map = {'385':0, '367': 1,'445':2,'375':3,'545':4,
 #'423': 5,'460': 6,'356': 7,'475':8,'450': 9}
 
