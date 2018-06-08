@@ -2,6 +2,9 @@ from tkinter import *
 
 import eyes
 import brain
+import entity
+import pickle
+import threading
 
 def main():
     root = Tk()
@@ -21,6 +24,10 @@ def main():
     act_L = Label(root, text = '')
     act_L.pack()
 
+    bttn = Button(root, text = "Start Tests", command = init_test)
+
+    bttn.pack()
+
     labels = [score_L, ring_L, live_L, act_L]
 
     root.after('500', update_core_stats, root, labels)
@@ -39,5 +46,35 @@ def update_core_stats(root, labels):
         labels[3].configure (text = str(brain.validate_act()))
 
     root.after('500', update_core_stats,root, labels)
+
+def init_test():
+    thread = threading.Thread(target = begin_test, daemon = True)
+    thread.start()
+
+def begin_test():
+    if brain.curr_lives != 0:
+        num_entities = brain.curr_lives
+        generation = []
+        while(num_entities > 0):
+            print(num_entities)
+            new_entity = entity.Entity()
+            entity_name = f'ent_{num_entities}'
+            new_entity.play_game()
+
+            generation.append(new_entity)
+
+            pickle_out = open(f'{entity_name}.pickle',"wb")
+            print('Saving entity.....')
+            pickle.dump(new_entity, pickle_out)
+            pickle_out.close()
+            print('Entity saved')
+            num_entities = brain.curr_lives
+
+        print('Saving generation')
+        pickle_out = open(f'gen.pickle',"wb")
+        pickle.dump(generation ,pickle_out)
+        pickle.close
+        print('Generation saved')
+
 if __name__ == '__main__':
     main()

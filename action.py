@@ -20,11 +20,36 @@ class action_name(Enum):
 
 class Action:
 
-
     def __init__(self, action, delay):
         self.action = action
         self.delay = delay
+        self.score = 0
 
+        self.ring_count = 0
+        self.score_count = 0
+        self.lives_count = 0
+
+
+    def set_rings(self, rings):
+        print(f'Current Rings: {rings}')
+        self.ring_count = rings
+
+    def set_score(self, score):
+        print(f'Current score: {score}')
+        self.score_count = score
+
+    def set_live(self, lives, entity , action_list):
+        print(f'Current lives: {lives}')
+
+        if action_list:
+            previous_action = action_list.pop()
+
+            if lives  == previous_action.lives_count - 1:
+                entity.died()
+
+            action_list.append(previous_action)
+
+        self.lives_count = lives
 
     def execute_action(self):
 
@@ -64,7 +89,7 @@ class Action:
             time.sleep(self.delay)
             keyboard.release(self.action.value[1])
             keyboard.release(self.action.value[0])
-            
+
         else:
 
             keyboard.press(self.action.value)
