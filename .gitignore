@@ -1,5 +1,6 @@
 *.pyc
 *.png
+*.pickle
 Snaps/
 __pycache__/
 snapgetter.py
