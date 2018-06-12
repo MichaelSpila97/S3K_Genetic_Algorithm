@@ -7,6 +7,7 @@ curr_score = 0
 curr_lives = 0
 curr_act = ''
 
+
 game_started = False
 
 
@@ -23,6 +24,7 @@ def validate_score(score):
 
 def validate_rings(rings):
     global curr_rings
+
     if rings == 'Could not obtain ring count':
         return curr_rings
     elif int(rings) < curr_rings and int(rings) != 0:
@@ -35,6 +37,7 @@ def validate_rings(rings):
 
 def validate_lives(lives):
     global curr_lives
+    
     if lives == 'Could not obtain lives count':
         return curr_lives
     else:
@@ -53,6 +56,7 @@ def validate_act():
         curr_act = f'Act {act_e_status} End'
 
     return curr_act
+
 def gameStarted():
 
     global game_started
