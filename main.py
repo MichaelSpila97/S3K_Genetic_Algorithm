@@ -4,6 +4,7 @@ import eyes
 import brain
 import entity
 import pickle
+import time
 import threading
 
 def main():
@@ -28,14 +29,17 @@ def main():
 
     bttn.pack()
 
-    labels = [score_L, ring_L, live_L, act_L]
+    labels = [score_L, ring_L, live_L, act_L ,time_L]
 
-    root.after('500', update_core_stats, root, labels)
+    root.after('100', update_core_stats, root, labels, 0)
     root.mainloop()
 
-def update_core_stats(root, labels):
+def update_core_stats(root, labels , exec_num):
 
     if brain.gameStarted():
+
+        exec_num = exec_num + 1
+
         updated_score = eyes.score_grab()
         updated_rings = eyes.ring_grab()
         updated_lives = eyes.live_grab()
@@ -45,36 +49,28 @@ def update_core_stats(root, labels):
         labels[2].configure (text = 'Current Lives: ' + str(brain.validate_lives(updated_lives)))
         labels[3].configure (text = str(brain.validate_act()))
 
-    root.after('500', update_core_stats,root, labels)
+    root.after('100', update_core_stats,root, labels, exec_num)
+
 
 def init_test():
-    thread = threading.Thread(target = begin_test, daemon = True)
-    thread.start()
+    if brain.gameStarted():
+
+        g_thread = threading.Thread(target = begin_test, daemon = True)
+        g_thread.start()
 
 def begin_test():
-    if brain.curr_lives != 0:
-        num_entities = brain.curr_lives
-        generation = []
-        while(num_entities > 0):
-            print(num_entities)
-            new_entity = entity.Entity()
-            entity_name = f'ent_{num_entities}'
+
+    while brain.curr_lives > 0:
+
+            new_entity = entity.Entity(act_list = [])
             new_entity.play_game()
 
-            generation.append(new_entity)
-
-            pickle_out = open(f'{entity_name}.pickle',"wb")
-            print('Saving entity.....')
+            pickle_out = open(f"entity_data/Gen_0/entity_{4 - (brain.curr_lives + 1)}.pickle", "wb")
             pickle.dump(new_entity, pickle_out)
             pickle_out.close()
-            print('Entity saved')
-            num_entities = brain.curr_lives
 
-        print('Saving generation')
-        pickle_out = open(f'gen.pickle',"wb")
-        pickle.dump(generation ,pickle_out)
-        pickle.close
-        print('Generation saved')
+            new_entity = None
+            
 
 if __name__ == '__main__':
     main()

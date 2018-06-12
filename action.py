@@ -1,7 +1,7 @@
 import keyboard
 import time
 import random
-
+import brain
 from enum import Enum
 
 
@@ -28,33 +28,25 @@ class Action:
         self.ring_count = 0
         self.score_count = 0
         self.lives_count = 0
+        self.mutation = 0.50
 
+    def __str__(self):
+        return f"""
+        \033[0;32;40mAction:                       \033[0;36;40m{self.action}
+        \033[0;32;40mAction delay:                 \033[0;36;40m{self.delay}
+        \033[0;32;40mPoints assigned to action:    \033[0;36;40m{self.score}
+        \033[0;32;40mRing count during execution:  \033[0;36;40m{self.ring_count}
+        \033[0;32;40mScore count during execution: \033[0;36;40m{self.score_count}
+        \033[0;32;40mLives count during execution: \033[0;36;40m{self.lives_count}
+        \033[0;32;40mMutation Rate:                \033[0;36;40m{self.mutation}"""
 
-    def set_rings(self, rings):
-        print(f'Current Rings: {rings}')
-        self.ring_count = rings
-
-    def set_score(self, score):
-        print(f'Current score: {score}')
-        self.score_count = score
-
-    def set_live(self, lives, entity , action_list):
-        print(f'Current lives: {lives}')
-
-        if action_list:
-            previous_action = action_list.pop()
-
-            if lives  == previous_action.lives_count - 1:
-                entity.died()
-
-            action_list.append(previous_action)
-
-        self.lives_count = lives
+    def set_core_stats(self):
+        self.ring_count = brain.curr_rings
+        self.score_count = brain.curr_score
+        self.lives_count = brain.curr_lives
+        
 
     def execute_action(self):
-
-        print(f' action name: {self.action}')
-        print(f' action delay: {self.delay}')
 
         if  self.action == action_name.wait:
             time.sleep(self.delay)
@@ -95,3 +87,5 @@ class Action:
             keyboard.press(self.action.value)
             time.sleep(self.delay)
             keyboard.release(self.action.value)
+
+        self.set_core_stats()
