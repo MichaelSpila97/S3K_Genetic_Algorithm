@@ -1,15 +1,11 @@
 from tkinter import *
-from tkinter import filedialog
 
+import eyes
 import brain
 import entity
-import filehandler
+import pickle
 import time
-import os
-import copy
 import threading
-
-button = []
 
 def main():
     root = Tk()
@@ -17,57 +13,64 @@ def main():
     frame = Frame(root, width=100, height=50)
     frame.pack()
 
-    start_bttn = Button(root, text = "Start Tests with no data", command = begin_test)
-    start_bttn.pack()
+    score_L = Label(root, text= "The Game Has not Started Yet")
+    score_L.pack()
 
-    button.append(start_bttn)
+    ring_L = Label(root, text ='')
+    ring_L.pack()
 
-    load_bttn = Button(root, text = "Start tests with data", command = lambda: load_gen(root))
-    load_bttn.pack()
+    live_L = Label(root, text ='')
+    live_L.pack()
 
-    button.append(load_bttn)
+    act_L = Label(root, text = '')
+    act_L.pack()
 
-    stat_thread = threading.Thread(target = brain.get_core_stats, daemon = True)
-    stat_thread.start()
+    bttn = Button(root, text = "Start Tests", command = init_test)
 
+    bttn.pack()
+
+    labels = [score_L, ring_L, live_L, act_L ,time_L]
+
+    root.after('100', update_core_stats, root, labels, 0)
     root.mainloop()
 
-def load_gen(root):
+def update_core_stats(root, labels , exec_num):
 
-    my_filetypes = [('allfiles', '.*')]
+    if brain.gameStarted():
 
-    answer = filedialog.askopenfilename(parent= root, initialdir = os.getcwd(),
-    title = "Please select a folder")
+        exec_num = exec_num + 1
 
-    generation  =  filehandler.load_data(answer)
+        updated_score = eyes.score_grab()
+        updated_rings = eyes.ring_grab()
+        updated_lives = eyes.live_grab()
+
+        labels[0].configure (text = 'Current Score: ' + str(brain.validate_score(updated_score)))
+        labels[1].configure (text = 'Current Rings: ' + str(brain.validate_rings(updated_rings)))
+        labels[2].configure (text = 'Current Lives: ' + str(brain.validate_lives(updated_lives)))
+        labels[3].configure (text = str(brain.validate_act()))
+
+    root.after('100', update_core_stats,root, labels, exec_num)
 
 
-    begin_test(generation)
+def init_test():
+    if brain.gameStarted():
 
-def begin_test(gen = []):
+        g_thread = threading.Thread(target = begin_test, daemon = True)
+        g_thread.start()
 
-    button[0].config(state = "disabled")
-    button[1].config(state = "disabled")
-    print('Before sleep')
-    time.sleep(2)
+def begin_test():
 
-    if gen:
+    while brain.curr_lives > 0:
 
-        for x in gen:
-            x.play_game()
-            print(x)
+            new_entity = entity.Entity(act_list = [])
+            new_entity.play_game()
 
-    else:
+            pickle_out = open(f"entity_data/Gen_0/entity_{4 - (brain.curr_lives + 1)}.pickle", "wb")
+            pickle.dump(new_entity, pickle_out)
+            pickle_out.close()
 
-        while brain.curr_lives > 0:
-            ent = copy.deepcopy(entity.Entity())
-            ent.play_game()
-            print(str(ent))
-            gen.append(copy.deepcopy(ent))
-            del ent
-
-    filehandler.save_data(gen, 'entity_data/gen_0')
-
+            new_entity = None
+            
 
 if __name__ == '__main__':
     main()
