@@ -2,6 +2,7 @@ import keyboard
 import time
 import random
 import brain
+import eyes
 from enum import Enum
 
 
@@ -28,23 +29,27 @@ class Action:
         self.ring_count = 0
         self.score_count = 0
         self.lives_count = 0
+        self.act = ''
+
         self.mutation = 0.50
 
     def __str__(self):
         return f"""
-        \033[0;32;40mAction:                       \033[0;36;40m{self.action}
-        \033[0;32;40mAction delay:                 \033[0;36;40m{self.delay}
-        \033[0;32;40mPoints assigned to action:    \033[0;36;40m{self.score}
-        \033[0;32;40mRing count during execution:  \033[0;36;40m{self.ring_count}
-        \033[0;32;40mScore count during execution: \033[0;36;40m{self.score_count}
-        \033[0;32;40mLives count during execution: \033[0;36;40m{self.lives_count}
-        \033[0;32;40mMutation Rate:                \033[0;36;40m{self.mutation}"""
+        Action:                       {self.action}
+        Action delay:                 {self.delay}
+        Points assigned to action:    {self.score}
+        Ring count during execution:  {self.ring_count}
+        Score count during execution: {self.score_count}
+        Lives count during execution: {self.lives_count}
+        Act during execution:         {self.act}
+        Mutation Rate:                {self.mutation}"""
 
     def set_core_stats(self):
         self.ring_count = brain.curr_rings
         self.score_count = brain.curr_score
         self.lives_count = brain.curr_lives
-        
+        self.act = brain.curr_act
+
 
     def execute_action(self):
 
