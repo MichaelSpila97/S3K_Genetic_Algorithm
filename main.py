@@ -66,7 +66,7 @@ def begin_test(gen = []):
             gen.append(copy.deepcopy(ent))
             del ent
 
-    filehandler.save_data(gen, 'entity_data/gen_0')
+    filehandler.save_data(gen, 'entity_data/Generation_0/Raw_gen_0')
 
 
 if __name__ == '__main__':

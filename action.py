@@ -24,7 +24,6 @@ class Action:
     def __init__(self, action, delay):
         self.action = action
         self.delay = delay
-        self.score = 0
 
         self.ring_count = 0
         self.score_count = 0
@@ -37,12 +36,11 @@ class Action:
         return f"""
         Action:                       {self.action}
         Action delay:                 {self.delay}
-        Points assigned to action:    {self.score}
         Ring count during execution:  {self.ring_count}
         Score count during execution: {self.score_count}
         Lives count during execution: {self.lives_count}
         Act during execution:         {self.act}
-        Mutation Rate:                {self.mutation}"""
+        Mutation Chance:              {self.mutation}"""
 
     def set_core_stats(self):
         self.ring_count = brain.curr_rings
@@ -50,6 +48,48 @@ class Action:
         self.lives_count = brain.curr_lives
         self.act = brain.curr_act
 
+
+    def getAction(self):
+        return self.action
+
+    def getDelay(self):
+        return self.delay
+
+    def getRingCount(self):
+        return self.ring_count
+
+    def getScoreCount(self):
+        return self.score_count
+
+    def getLivesCount(self):
+        return self.lives_count
+
+    def getAct(self):
+        return self.act
+
+    def getMutation(self):
+        return self.mutation
+
+    def setAction(self, action):
+        self.action = action
+
+    def setDelay(self, delay):
+        self.delay = delay
+
+    def setRingCount(self, ring):
+        self.ring_count = ring
+
+    def setScoreCount(self, score):
+        self.score_count = score
+
+    def setLivesCount(self, lives):
+        self.lives_count = lives
+
+    def setAct(self, act):
+        self.act = act
+
+    def setMutation(self, mutation):
+        self.mutation = mutation
 
     def execute_action(self):
 

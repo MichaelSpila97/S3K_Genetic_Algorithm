@@ -27,12 +27,6 @@ Action: [{i}]
                 Parents to this Entity: {self.parents}
                 Entity's Status: {self.alive}"""
 
-    def isAlive(self):
-
-        if brain.curr_lives  == 0:
-            self.alive = False
-
-        return self.alive
 
     def play_game(self):
         print('playing game...')
@@ -50,3 +44,21 @@ Action: [{i}]
 
     def resurrect(self):
         self.alive = True
+
+    def getActionList(self):
+        return self.action_list
+
+    def getFitness(self):
+        return self.fitness
+
+    def getParents(self):
+        return self.parents
+
+    def setActionList(self, new_act_list):
+        self.action_list = new_act_list
+
+    def setFitness(self, new_fitness):
+        self.fitness = new_fitness
+
+    def setParents(self, new_parents):
+        self.parents = new_parents
