@@ -64,11 +64,137 @@ def clean_dna(generation):
 
         score = 0
         rings = 0
-    filehandler.save_data(generation, 'entity_data/Generation_0/tClean_gen_0')
+    filehandler.save_data(generation, 'entity_data/Generation_0/Clean_gen_0')
 
 def eval_dna(generation):
-    pass
 
+    pgen = positive_eval(copy.deepcopy(generation))
+    ngen = negative_eval(copy.deepcopy(pgen))
+    filehandler.save_data(ngen, 'entity_data/Generation_0/Eval_gen_0')
+
+def positive_eval(generation):
+    pos_gen = generation
+
+    j = 0
+    for ent in pos_gen:
+
+        rings = 0
+        score = 0
+        delay = 0
+
+        reset_delay = False
+        i = 0
+        curr_lives = ent.action_list[i].getLivesCount()
+
+        while ent.action_list[i].getLivesCount() >= curr_lives:
+
+            delay =  delay + ent.action_list[i].getDelay()
+            if rings < ent.action_list[i].getRingCount() or score < ent.action_list[i].getScoreCount():
+
+                if delay <= 5:
+                    ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.100, 10, 'dec'))
+                else:
+                    ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.050, 5, 'dec'))
+
+                reset_delay = True
+
+            if reset_delay:
+                delay = 0
+                reset_delay = False
+
+            rings = ent.action_list[i].getRingCount()
+            score = ent.action_list[i].getScoreCount()
+            #print(f'Mutation: {ent.action_list[i].getMutation()}')
+            i = i + 1
+
+        j = j + 1
+
+    return pos_gen
+
+def negative_eval(generation):
+    neg_gen = generation
+
+    j = 0
+
+    for ent in generation:
+
+        rings = 0
+        score = 0
+        rdelay = 0
+        sdelay = 0
+
+        reset_sdelay = False
+        reset_rdelay = False
+
+        i = 0
+
+        curr_lives = ent.action_list[i].getLivesCount()
+
+        while ent.action_list[i].getLivesCount() >= curr_lives:
+
+            rdelay =  rdelay + ent.action_list[i].getDelay()
+            sdelay =  sdelay + ent.action_list[i].getDelay()
+
+            if ent.action_list[i].getRingCount() == 0:
+
+                ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.010, 10, 'inc'))
+
+            if rdelay >= 30 and ent.action_list[i].getRingCount() == rings:
+
+                if rings == 0:
+                    ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.10, 30, 'inc'))
+                else :
+                    ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.050, 30, 'inc'))
+
+                reset_rdelay = True
+
+            if sdelay >= 30 and ent.action_list[i].getScoreCount() == score:
+
+                ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.050, 30, 'inc'))
+                reset_sdelay = True
+
+
+            rings = ent.action_list[i].getRingCount()
+            score = ent.action_list[i].getScoreCount()
+
+
+            if reset_rdelay:
+                rdelay = 0
+                reset_rdelay = False
+
+            if reset_sdelay:
+                sdelay = 0
+                reset_sdelay = False
+
+            i = i + 1
+        j = j + 1
+
+
+    return neg_gen
+def mutation_adjuster(action_list, index, amount, delay, direction):
+
+
+    while delay > 0 and index >= 0:
+
+        if direction == 'dec':
+
+            action_list[index].setMutation(float(format(action_list[index].getMutation() - amount, '.2f')))
+
+        elif direction == 'inc':
+
+            action_list[index].setMutation(float(format(action_list[index].getMutation() + amount, '.2f')))
+
+
+        if action_list[index].getMutation() > 1:
+            action_list[index].setMutation(1)
+
+        elif action_list[index].getMutation() < 0:
+            action_list[index].setMutation(0)
+
+
+        delay = delay - action_list[index].getDelay()
+        index = index - 1
+    return action_list
 def reproduce(generation):
     pass
 

@@ -14,10 +14,11 @@ class Entity:
     def __str__(self):
         action_str = ''
         i = 0
+        time = 0
         while i < len(self.action_list):
-
+            time = time + self.action_list[i].getDelay()
             action_str =  action_str + f"""
-Action: [{i}]
+Action: [{i}] {format(time, '.2f')} 
             {self.action_list[i]}\n"""
             i = i + 1
         return f"""{action_str}
