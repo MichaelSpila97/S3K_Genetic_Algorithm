@@ -1,12 +1,7 @@
-devised# Sonic3-K_Game_AI
+#Sonic3-K_Game_AI
 
-Project Overview:
 
-The goal of this project is to create a AI or Bot that can compenetly play the sega genisis classic Sonic 3 & Knuckles.
-The AI will use a combination of image analysis and action analysis to function. By the end the project it should be able to
-at least get through the first act of the game, Angel Island zone, with no issues. Below is a list of what has been completed,
-what needs to be polished/Upgraded or what need to be created.
-
+Below is a list of what has been completed, what needs to be polished/Upgraded or what need to be created.
 
 Completed:
 
