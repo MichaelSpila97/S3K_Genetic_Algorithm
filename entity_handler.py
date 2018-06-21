@@ -75,7 +75,6 @@ def eval_dna(generation):
 def positive_eval(generation):
     pos_gen = generation
 
-    j = 0
     for ent in pos_gen:
 
         rings = 0
@@ -107,14 +106,10 @@ def positive_eval(generation):
             #print(f'Mutation: {ent.action_list[i].getMutation()}')
             i = i + 1
 
-        j = j + 1
-
     return pos_gen
 
 def negative_eval(generation):
     neg_gen = generation
-
-    j = 0
 
     for ent in generation:
 
@@ -167,12 +162,9 @@ def negative_eval(generation):
                 reset_sdelay = False
 
             i = i + 1
-        j = j + 1
-
 
     return neg_gen
 def mutation_adjuster(action_list, index, amount, delay, direction):
-
 
     while delay > 0 and index >= 0:
 
@@ -184,28 +176,25 @@ def mutation_adjuster(action_list, index, amount, delay, direction):
 
             action_list[index].setMutation(float(format(action_list[index].getMutation() + amount, '.2f')))
 
-
         if action_list[index].getMutation() > 1:
             action_list[index].setMutation(1)
 
         elif action_list[index].getMutation() < 0:
             action_list[index].setMutation(0)
 
-
         delay = delay - action_list[index].getDelay()
         index = index - 1
+
     return action_list
+
 def reproduce(generation):
     pass
-
 
 def choose_mates(generation):
     pass
 
-
 def mutate_dna(generation):
     pass
-
 
 def random_list_handler(generation):
     pass
