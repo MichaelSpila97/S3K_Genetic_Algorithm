@@ -1,6 +1,6 @@
-import action_handler
-import GDV
 
+import action_handler
+import gdv
 #_______________________________________________________________________________________________________________________________
 #Entity is an object that represent a single attempt by the computer to complete Sonic 3 and Knunkles
 #Each Entity have the following attributes to them:
@@ -8,7 +8,7 @@ import GDV
 #     fitness:     This represent the fitness of an entity and is used to determine how easily the entity will be able to reproduce
 #     generation:  This represent the generation the entity belongs to
 #     parents:     This is a list that contains the parents to the entity. Will be empty if the entity belongs to Gen 0
-#     alive:       This represent weather the entity living status. Used to stop entities run if it dies during the game
+#     alive:       This represent wheater the entity living status. Used to stop entities run if it dies during the game
 #_______________________________________________________________________________________________________________________________
 
 class Entity:
