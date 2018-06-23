@@ -56,7 +56,9 @@ class Action:
         self.act = ''
 
         self.mutation = 0.50
+
     # __________________________________________________________________________
+    def __str__(self):
         return f"""
         Action:                       {self.action}
         Action delay:                 {self.delay}

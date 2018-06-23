@@ -82,15 +82,29 @@ def clean_dna(generation):
     filehandler.save_data(generation, 'entity_data/Generation_0/Clean_gen_0')
 
 
-# Wrapper function that execute all evaluation function and saves the state of
+#   Wrapper function that execute all evaluation functions and saves the state of
 # the generation object after evaluation
 def eval_entity(generation):
 
     ngen = neg_dna_eval(copy.deepcopy(generation))
     pgen = pos_dna_eval(copy.deepcopy(ngen))
+    fgen = calc_fitness(copy.deepcopy(pgen))
+    filehandler.save_data(fgen, 'entity_data/Generation_0/Eval_gen_0')
 
-    filehandler.save_data(pgen, 'entity_data/Generation_0/Eval_gen_0')
+def calc_fitness(generation):
+    fitgen = generation
 
+    for entities in generation:
+        dna_len = len(entities.getActionList())
+        print(dna_len)
+        mutation_total = 0
+
+        for dna in entities.getActionList():
+            mutation_total = mutation_total + dna.getMutation()
+
+        entities.setFitness(1 - (mutation_total / dna_len))
+
+    return fitgen
 #   Function handles the postive evaluation of the dna sequence of each enitiy
 # in the generation gen_list
 # Passes:
@@ -261,8 +275,55 @@ def mutation_adjuster(action_list, index, amount, delay, direction):
     return action_list
 
 def reproduce(generation):
-    pass
+    mating_pool = assign_entities_to_pools(generation)
+    config_mp = configure_mating_percents(copy.deepcopy(mating_pool))
 
+def assign_entities_to_pools(generation):
+
+    mating_pools = [[5], [15], [30], [50]]
+
+    for entities in generation:
+
+        ent_fitness = entities.getFitness() * 100
+        if ent_fitness < 30:
+            mating_pools[0].append(entities)
+        elif ent_fitness >= 30 and ent_fitness < 50:
+            mating_pools[1].append(entities)
+        elif ent_fitness >= 50 and ent_fitness < 70:
+            mating_pools[2].append(entities)
+        elif ent_fitness >= 70:
+            mating_pools[3].append(entities)
+
+    return mating_pools
+
+def configure_mating_percents(mating_pool):
+    top_iter = len(mating_pool) - 1
+    bottom_iter = 0
+
+    t_carry_percent = 0
+    b_carry_percent = 0
+
+    b_pool_is_empty = True
+    t_pool_is_empty = True
+
+    while b_pool_is_empty or t_pool_is_empty:
+        mating_pool[top_iter][0] += t_carry_percent
+        if len(mating_pool[top_iter]) == 1:
+            t_carry_percent += mating_pool[top_iter][0]
+            mating_pool[top_iter][0] = 0
+            top_iter -= 1
+        else:
+            t_pool_is_empty = False
+
+        mating_pool[bottom_iter][0] += b_carry_percent
+        if len(mating_pool[bottom_iter][0]) == 1:
+            b_carry_percent += mating_pool[bottom_iter][0]
+            mating_pool[bottom_iter][0] = 0
+            bottom_iter -= 1
+        else:
+            b_pool_is_empty = False
+
+    return mating_pool
 def choose_mates(generation):
     pass
 
