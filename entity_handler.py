@@ -277,9 +277,10 @@ def mutation_adjuster(action_list, index, amount, delay, direction):
 def reproduce(generation):
     mating_pool = assign_entities_to_pools(generation)
     config_mp = configure_mating_percents(copy.deepcopy(mating_pool))
+    new_generation = choose_and_mate(config_mp)
+    # filehandler.save_data(new_generation, 'entity_data/Generation_0/Offspring_gen_0')
 
 def assign_entities_to_pools(generation):
-
     mating_pools = [[5], [15], [30], [50]]
 
     for entities in generation:
@@ -307,7 +308,10 @@ def configure_mating_percents(mating_pool):
     t_pool_is_empty = True
 
     while b_pool_is_empty or t_pool_is_empty:
+
         mating_pool[top_iter][0] += t_carry_percent
+        t_carry_percent = 0
+
         if len(mating_pool[top_iter]) == 1:
             t_carry_percent += mating_pool[top_iter][0]
             mating_pool[top_iter][0] = 0
@@ -316,19 +320,48 @@ def configure_mating_percents(mating_pool):
             t_pool_is_empty = False
 
         mating_pool[bottom_iter][0] += b_carry_percent
-        if len(mating_pool[bottom_iter][0]) == 1:
+        b_carry_percent = 0
+
+        if len(mating_pool[bottom_iter]) == 1:
             b_carry_percent += mating_pool[bottom_iter][0]
             mating_pool[bottom_iter][0] = 0
-            bottom_iter -= 1
+            bottom_iter += 1
         else:
             b_pool_is_empty = False
 
+    i = 0
+    dangling_percent = 0
+
+    while i != top_iter:
+
+        if mating_pool[i][0] != 0:
+            dangling_percent += mating_pool[i][0]
+            mating_pool[i][0] = 0
+        i += 1
+
+    mating_pool[top_iter][0] += dangling_percent
+
     return mating_pool
-def choose_mates(generation):
+
+def choose_and_mate(mating_pool):
+    choose_pool = random_list_creater(mating_pool)
+
+def create_new_entity(parents):
     pass
 
 def mutate_dna(generation):
     pass
 
-def random_list_handler(generation):
-    pass
+def random_list_creater(elements):
+    list = []
+    for items in elements:
+
+        if len(items) > 1:
+
+            equal_rep = items[0] // (len(items) - 1)
+            i = 1
+            while i < len(items):
+                curr_list = equal_rep * [items[i]]
+                list += curr_list
+                i += 1
+    return list
