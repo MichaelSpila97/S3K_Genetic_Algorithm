@@ -1,4 +1,4 @@
-#Sonic3-K_Game_AI
+#Sonic3-K_Game_Genetic_Algorithm
 
 
 Below is a list of what has been completed, what needs to be polished/Upgraded or what need to be created.
@@ -17,22 +17,22 @@ Completed:
           5) Rough Documentation of all current files
           6) Functions/Functions to load/save data off each play attempt made by the computer
           7) Better file names for current files
+          8) Functions for the evaluation of a generation and creation of a new generation based on said evaluations
 
 Needs work:
 
           1) Need to add Snap Shot Function and Recognition for:
             a) Soinc(Mabye..)
-            b) recognize certain screens for use in automating the testing process
+            b) recognize certain screens for use in automating the testing process*
           2) Proofread Documentation and this file
           3) Add Documentation to new files
           4) Improve Test_Drivers GUI
-          5) Add Functions in Test_Driver to automate testing process
-          6)Explanation of projects at the bottom of this read me
+          5) Add Functions in Test_Driver to automate testing process*
+          6) Explanation of projects at the bottom of this read me
 
 Needs Created:
+              Nothing as of now.
 
-          1) Functions for the evaluation of a generation and creation of a new generation based on said evaluations*
-          2) Functions to facilitate automatically naming a new generation based on a previous name
 
 
 
