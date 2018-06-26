@@ -76,7 +76,7 @@ def begin_test(gen=[]):
         for entities in gen:
             entities.play_game()
 
-    #  Else need to create three new entities and have them attempt the
+    # Else need to create three new entities and have them attempt the
     # game to create Generation 0
     else:
         while gdv.curr_lives > 0:
