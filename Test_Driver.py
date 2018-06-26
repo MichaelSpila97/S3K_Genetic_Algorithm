@@ -1,9 +1,9 @@
 from tkinter import *
 from tkinter import filedialog
+from copy import deepcopy
 
 import time
 import os
-import copy
 import threading
 
 import gdv
@@ -76,17 +76,16 @@ def begin_test(gen=[]):
         for entities in gen:
             entities.play_game()
 
-    #   Else need to create three new entities and have them attempt the
+    #  Else need to create three new entities and have them attempt the
     # game to create Generation 0
     else:
         while gdv.curr_lives > 0:
-
-            ent = copy.deepcopy(entity.Entity())
+            print(f'cur lives {gdv.curr_lives}')
+            ent = deepcopy(entity.Entity(name=f'G0E{3 - (gdv.curr_lives - 1)}'))
             ent.play_game()
-            print(str(ent))
-            gen.append(copy.deepcopy(ent))
-            del ent
+            gen.append(deepcopy(ent))
 
+    print('Game over\nSaving Data..')
     filehandler.save_data(gen, 'entity_data/Generation_0/Raw_gen_0')
 
 # ______________________________________________________________________________

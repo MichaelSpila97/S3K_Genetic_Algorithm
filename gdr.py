@@ -69,6 +69,7 @@ def live_grab():
 
     lives_box = Static_Obj_Pos.lives.value
 
+    print('Live grab:')
     lives_total = calc_num_total(live_num_map, lives_box)
 
     if lives_total is None:
@@ -88,6 +89,7 @@ def act_beginning_grab():
     else:
         return(act_beg_total)
 # ______________________________________________________________________________
+def act_end_grab():
     act_end_map = {'734': 1, '638': 2}
 
     act_end_box = Static_Obj_Pos.act_e.value
@@ -126,7 +128,7 @@ def calc_num_total(num_map, box):
 
         # Calculated the number id
         num_id = calc_num_id(num_image, num_map)
-
+        print(num_id)
         # Retrive the number in the num_map that maps to the num_id
         # Will be none if nothing maps to the num_id
         num = num_map.get(str(num_id))
@@ -135,7 +137,7 @@ def calc_num_total(num_map, box):
         # the live num map since thier is no distince pixel addtion for two and
         # seven for lives
         if isinstance(num, list):
-            num = check_if_two_or_seven(num, numbers_place)
+            num = check_if_two_or_seven(numbers_place)
 
         # Reaches end of number and will break
         if num is None:
@@ -174,12 +176,12 @@ def calc_num_id(num_image, num_map):
         # If and else determines which types of pixels will be used in the calculations
         # Used for determining the screenshots for lives
         if num_map.get('152') == 0:
-            if pixels[0] == 224 and pixels[1] == 224 and pixels[2] == 225 or \
-               pixels[0] == 160 and pixels[1] == 160 and pixels[2] == 225:
+            if pixels[0] == 224 and pixels[1] == 224 and pixels[2] == 225:
                 result = result + 1
         # Used for determing all other screenshots
         else:
-            if pixels[0] == 224 and pixels[1] == 224 and pixels[2] == 225:
+            if pixels[0] == 224 and pixels[1] == 224 and pixels[2] == 225 or pixels[0] == 160 and pixels[1] == 160 and pixels[2] == 225:
+
                 result = result + 1
 
     return result

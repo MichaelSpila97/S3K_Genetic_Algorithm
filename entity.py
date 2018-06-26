@@ -14,8 +14,9 @@ import action_handler
 class Entity:
 
 # _______________________________________________________________________________________________________________________________
-    def __init__(self, act_list=[], parents=None):
+    def __init__(self, name, act_list=[], parents=None):
 
+        self.name = name
         self.action_list = act_list
         self.fitness = 0
         self.generation = 0
@@ -34,7 +35,7 @@ Action: [{i}] {format(time, '.2f')}
             {self.action_list[i]}\n"""
             i = i + 1
         return f"""{action_str}
-        Entity Overall Stats:
+        Entity {self.name} Overall Stats:
                 Fitness Score: {self.fitness}
                 Generation: {self.generation}
                 Parents to this Entity: {self.parents}
@@ -69,6 +70,12 @@ Action: [{i}] {format(time, '.2f')}
     def getActionList(self):
         return self.action_list
 
+    def getName(self):
+        return self.name
+
+    def getGeneration(self):
+        return self.generation
+
     def getFitness(self):
         return self.fitness
 
@@ -84,3 +91,9 @@ Action: [{i}] {format(time, '.2f')}
 
     def setParents(self, new_parents):
         self.parents = new_parents
+
+    def setName(self, new_name):
+        self.name = new_name
+
+    def setGeneration(self, new_gen):
+        self.generation = new_gen

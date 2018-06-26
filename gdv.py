@@ -17,10 +17,6 @@ curr_act = ''
 def get_core_stats():
     while True:
         validate_lives(gdr.live_grab())
-        validate_score(gdr.score_grab())
-        validate_rings(gdr.ring_grab())
-        validate_act()
-
         time.sleep(0.1)
 # ______________________________________________________________________________
 # Passes:
@@ -74,15 +70,18 @@ def validate_lives(lives):
     global curr_lives
 
     if lives == 'Could not obtain lives count':
+        print('Could not obtain lives count')
         return curr_lives
 
     # lives should not increase or decreases more than once at a time
     # Ex: lives 3 -> 2 or 3->4 is good
     #    lives 3 -> 0 or 3 -> 7 not good
     elif lives > curr_lives + 1 or lives < curr_lives - 1:
+        print('Lives increased or deceased to fast')
         return curr_lives
 
     else:
+        print('set new live count')
         curr_lives = int(lives)
         return curr_lives
 # ______________________________________________________________________________
@@ -109,8 +108,8 @@ def validate_act():
 
     # if game_started == False:
 
-        # if  curr_rings != -1 and curr_score != -1 and curr_lives != -1:
-            # print('game has started')
-            # game_started = True
+    # if  curr_rings != -1 and curr_score != -1 and curr_lives != -1:
+    # print('game has started')
+    # game_started = True
 
     # return game_started

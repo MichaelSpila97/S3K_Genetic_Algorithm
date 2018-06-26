@@ -22,11 +22,12 @@ def generate_delay():
 #       entity:     an Entity object
 #       list_place: index value representing which action is being executed
 def check_status(entity, list_place):
+    print(f'list place: {list_place}')
     if list_place > 0:
 
         entity_curr_lives = entity.action_list[list_place].lives_count
         entity_prev_lives = entity.action_list[list_place - 1].lives_count
-
+        print(f'{entity_curr_lives} {entity_prev_lives}')
         if entity_curr_lives < entity_prev_lives:
             entity.died()
 
