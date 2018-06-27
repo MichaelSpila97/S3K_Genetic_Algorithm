@@ -5,12 +5,15 @@ from copy import deepcopy
 import time
 import os
 import threading
+import queue
 
 import gdv
 import entity
 import filehandler
 
 button = []
+main_func_qu = queue.Queue(maxsize=5)
+gui_func_gu = queue.Queue(maxsize=5)
 # ______________________________________________________________________________
 #   This contains the tkinter gui and methods responsible for facillitating an
 # entire generations attempts at completing sonic 3 and Knukles. Can start test
@@ -20,6 +23,27 @@ button = []
 #   The main builds the tkinter gui and sets the functions to be called when one
 # of the buttons is pressed
 def main():
+
+    gui_thread = threading.Thread(traget=init_tkinter_GUI, daemon=True)
+    stat_thread = threading.Thread(target=gdv.get_core_stats, daemon=True)
+    #   Creates and execute thread responsible for capturing data from game screen in concurence
+    # with the testing code
+
+    stat_thread.start()
+    gui_thread.start()
+
+    while True:
+        exec_func_from_threads()
+
+def add_func_for_main(func):
+    func_qu.put(func)
+
+def exec_func_from_threads():
+    if not func_qu.empty():
+        thread_func = func_qu.get()
+        thread_func()
+
+def init_tkinter_GUI():
     root = Tk()
 
     # Creates frame
@@ -27,19 +51,16 @@ def main():
     frame.pack()
 
     # Creates start buttons
-    start_bttn = Button(root, text="Start Tests with no data", command=begin_test)
+    begin_test_lam = add_func_for_main(begin_test)
+    load_gen_lam = add_func_for_main(lambda: load_gen(root))
+    start_bttn = Button(root, text="Start Tests with no data", command=begin_test_lam)
     start_bttn.pack()
     button.append(start_bttn)
 
     # Creates load button
-    load_bttn = Button(root, text="Start tests with data", command=lambda: load_gen(root))
+    load_bttn = Button(root, text="Start tests with data", command=load_gen_lam)
     load_bttn.pack()
     button.append(load_bttn)
-
-    #   Creates and execute thread responsible for capturing data from game screen in concurence
-    # with the testing code
-    stat_thread = threading.Thread(target=gdv.get_core_stats, daemon=True)
-    stat_thread.start()
 
     root.mainloop()
 
