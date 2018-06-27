@@ -92,11 +92,17 @@ def validate_act():
     act_b_status = gdr.act_beginning_grab()
     act_e_status = gdr.act_end_grab()
 
-    if act_b_status != 'Could not obtain the beginning of the act':
+    act_b_fail_str = 'Could not obtain the beginning of the act'
+    act_e_fail_str = 'Could not obtain the end of the act'
+
+    if act_b_status != act_b_fail_str:
         curr_act = f'Act {act_b_status}'
 
-    elif act_e_status != 'Could not obtain the end of the act':
+    elif act_e_status != act_e_fail_str:
         curr_act = f'Act {act_e_status} End'
+
+    elif curr_act == 'Act 2 End':
+        curr_act = f'Transitioning to next Zone...'
 
     return curr_act
 # _____________________________________________________________________________
