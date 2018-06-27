@@ -1,6 +1,7 @@
 import time
 import gdr
-
+from copy import deepcopy
+from Test_Driver import gui_func_qu
 # ______________________________________________________________________________
 #        This contains the collection of funciton that validate and stores the
 #  core in game statistic that is used by the Aciton objects
@@ -16,7 +17,19 @@ curr_act = ''
 # ______________________________________________________________________________
 def get_core_stats():
     while True:
+        lives = deepcopy(curr_lives)
+        rings = deepcopy(curr_rings)
+        score = deepcopy(curr_score)
+        act = deepcopy(curr_act)
+
         validate_lives(gdr.live_grab())
+        validate_score(gdr.score_grab())
+        validate_rings(gdr.ring_grab())
+        validate_act()
+
+        detect_change = lives != curr_lives or rings != curr_rings or score != curr_score or act != curr_act
+        if detect_change:
+            gui_func_qu.put("change_labels_texts")
         time.sleep(0.1)
 # ______________________________________________________________________________
 # Passes:
@@ -70,18 +83,15 @@ def validate_lives(lives):
     global curr_lives
 
     if lives == 'Could not obtain lives count':
-        print('Could not obtain lives count')
         return curr_lives
 
     # lives should not increase or decreases more than once at a time
     # Ex: lives 3 -> 2 or 3->4 is good
     #    lives 3 -> 0 or 3 -> 7 not good
     elif lives > curr_lives + 1 or lives < curr_lives - 1:
-        print('Lives increased or deceased to fast')
         return curr_lives
 
     else:
-        print('set new live count')
         curr_lives = int(lives)
         return curr_lives
 # ______________________________________________________________________________

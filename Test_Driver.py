@@ -1,19 +1,18 @@
-from tkinter import *
-from tkinter import filedialog
+
 from copy import deepcopy
 
 import time
-import os
 import threading
 import queue
 
 import gdv
 import entity
 import filehandler
+from Test_GUI import Test_GUI
 
-button = []
 main_func_qu = queue.Queue(maxsize=5)
-gui_func_gu = queue.Queue(maxsize=5)
+gui_func_qu = queue.Queue(maxsize=5)
+
 # ______________________________________________________________________________
 #   This contains the tkinter gui and methods responsible for facillitating an
 # entire generations attempts at completing sonic 3 and Knukles. Can start test
@@ -24,59 +23,28 @@ gui_func_gu = queue.Queue(maxsize=5)
 # of the buttons is pressed
 def main():
 
-    gui_thread = threading.Thread(traget=init_tkinter_GUI, daemon=True)
     stat_thread = threading.Thread(target=gdv.get_core_stats, daemon=True)
-    #   Creates and execute thread responsible for capturing data from game screen in concurence
-    # with the testing code
+    gui_thread = threading.Thread(target=create_gui, daemon=True)
 
-    stat_thread.start()
+    # Creates and execute thread responsible for capturing data from game screen in concurence
+    # with the testing code
     gui_thread.start()
+    stat_thread.start()
 
     while True:
         exec_func_from_threads()
 
+def create_gui():
+    global gui
+    gui = Test_GUI()
+
 def add_func_for_main(func):
-    func_qu.put(func)
+    main_func_qu.put(func)
 
 def exec_func_from_threads():
-    if not func_qu.empty():
-        thread_func = func_qu.get()
+    if not main_func_qu.empty():
+        thread_func = main_func_qu.get()
         thread_func()
-
-def init_tkinter_GUI():
-    root = Tk()
-
-    # Creates frame
-    frame = Frame(root, width=100, height=50)
-    frame.pack()
-
-    # Creates start buttons
-    begin_test_lam = add_func_for_main(begin_test)
-    load_gen_lam = add_func_for_main(lambda: load_gen(root))
-    start_bttn = Button(root, text="Start Tests with no data", command=begin_test_lam)
-    start_bttn.pack()
-    button.append(start_bttn)
-
-    # Creates load button
-    load_bttn = Button(root, text="Start tests with data", command=load_gen_lam)
-    load_bttn.pack()
-    button.append(load_bttn)
-
-    root.mainloop()
-
-# _____________________________________________________________________________
-#   Function that loads the data specfied by the user and sends it off
-# to the begin_test function
-# Passes:
-#       root: the root of the tkinter gui. Needed to create file dialog
-def load_gen(root):
-
-    answer = filedialog.askopenfilename(parent=root, initialdir=os.getcwd(),
-    title="Please select a folder")
-
-    generation = filehandler.load_data(answer)
-
-    begin_test(generation)
 
 # ______________________________________________________________________________
 #   Function that runs each entities attempt until all of the entities die or
@@ -87,8 +55,6 @@ def load_gen(root):
 #       gen: the list that contains entities from a single generation. Is empty list if nothing is passed.
 def begin_test(gen=[]):
 
-    button[0].config(state="disabled")
-    button[1].config(state="disabled")
     print('Before sleep')
     time.sleep(2)
 

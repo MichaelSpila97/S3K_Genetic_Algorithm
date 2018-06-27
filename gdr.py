@@ -69,7 +69,6 @@ def live_grab():
 
     lives_box = Static_Obj_Pos.lives.value
 
-    print('Live grab:')
     lives_total = calc_num_total(live_num_map, lives_box)
 
     if lives_total is None:
@@ -128,7 +127,7 @@ def calc_num_total(num_map, box):
 
         # Calculated the number id
         num_id = calc_num_id(num_image, num_map)
-        print(num_id)
+
         # Retrive the number in the num_map that maps to the num_id
         # Will be none if nothing maps to the num_id
         num = num_map.get(str(num_id))
