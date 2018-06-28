@@ -85,7 +85,8 @@ def clean_dna(generation):
         score_keeper = 0
         ring_keeper = 0
 
-    filehandler.save_data(generation, 'entity_data/Generation_0/Clean_gen_0')
+    gen_num = generation[0].getGeneration()
+    filehandler.save_data(generation, f'entity_data/Generation_{gen_num}/Clean_gen_{gen_num}')
 
 
 #   Wrapper function that execute all evaluation functions and saves the state of
@@ -95,7 +96,8 @@ def eval_entity(generation):
     ngen = neg_dna_eval(deepcopy(generation))
     pgen = pos_dna_eval(deepcopy(ngen))
     fgen = calc_fitness(deepcopy(pgen))
-    filehandler.save_data(fgen, 'entity_data/Generation_0/Eval_gen_0')
+    gen_num = generation[0].getGeneration()
+    filehandler.save_data(fgen, f'entity_data/Generation_{gen_num}/Eval_gen_{gen_num}')
 
 def calc_fitness(generation):
     fitgen = generation
@@ -284,7 +286,8 @@ def reproduce(generation):
     mating_pool = assign_entities_to_pools(generation)
     config_mp = configure_mating_percents(deepcopy(mating_pool))
     new_generation = choose_and_mate(config_mp)
-    filehandler.save_data(new_generation, 'entity_data/Generation_0/Offspring_gen_0')
+    gen_num = generation[0].getGeneration()
+    filehandler.save_data(new_generation, f'entity_data/Generation_{gen_num}/Offspring_gen_{gen_num}')
 
 def assign_entities_to_pools(generation):
     mating_pools = [[5], [15], [30], [50]]

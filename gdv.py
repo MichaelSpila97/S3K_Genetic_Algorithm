@@ -1,7 +1,8 @@
 import time
 import gdr
+import Test_Driver
 from copy import deepcopy
-from Test_Driver import gui_func_qu
+
 # ______________________________________________________________________________
 #        This contains the collection of funciton that validate and stores the
 #  core in game statistic that is used by the Aciton objects
@@ -29,7 +30,7 @@ def get_core_stats():
 
         detect_change = lives != curr_lives or rings != curr_rings or score != curr_score or act != curr_act
         if detect_change:
-            gui_func_qu.put("change_labels_texts")
+            Test_Driver.gui_func_qu.put('Update Texts')
         time.sleep(0.1)
 # ______________________________________________________________________________
 # Passes:
