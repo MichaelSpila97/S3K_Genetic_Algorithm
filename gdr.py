@@ -28,6 +28,8 @@ class Static_Obj_Pos(Enum):
     act_b = (1410, 774, 1449, 813)
     act_e = (1374, 290, 1413, 329)
 
+    start_game = (654, 929, 725, 962)
+
 
 # --------------------------------Grabber Methods-------------------------
 # General description:
@@ -101,6 +103,18 @@ def act_end_grab():
         return(act_end_total)
 
 # _____________________________________________________________________________
+def start_game_grab():
+    start_map = {'774': 'Go'}
+
+    start_box = Static_Obj_Pos.start_game.value
+
+    start = calc_num_total(start_map, start_box)
+
+    if start is None:
+        return('Not at Start Screen')
+    else:
+        return (start)
+
 # ------------------------Number identification methods--------------------------
 
 # ______________________________________________________________________________
@@ -142,6 +156,9 @@ def calc_num_total(num_map, box):
         if num is None:
             break
 
+        elif num == 'Go':
+            total = num
+            break
         #   Calulates the total of the number and increases the current places
         # to the next number place in line
         elif isinstance(num, int):
@@ -176,6 +193,9 @@ def calc_num_id(num_image, num_map):
         # Used for determining the screenshots for lives
         if num_map.get('152') == 0:
             if pixels[0] == 224 and pixels[1] == 224 and pixels[2] == 225:
+                result = result + 1
+        elif num_map.get('774') == 'Go':
+            if pixels[0] == 224 and pixels[1] == 0 and pixels[2] == 0:
                 result = result + 1
         # Used for determing all other screenshots
         else:

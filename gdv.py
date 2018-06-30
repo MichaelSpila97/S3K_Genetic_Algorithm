@@ -13,7 +13,8 @@ curr_score = 0
 curr_lives = 3
 curr_act = ''
 
-# game_started = False
+at_start_screen = False
+training_start = False
 
 # ______________________________________________________________________________
 def get_core_stats():
@@ -119,14 +120,29 @@ def validate_act():
 # _____________________________________________________________________________
 # returns the global variable that represented weather the game has started
 # Method not usable in current state
-# def gameStarted():
+def isTrainingStarted():
 
-    # global game_started
+    global training_start
 
-    # if game_started == False:
+    fring_str = 'Could not obtain ring count'
+    fscore_str = 'Could not obtain score'
+    flives_str = 'Could not obtain lives count'
 
-    # if  curr_rings != -1 and curr_score != -1 and curr_lives != -1:
-    # print('game has started')
-    # game_started = True
+    if gdr.ring_grab() == fring_str and gdr.score_grab() == fscore_str and gdr.live_grab() == flives_str:
+        training_start = False
+    else:
+        training_start = True
 
-    # return game_started
+    return training_start
+
+def isAtStartScreen():
+    global at_start_screen
+
+    print(gdr.start_game_grab())
+    if gdr.start_game_grab() == 'Go':
+        at_start_screen = True
+
+    else:
+        at_start_screen = False
+
+    return at_start_screen

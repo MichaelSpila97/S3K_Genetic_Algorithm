@@ -1,7 +1,7 @@
 from copy import deepcopy
 from random import shuffle, choice, seed
-from action import Action
-from action_handler import generate_delay, generate_action
+import action
+import action_handler as ah
 
 import filehandler
 import entity
@@ -307,6 +307,7 @@ def assign_entities_to_pools(generation):
     return mating_pools
 
 def configure_mating_percents(mating_pool):
+    print('     configuring mating p')
     top_iter = len(mating_pool) - 1
     bottom_iter = 0
 
@@ -343,7 +344,7 @@ def configure_mating_percents(mating_pool):
 
     while i != top_iter:
 
-        if mating_pool[i][0] != 0:
+        if mating_pool[i][0] != 0 and len(mating_pool[i]) == 1:
             dangling_percent += mating_pool[i][0]
             mating_pool[i][0] = 0
         i += 1
@@ -351,9 +352,11 @@ def configure_mating_percents(mating_pool):
     mating_pool[top_iter][0] += dangling_percent
 
     print(mating_pool)
+    print('     Finishconfiguring mating p')
     return mating_pool
 
 def choose_and_mate(mating_pool):
+    print('     Choosing and mating')
     choose_pool = choose_pool_creater(mating_pool)
 
     gen_num = get_gen_num(mating_pool[0][1])
@@ -365,9 +368,11 @@ def choose_and_mate(mating_pool):
         new_generation.append(create_new_entity(parents, gen_num, len(new_generation) + 1))
         print(f'NG: {new_generation}')
 
+    print('     Finish Choosing and mating')
     return new_generation
 
 def choose_parents(choose_pool):
+    print('     Choosing parents')
     par_list = []
     while len(par_list) < 2:
         shuffle(choose_pool)
@@ -380,18 +385,22 @@ def choose_parents(choose_pool):
                 par_list.append(deepcopy(new_parent))
         seed()
 
+    print('     Finish Choosing parents')
     return par_list
 
 def create_new_entity(parents, gen_num, entity_num):
+    print('     Creatining new entity')
     new_entity = entity.Entity(name=f'G{gen_num + 1}E{entity_num}')
 
     new_entity.setGeneration(gen_num + 1)
     new_entity.setParents([parents[0].getName(), parents[1].getName()])
     new_entity.setActionList(construct_Dna(parents))
 
+    print('     Finish Creating new entity')
     return new_entity
 
 def construct_Dna(parent):
+    print('     Constructing DNA')
     new_dna = []
 
     par1_dna_left = True
@@ -434,6 +443,7 @@ def construct_Dna(parent):
 
         if par2_itr > len(par2_dna) - 1:
             par2_dna_left = False
+    print('     Finish Constructing DNA')
     return new_dna
 def attempt_mutation(dna):
     seed()
@@ -447,7 +457,7 @@ def attempt_mutation(dna):
     mut_choice = choice(mut_list)
 
     if mut_choice == 'Y':
-        return Action(generate_action(), generate_delay())
+        return action.Action(ah.generate_action(), ah.generate_delay())
     else:
         return dna
 

@@ -19,9 +19,12 @@ class Test_GUI:
         self.ring_label = tkinter.Label(self.root, text=f'Rings: {gdv.curr_rings}')
         self.lives_label = tkinter.Label(self.root, text=f'Lives: {gdv.curr_lives}')
         self.act_label = tkinter.Label(self.root, text=f'Act: {gdv.curr_act}')
-
+        self.con_choice = tkinter.IntVar()
+        self.conrb = tkinter.Radiobutton(self.root, text='Continuous Traning', variable=self.con_choice, value=1, command=self.radio_selection)
+        self.noncrb = tkinter.Radiobutton(self.root, text='Non-Continuous Training', variable=self.con_choice, value=0, command=self.radio_selection)
         self.obj_list = [self.score_label, self.ring_label, self.lives_label,
-                        self.act_label, self.ndtrain_button, self.ldtrain_button]
+                        self.act_label, self.ndtrain_button, self.ldtrain_button,
+                        self.conrb, self.noncrb]
         self.packer()
 
         self.queue = Test_Driver.gui_func_qu
@@ -38,11 +41,9 @@ class Test_GUI:
                 request = self.queue.get()
 
                 if request == 'Update Texts':
-                    print("Updating Text")
                     self.change_labels_texts()
 
                 elif request == 'Toggle Button':
-                    print("Toggling Buttons")
                     self.toggle_buttons_state()
 
         self.root.after('100', self.gui_request_handler)
@@ -64,6 +65,9 @@ class Test_GUI:
                 button.config(state="disabled")
             elif state == "disabled":
                 button.config(state="normal")
+
+    def radio_selection(self):
+        Test_Driver.continue_training = self.con_choice.get()
 
     def request_training(self, gen=[]):
         print('request testing')
@@ -87,3 +91,6 @@ class Test_GUI:
 
     def getLabels(self):
         return [self.score_label, self.ring_label, self.lives_label, self.act_label]
+
+    def getContinue_training(self):
+        return self.continue_training
