@@ -194,6 +194,7 @@ def calc_num_id(num_image, num_map):
         if num_map.get('152') == 0:
             if pixels[0] == 224 and pixels[1] == 224 and pixels[2] == 225:
                 result = result + 1
+        # Used for determining if the screenshot indicates the game is at the start screen
         elif num_map.get('774') == 'Go':
             if pixels[0] == 224 and pixels[1] == 0 and pixels[2] == 0:
                 result = result + 1

@@ -6,7 +6,8 @@ import action_handler as ah
 import filehandler
 import entity
 
-
+# ____________________________________________________________________________________________
+# --------------------------Beginning of Cleaning Functions---------------------------------
 # Function cleans the dna of each entity for errors and incosistances
 # Also adjustes the values in each dna to represent the spefic attempt
 # of each entity
@@ -87,8 +88,8 @@ def clean_dna(generation):
 
     gen_num = generation[0].getGeneration()
     filehandler.save_data(generation, f'entity_data/Generation_{gen_num}/Clean_gen_{gen_num}')
-
-
+# ____________________________________________________________________________________________
+# --------------------------Beginning of Evaluating Functions---------------------------------
 #   Wrapper function that execute all evaluation functions and saves the state of
 # the generation object after evaluation
 def eval_entity(generation):
@@ -281,7 +282,10 @@ def mutation_adjuster(action_list, index, amount, delay, direction):
         index = index - 1
 
     return action_list
-
+# ____________________________________________________________________________________________
+# -------------------------------Beginning of Reproductin Functions---------------------------
+#   Wrapper function that execute all reproduction functions and saves the state of
+# the generation object after reproduction is done
 def reproduce(generation):
     mating_pool = assign_entities_to_pools(generation)
     config_mp = configure_mating_percents(deepcopy(mating_pool))
@@ -289,6 +293,14 @@ def reproduce(generation):
     gen_num = generation[0].getGeneration()
     filehandler.save_data(new_generation, f'entity_data/Generation_{gen_num}/Offspring_gen_{gen_num}')
 
+# Function assigns entities to one of the four mating pools based on thier fitness score
+#
+# Passes:
+#        generation: List of entities that belong to a generation
+#
+# Returns:
+#        mating_pool: List of the four mating pools with the entities in their
+#                     respective pools
 def assign_entities_to_pools(generation):
     mating_pools = [[5], [15], [30], [50]]
 
@@ -306,8 +318,20 @@ def assign_entities_to_pools(generation):
 
     return mating_pools
 
+#   Function that moves mating percentage values from empty mating pool values in ward .
+# If mating percentages are stuck in the middle of two occupied mating pools then those precentages goes
+# up to the higher mating pool
+#
+# Passes:
+#        mating_pool: List of the four mating pools with the entities in their
+#                     respective pools
+#
+# Returns:
+#       mating_pool: Same as passes but the mating percent values have been moved to
+#                    to occupied pools
 def configure_mating_percents(mating_pool):
     print('     configuring mating p')
+
     top_iter = len(mating_pool) - 1
     bottom_iter = 0
 
@@ -317,6 +341,7 @@ def configure_mating_percents(mating_pool):
     b_pool_is_empty = True
     t_pool_is_empty = True
 
+    # Initial Moving of mating percent values in occupied pools
     while b_pool_is_empty or t_pool_is_empty:
 
         mating_pool[top_iter][0] += t_carry_percent
@@ -342,6 +367,8 @@ def configure_mating_percents(mating_pool):
     i = 0
     dangling_percent = 0
 
+    #   Second run over of mating pools to make sure no empty pools have non-zero
+    # values
     while i != top_iter:
 
         if mating_pool[i][0] != 0 and len(mating_pool[i]) == 1:
@@ -351,10 +378,18 @@ def configure_mating_percents(mating_pool):
 
     mating_pool[top_iter][0] += dangling_percent
 
-    print(mating_pool)
-    print('     Finishconfiguring mating p')
+    print(f'{mating_pool}\n     Finish configuring mating pool')
     return mating_pool
 
+#   Fuction responsible faciliting the choosing of parents and creation of their
+# offsprings
+#
+# Passes:
+#           mating_pool: List of the four mating pools with the entities in their
+#                        respective pools
+#
+# Returns:
+#           new_generation: The new generation created from the mating of parents entities
 def choose_and_mate(mating_pool):
     print('     Choosing and mating')
     choose_pool = choose_pool_creater(mating_pool)
@@ -371,6 +406,14 @@ def choose_and_mate(mating_pool):
     print('     Finish Choosing and mating')
     return new_generation
 
+#   Fuction responsible for choosing the parents that will mate and create a new entity
+#
+# Passes:
+#           choose_pool: list that contains multiple copies of pontential parents from the current
+#                        generation. The list will allways be length 100.
+#
+# Returns:
+#           par_list: the list of the two parents that will mate
 def choose_parents(choose_pool):
     print('     Choosing parents')
     par_list = []
@@ -388,6 +431,15 @@ def choose_parents(choose_pool):
     print('     Finish Choosing parents')
     return par_list
 
+# Function that is responsibe for creating the new entitiy based on its parents DNA
+#
+# Passes:
+#        parents: The list that contains the name of the parents to the new entitiy
+#        gen_num: The number of the generation that the new entity belongs to
+#        entitiy_num: The number that idetifies each entity in generation apart
+#
+# Returns:
+#        new_entity: the new entity created from the parents DNA
 def create_new_entity(parents, gen_num, entity_num):
     print('     Creatining new entity')
     new_entity = entity.Entity(name=f'G{gen_num + 1}E{entity_num}')
@@ -399,6 +451,13 @@ def create_new_entity(parents, gen_num, entity_num):
     print('     Finish Creating new entity')
     return new_entity
 
+#   Function that is responsibe for creating the DNA based of the new entities parents
+#
+# Passes:
+#        parents: the list of entities that are the parents to the new entitiy
+#
+# Returns:
+#        new_dna: the list of actions that is the dna for the new entity
 def construct_Dna(parent):
     print('     Constructing DNA')
     new_dna = []
@@ -413,6 +472,7 @@ def construct_Dna(parent):
     par2_dna = parent[1].getActionList()
 
     while par1_dna_left or par2_dna_left:
+
         par_choice_list = ["P1"] * 50 + ["P2"] * 50
         shuffle(par_choice_list)
         par_choice = choice(par_choice_list)
@@ -423,7 +483,6 @@ def construct_Dna(parent):
 
             if par1_dna_left:
                 new_dna.append(attempt_mutation(par1_dna[par1_itr]))
-
             else:
                 new_dna.append(attempt_mutation(par2_dna[par2_itr]))
 
@@ -431,7 +490,6 @@ def construct_Dna(parent):
 
             if par2_dna_left:
                 new_dna.append(attempt_mutation(par2_dna[par2_itr]))
-
             else:
                 new_dna.append(attempt_mutation(par1_dna[par1_itr]))
 
@@ -443,15 +501,25 @@ def construct_Dna(parent):
 
         if par2_itr > len(par2_dna) - 1:
             par2_dna_left = False
+
     print('     Finish Constructing DNA')
     return new_dna
-def attempt_mutation(dna):
+
+#   Function that decides wheater a gene will mutate
+#
+# Passes:
+#        gene: an action that is being evaluted for wheather it will mutate
+#
+# Returns:
+#        dna: the list of actions that is the dna for the new entity
+def attempt_mutation(gene):
     seed()
 
-    mutation_chance = dna.getMutation()
+    mutation_chance = gene.getMutation()
     yes_mut = int(mutation_chance * 100)
     no_mut = 100 - yes_mut
     mut_list = ['Y'] * yes_mut + ['N'] * no_mut
+
 
     shuffle(mut_list)
     mut_choice = choice(mut_list)
@@ -459,10 +527,17 @@ def attempt_mutation(dna):
     if mut_choice == 'Y':
         return action.Action(ah.generate_action(), ah.generate_delay())
     else:
-        return dna
-
+        return gene
+#   Function that creates the choose pool used to choose parents for mating
+#
+# Passes:
+#        elements: the list that contains lists of items that represents each parents
+#                  and thier corresponding percent chance of being choosen
+#
+# Returns:
+#        choose_pool: A list that is the newly created choose pool
 def choose_pool_creater(elements):
-    list = []
+    choose_pool = []
     curr_max = None
 
     for items in elements:
@@ -473,7 +548,7 @@ def choose_pool_creater(elements):
             i = 1
             while i < len(items):
                 curr_list = equal_rep * [items[i]]
-                list += curr_list
+                choose_pool += curr_list
 
                 if curr_max is None:
                     curr_max = items[i]
@@ -481,12 +556,20 @@ def choose_pool_creater(elements):
                     curr_max = items[i]
 
                 i += 1
-    if len(list) != 100:
-        while len(list) != 100:
-            list.append(curr_max)
+    if len(choose_pool) != 100:
+        while len(choose_pool) != 100:
+            choose_pool.append(curr_max)
 
-    return list
+    return choose_pool
 
+#   Function that obtains the generation number for the next generation
+# of entities through their parent generation name string
+#
+# Passes:
+#        entitiy: A entity from the parent generation
+#
+# Returns:
+#        gen_num: a integer that is the number of the next generation
 def get_gen_num(entity):
     ent_name = entity.getName()
     gen_num = ''
@@ -495,3 +578,4 @@ def get_gen_num(entity):
         gen_num += ent_name[i]
         i += 1
     return int(gen_num)
+#____________________________________________________________________________________________

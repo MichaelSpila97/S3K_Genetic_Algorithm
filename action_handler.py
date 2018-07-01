@@ -37,33 +37,40 @@ def check_status(entity, list_place):
 #       entity: an Entity Object
 def action_driver(entity):
 
-    # If entity has already defined actions
+    # If entity has already actions in its action list
     if entity.action_list:
         print('has action to replay')
-        old_list = deepcopy(entity.action_list)
+
         list_place = 0
+
+        old_list = deepcopy(entity.action_list)
         entity.setActionList([])
-        print(entity.getActionList())
+
         for actions in old_list:
 
+            # Stops action replay if the entity dies
             if not entity.isAlive():
                 print('Entity died while replaying actions')
-                print(entity.getActionList())
                 return
 
+            # Creates a new action object based of current action in the old_list
             else:
-                actions.execute_action()
-                entity.action_list.append(deepcopy(actions))
+                action = action.Action(actions.getAction(), action.getDelay(), action.getMutation())
+                action.execute_action()
+
+                entity.action_list.append(deepcopy(action))
+                action = None
+
             check_status(entity, list_place)
             list_place += 1
-        if not entity.isAlive():
-            return
-    print(entity.getActionList())
+
     print('Done replaying actions and creating new ones')
+
+    list_place = len(entity.action_list) - 1
+    
     # Continues to play and generate random action till the entity dies
     while entity.isAlive():
 
-        list_place = len(entity.action_list) - 1
         ng.seed()
 
         # Generates and execute new action
@@ -77,4 +84,5 @@ def action_driver(entity):
 
         # Checks status of entity
         check_status(entity, list_place)
+        list_place += 1
 # _______________________________________________________________________________________________________________________________

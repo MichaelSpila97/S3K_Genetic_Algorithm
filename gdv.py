@@ -118,8 +118,11 @@ def validate_act():
 
     return curr_act
 # _____________________________________________________________________________
-# returns the global variable that represented weather the game has started
-# Method not usable in current state
+# Function responsible for finiding out if training is aloud to start
+#
+# Returns:
+#        training_start: a boolean variable that tells wheather training can be
+#                        started
 def isTrainingStarted():
 
     global training_start
@@ -134,11 +137,15 @@ def isTrainingStarted():
         training_start = True
 
     return training_start
-
+# _____________________________________________________________________________
+# Function responsible for finiding out if the game is at the start screen
+#
+# Returns:
+#        at_start_screen: a boolean variable that tells wheather the game is at
+#                         the start screen
 def isAtStartScreen():
     global at_start_screen
 
-    print(gdr.start_game_grab())
     if gdr.start_game_grab() == 'Go':
         at_start_screen = True
 
