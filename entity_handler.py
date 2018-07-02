@@ -131,6 +131,7 @@ def pos_dna_eval(generation):
         delay_keeper = 0
 
         reset_delay = False
+        allow_end_act_reward = True
 
         i = 0
 
@@ -156,6 +157,16 @@ def pos_dna_eval(generation):
                     ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.050, 5, 'dec'))
 
                 reset_delay = True
+
+            Reach_end_of_act = ent.action_list[i].getAct() == 'Act 1 End' or ent.action_list[i].getAct() == 'Act 2 End' and allow_end_act_reward is True
+            Started_Next_Act = ent.action_list[i].getAct() == 'Act 1' or ent.action_list[i].getAct() == 'Act 2' and allow_end_act_reward is False
+
+            if Reach_end_of_act:
+                ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.5, 14400, 'dec'))
+                allow_end_act_reward = False
+
+            if Started_Next_Act:
+                allow_end_act_reward = True
 
             # Resets the delay to 0 once a reward has been distributed
             if reset_delay:

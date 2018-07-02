@@ -21,7 +21,7 @@ class Test_GUI:
         self.score_label = tkinter.Label(self.root, text=f'Score: {gdv.curr_score}')
         self.ring_label = tkinter.Label(self.root, text=f'Rings: {gdv.curr_rings}')
         self.lives_label = tkinter.Label(self.root, text=f'Lives: {gdv.curr_lives}')
-        self.act_label = tkinter.Label(self.root, text=f'Act: {gdv.curr_act}')
+        self.act_label = tkinter.Label(self.root, text=f'{gdv.curr_act}')
 
         #   The Radio Buttons for deciding between Continuous Traning and Non-Continuous Training and
         # the variable the buttons will modifying when they are pressed on
