@@ -46,16 +46,16 @@ class action_name(Enum):
 
 class Action:
     # __________________________________________________________________________
-    def __init__(self, action, delay):
+    def __init__(self, action, delay, mutation=0.5):
         self.action = action
         self.delay = delay
-
+        self.mutation = mutation
+        
         self.ring_count = 0
         self.score_count = 0
         self.lives_count = 0
         self.act = ''
 
-        self.mutation = 0.50
 
     # __________________________________________________________________________
     def __str__(self):

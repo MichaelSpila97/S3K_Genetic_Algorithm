@@ -1,5 +1,7 @@
 import time
 import gdr
+import Test_Driver
+from copy import deepcopy
 
 # ______________________________________________________________________________
 #        This contains the collection of funciton that validate and stores the
@@ -11,12 +13,31 @@ curr_score = 0
 curr_lives = 3
 curr_act = ''
 
-# game_started = False
+at_start_screen = False
+training_start = False
 
+def reset_stats():
+    global curr_rings, curr_score, curr_lives, curr_act
+    curr_rings = 0
+    curr_score = 0
+    curr_lives = 3
+    curr_act = ''
 # ______________________________________________________________________________
 def get_core_stats():
     while True:
+        lives = deepcopy(curr_lives)
+        rings = deepcopy(curr_rings)
+        score = deepcopy(curr_score)
+        act = deepcopy(curr_act)
+
         validate_lives(gdr.live_grab())
+        validate_score(gdr.score_grab())
+        validate_rings(gdr.ring_grab())
+        validate_act()
+
+        detect_change = lives != curr_lives or rings != curr_rings or score != curr_score or act != curr_act
+        if detect_change:
+            Test_Driver.gui_func_qu.put('Update Texts')
         time.sleep(0.1)
 # ______________________________________________________________________________
 # Passes:
@@ -70,18 +91,15 @@ def validate_lives(lives):
     global curr_lives
 
     if lives == 'Could not obtain lives count':
-        print('Could not obtain lives count')
         return curr_lives
 
     # lives should not increase or decreases more than once at a time
     # Ex: lives 3 -> 2 or 3->4 is good
     #    lives 3 -> 0 or 3 -> 7 not good
     elif lives > curr_lives + 1 or lives < curr_lives - 1:
-        print('Lives increased or deceased to fast')
         return curr_lives
 
     else:
-        print('set new live count')
         curr_lives = int(lives)
         return curr_lives
 # ______________________________________________________________________________
@@ -106,16 +124,38 @@ def validate_act():
 
     return curr_act
 # _____________________________________________________________________________
-# returns the global variable that represented weather the game has started
-# Method not usable in current state
-# def gameStarted():
+# Function responsible for finiding out if training is aloud to start
+#
+# Returns:
+#        training_start: a boolean variable that tells wheather training can be
+#                        started
+def isTrainingStarted():
 
-    # global game_started
+    global training_start
 
-    # if game_started == False:
+    fring_str = 'Could not obtain ring count'
+    fscore_str = 'Could not obtain score'
+    flives_str = 'Could not obtain lives count'
 
-    # if  curr_rings != -1 and curr_score != -1 and curr_lives != -1:
-    # print('game has started')
-    # game_started = True
+    if gdr.ring_grab() == fring_str and gdr.score_grab() == fscore_str and gdr.live_grab() == flives_str:
+        training_start = False
+    else:
+        training_start = True
 
-    # return game_started
+    return training_start
+# _____________________________________________________________________________
+# Function responsible for finiding out if the game is at the start screen
+#
+# Returns:
+#        at_start_screen: a boolean variable that tells wheather the game is at
+#                         the start screen
+def isAtStartScreen():
+    global at_start_screen
+
+    if gdr.start_game_grab() == 'Go':
+        at_start_screen = True
+
+    else:
+        at_start_screen = False
+
+    return at_start_screen
