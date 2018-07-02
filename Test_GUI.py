@@ -106,7 +106,7 @@ class Test_GUI:
         data = []
 
         answer = filedialog.askopenfilename(parent=self.root, initialdir=os.getcwd(),
-        title="Please select a folder", filetypes = (('pickle files', '*.pickle')))
+        title="Please select a folder")
 
         data = filehandler.load_data(answer)
         self.request_training(data)
@@ -122,4 +122,4 @@ class Test_GUI:
         return [self.score_label, self.ring_label, self.lives_label, self.act_label]
 
     def getIsContinuous(self):
-        return self.iscontinuous
+        return self.iscontinuous.get()

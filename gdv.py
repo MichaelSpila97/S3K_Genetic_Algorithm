@@ -16,6 +16,12 @@ curr_act = ''
 at_start_screen = False
 training_start = False
 
+def reset_stats():
+    global curr_rings, curr_score, curr_lives, curr_act
+    curr_rings = 0
+    curr_score = 0
+    curr_lives = 3
+    curr_act = ''
 # ______________________________________________________________________________
 def get_core_stats():
     while True:

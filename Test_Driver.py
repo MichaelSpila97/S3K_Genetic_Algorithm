@@ -54,7 +54,7 @@ def begin_training(gen=[]):
 
     # If thier are entities in the gen list
     if gen:
-        #Gets Generation number from entities for file and directory nameing purposes
+        # Gets Generation number from entities for file and directory nameing purposes
         gen_num = gen[0].generation
 
         for entities in gen:
@@ -88,7 +88,6 @@ def begin_training(gen=[]):
 #        gen = List that contains entities that belong to the same generation
 #        gen_num: The number of the gneration that is being passed in.
 def process_data(gen, gen_num):
-
     print('cleaning data')
     entity_handler.clean_dna(gen)
 
@@ -105,6 +104,7 @@ def process_data(gen, gen_num):
         while not gdv.isAtStartScreen():
             print('Not at start')
 
+        gdv.reset_stats()
         start_next_game()
         begin_training(offspring)
 
@@ -116,7 +116,7 @@ def process_data(gen, gen_num):
 def start_next_game():
     print('Starting game..')
 
-    #Presses enter to move to save select screen
+    # Presses enter to move to save select screen
     time.sleep(5)
     keyboard.press('enter')
     time.sleep(0.1)
@@ -124,14 +124,14 @@ def start_next_game():
 
     time.sleep(5)
 
-    #Press left to move cursor over the no save selection
+    # Press left to move cursor over the no save selection
     keyboard.press('left')
     time.sleep(0.1)
     keyboard.release('left')
 
     time.sleep(1)
 
-    #Press enter to start the game
+    # Press enter to start the game
     keyboard.press('enter')
     time.sleep(0.2)
     keyboard.release('enter')

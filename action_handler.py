@@ -55,11 +55,11 @@ def action_driver(entity):
 
             # Creates a new action object based of current action in the old_list
             else:
-                action = action.Action(actions.getAction(), action.getDelay(), action.getMutation())
-                action.execute_action()
+                act = action.Action(actions.getAction(), actions.getDelay(), actions.getMutation())
+                act.execute_action()
 
-                entity.action_list.append(deepcopy(action))
-                action = None
+                entity.action_list.append(deepcopy(act))
+                act = None
 
             check_status(entity, list_place)
             list_place += 1
@@ -67,14 +67,14 @@ def action_driver(entity):
     print('Done replaying actions and creating new ones')
 
     list_place = len(entity.action_list) - 1
-    
+    print(f'list_place: {list_place}')
     # Continues to play and generate random action till the entity dies
     while entity.isAlive():
 
         ng.seed()
 
         # Generates and execute new action
-        new_action = action.Action(generate_action(), generate_delay())
+        new_action = action.Action(generate_action(), 1)
         new_action.execute_action()
 
         # Adds new action to entities action list
@@ -85,4 +85,5 @@ def action_driver(entity):
         # Checks status of entity
         check_status(entity, list_place)
         list_place += 1
+        print(f'list_place: {list_place}')
 # _______________________________________________________________________________________________________________________________

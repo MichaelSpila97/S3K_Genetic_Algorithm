@@ -289,7 +289,8 @@ def mutation_adjuster(action_list, index, amount, delay, direction):
 def reproduce(generation):
     mating_pool = assign_entities_to_pools(generation)
     config_mp = configure_mating_percents(deepcopy(mating_pool))
-    new_generation = choose_and_mate(config_mp)
+    gen_num = get_gen_num(generation[0])
+    new_generation = choose_and_mate(config_mp, gen_num)
     gen_num = generation[0].getGeneration()
     filehandler.save_data(new_generation, f'entity_data/Generation_{gen_num}/Offspring_gen_{gen_num}')
 
@@ -390,11 +391,9 @@ def configure_mating_percents(mating_pool):
 #
 # Returns:
 #           new_generation: The new generation created from the mating of parents entities
-def choose_and_mate(mating_pool):
+def choose_and_mate(mating_pool, gen_num):
     print('     Choosing and mating')
     choose_pool = choose_pool_creater(mating_pool)
-
-    gen_num = get_gen_num(mating_pool[0][1])
 
     new_generation = []
 
@@ -520,7 +519,6 @@ def attempt_mutation(gene):
     no_mut = 100 - yes_mut
     mut_list = ['Y'] * yes_mut + ['N'] * no_mut
 
-
     shuffle(mut_list)
     mut_choice = choice(mut_list)
 
@@ -578,4 +576,4 @@ def get_gen_num(entity):
         gen_num += ent_name[i]
         i += 1
     return int(gen_num)
-#____________________________________________________________________________________________
+# ____________________________________________________________________________________________
