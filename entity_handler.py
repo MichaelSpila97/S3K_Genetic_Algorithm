@@ -534,7 +534,7 @@ def attempt_mutation(gene):
     mut_choice = choice(mut_list)
 
     if mut_choice == 'Y':
-        return action.Action(ah.generate_action(), ah.generate_delay())
+        return action.Action(ah.generate_action(), 1)
     else:
         return gene
 #   Function that creates the choose pool used to choose parents for mating
