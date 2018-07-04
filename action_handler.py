@@ -67,7 +67,6 @@ def action_driver(entity):
     print('Done replaying actions and creating new ones')
 
     list_place = len(entity.action_list) - 1
-    print(f'list_place: {list_place}')
     # Continues to play and generate random action till the entity dies
     while entity.isAlive():
 
@@ -85,5 +84,4 @@ def action_driver(entity):
         # Checks status of entity
         check_status(entity, list_place)
         list_place += 1
-        print(f'list_place: {list_place}')
 # _______________________________________________________________________________________________________________________________

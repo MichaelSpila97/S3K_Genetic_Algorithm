@@ -1,7 +1,9 @@
 import time
+from copy import deepcopy
+
 import gdr
 import Test_Driver
-from copy import deepcopy
+
 
 # ______________________________________________________________________________
 #        This contains the collection of funciton that validate and stores the
@@ -17,6 +19,7 @@ at_start_screen = False
 training_start = False
 
 def reset_stats():
+    print('Reseting Stats for next Training Session')
     global curr_rings, curr_score, curr_lives, curr_act
     curr_rings = 0
     curr_score = 0

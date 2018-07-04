@@ -50,12 +50,11 @@ class Action:
         self.action = action
         self.delay = delay
         self.mutation = mutation
-        
+
         self.ring_count = 0
         self.score_count = 0
         self.lives_count = 0
         self.act = ''
-
 
     # __________________________________________________________________________
     def __str__(self):
