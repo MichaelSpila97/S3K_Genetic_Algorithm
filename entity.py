@@ -34,17 +34,19 @@ class Entity:
 Action: [{i}] {format(time, '.2f')}
             {self.action_list[i]}\n"""
             i = i + 1
-        return f"""{action_str}
+        return f"""
         Entity {self.name} Overall Stats:
                 Fitness Score: {self.fitness}
                 Generation: {self.generation}
                 Parents to this Entity: {self.parents}
-                Entity's Status: {self.alive}"""
+                Entity's Status: {self.alive}
+                Actions:
+                         {action_str}        """
 
 # ______________________________________________________________________________________________________________________________
     # This function directs living entities to attempt Sonic 3 and Knuckles
     def play_game(self):
-        print('playing game...')
+        print(f'{self.name} is Training')
         if self.isAlive():
             action_handler.action_driver(self)
         else:
@@ -58,7 +60,7 @@ Action: [{i}] {format(time, '.2f')}
 # ______________________________________________________________________________________________________________________________
     # Sets alive variable to false if it died in game
     def died(self):
-        print(f'entity is dead')
+        print(f'{self.name} is dead')
         self.alive = False
 
 # ___________________________________________________________________________________________________________________________

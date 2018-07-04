@@ -56,23 +56,23 @@ def begin_training(gen=[]):
     if gen:
         # Gets Generation number from entities for file and directory nameing purposes
         gen_num = gen[0].generation
-
+        print(f'Generation {gen_num} training has begun')
         for entities in gen:
             entities.play_game()
 
-        os.mkdir(f'{os.getcwd()}/entity_data/Generation_{gen_num}')
-        filehandler.save_data(gen, f'entity_data/Generation_{gen_num}/Raw_Gen_{gen_num}')
-
     # Else need to create three new entities that will compose generation 0
     else:
+        print(f'Generation {gen_num} training has begun')
         while gdv.curr_lives > 0:
 
             ent = deepcopy(entity.Entity(name=f'G0E{3 - (gdv.curr_lives - 1)}'))
             ent.play_game()
             gen.append(deepcopy(ent))
-        filehandler.save_data(gen, 'entity_data/Generation_0/Raw_gen_0')
 
-    print('Game over\nSaving Data..')
+    os.mkdir(f'{os.getcwd()}/entity_data/Generation_{gen_num}')
+    filehandler.save_data(gen, f'entity_data/Generation_{gen_num}/Raw_Gen_{gen_num}')
+
+    print(f'Generation {gen_num} training has ended')
 
     gui_func_qu.put('Toggle Button')
 
@@ -88,21 +88,25 @@ def begin_training(gen=[]):
 #        gen = List that contains entities that belong to the same generation
 #        gen_num: The number of the gneration that is being passed in.
 def process_data(gen, gen_num):
-    print('cleaning data')
+    print(f'\nProcessing Generation {gen_num} data...\n')
+    print('1) Cleaning data\n')
     entity_handler.clean_dna(gen)
 
-    print('Evaluating data')
+    print('2) Evaluating data\n')
     clean_gen = filehandler.load_data(f'entity_data/Generation_{gen_num}/Clean_gen_{gen_num}.pickle')
     entity_handler.eval_entity(clean_gen)
 
-    print('Creating offspring')
     eval_gen = filehandler.load_data(f'entity_data/Generation_{gen_num}/Eval_gen_{gen_num}.pickle')
+    for entities in eval_gen:
+        print(f"{entities.getName()}'s Fitness Score: {entities.getFitness()}")
+    print('\n3) Creating offspring\n')
     entity_handler.reproduce(eval_gen)
 
     if continue_training == 1:
+        print(f'Movining on to Generation {gen_num + 1} training')
         offspring = filehandler.load_data(f'entity_data/Generation_{gen_num}/Offspring_gen_{gen_num}.pickle')
         while not gdv.isAtStartScreen():
-            print('Not at start')
+            pass
 
         gdv.reset_stats()
         start_next_game()
@@ -114,7 +118,7 @@ def process_data(gen, gen_num):
 # get Sonic only a character since the game remeber your selection of characters in the no save
 # selection.
 def start_next_game():
-    print('Starting game..')
+    print('Starting game..\n')
 
     # Presses enter to move to save select screen
     time.sleep(5)

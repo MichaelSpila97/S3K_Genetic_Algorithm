@@ -1,8 +1,8 @@
 from copy import deepcopy
 from random import shuffle, choice, seed
+
 import action
 import action_handler as ah
-
 import filehandler
 import entity
 
@@ -411,7 +411,6 @@ def choose_and_mate(mating_pool, gen_num):
     while len(new_generation) < 3:
         parents = choose_parents(choose_pool)
         new_generation.append(create_new_entity(parents, gen_num, len(new_generation) + 1))
-        print(f'NG: {new_generation}')
 
     print('     Finish Choosing and mating')
     return new_generation
