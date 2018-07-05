@@ -69,5 +69,5 @@
              evolve toward stability
 
 
-These problems drives me away from using this version of the algorithm to test out the question of this project. 
+The previously stated problems drives me away from using this version of the algorithm to test out the question of this project. 
 The amount time it takes and the amount of luck required for it progress in the game make it a very naive choice when it comes to answering the question of this project in an efficient time.
