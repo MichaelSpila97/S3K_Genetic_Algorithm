@@ -2,6 +2,7 @@
 import random
 from copy import deepcopy
 
+from enumval import ActionName
 import action
 
 ng = random.Random()
@@ -9,7 +10,7 @@ ng = random.Random()
 # _______________________________________________________________________________________________________________________________
 # Function responsible for generating random action
 def generate_action():
-    return ng.choice(list(action.action_name))
+    return ng.choice(list(ActionName))
 
 # _______________________________________________________________________________________________________________________________
 # Function responsible for generating random delay

@@ -1,17 +1,17 @@
 
 from copy import deepcopy
+from buttonpress import start_next_game
 
-import time
+
 import threading
 import queue
-import keyboard
 import os
 
 import gdv
 import entity
 import filehandler
 import entity_handler
-from Test_GUI import Test_GUI
+import traininggui
 
 gui_func_qu = queue.Queue(maxsize=5)
 continue_training = 0
@@ -27,7 +27,7 @@ def main():
     stat_thread.start()
 
     # Builds Gui that displays in game stats and used to start test
-    Test_GUI()
+    traininggui.GUI()
 
 
 # ______________________________________________________________________________
@@ -111,34 +111,6 @@ def process_data(gen, gen_num):
         gdv.reset_stats()
         start_next_game()
         begin_training(offspring)
-
-# ______________________________________________________________________________
-#       Fuction that execute necessary button press to get from the start screen of Sonic
-# 3 and Knukles to a new game. Note you will have to scoll up the first time this is executed to
-# get Sonic only a character since the game remeber your selection of characters in the no save
-# selection.
-def start_next_game():
-    print('Starting game..\n')
-
-    # Presses enter to move to save select screen
-    time.sleep(5)
-    keyboard.press('enter')
-    time.sleep(0.1)
-    keyboard.release('enter')
-
-    time.sleep(5)
-
-    # Press left to move cursor over the no save selection
-    keyboard.press('left')
-    time.sleep(0.1)
-    keyboard.release('left')
-
-    time.sleep(1)
-
-    # Press enter to start the game
-    keyboard.press('enter')
-    time.sleep(0.2)
-    keyboard.release('enter')
 
 # ______________________________________________________________________________
 
