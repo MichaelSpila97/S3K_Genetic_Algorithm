@@ -1,15 +1,15 @@
 #Sonic3-K_Game_Genetic_Algorithm
 
 
-                                    Algorithm Version 2 Description
+                                          Algorithm Version 2 Description
 
-                                   Name: Segmented Stability Algorithm
-                                            (DO NOT USE)
+                                         Name: Segmented Stability Algorithm
+                                                      
 
-                     The Segmented Stability Algorithm works on the idea of the algorithm training entities on smaller
-                but equal segments of the game over and over again until an entities fitness rating is over 90%
-                then that entities DNA is used by other entities in futher genertaion as they tackle the next
-                segment of the game. The algorithm will be preformed as flowed:
+                 The Segmented Stability Algorithm works on the idea of the algorithm training entities on 
+             smaller but equal segments of the game over and over again until an entities fitness rating is 
+             over 90% then that entities DNA is used by other entities in futher genertaion as they tackle 
+             the next segment of the game. The algorithm will be preformed as flowed:
 
 
                  1. All entities in a generation play till they play out a certain set number of action:
