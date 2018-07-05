@@ -1,7 +1,6 @@
-import keyboard
-import time
-from enum import Enum
 
+from enumval import ActionName
+import buttonpress as bp
 import gdv
 # ______________________________________________________________________________
 #   Action is an object that represent a single action executed by the computer
@@ -29,20 +28,6 @@ import gdv
 #   mutation:    The rate in which an action will change to a diffrent action
 #                during the repoduction phase
 # ______________________________________________________________________________
-
-
-class action_name(Enum):
-    move_left = 'left'
-    move_right = 'right'
-    press_down = 'down'
-    press_up = 'up'
-    jump_up = 'a'
-    jump_right = ['right', 'a']
-    jump_left = ['left', 'a']
-    wait = ''
-    spindash = ['down', 'a']
-    jump_shield = ['a', 'a']
-
 
 class Action:
     # __________________________________________________________________________
@@ -79,49 +64,20 @@ class Action:
     # The Function that execute the action through keyboard presses
     def execute_action(self):
 
-        # Execution instructions for waiting
-        if self.action == action_name.wait:
-            time.sleep(self.delay)
-
         # Execution instructions for spindash
-        elif self.action == action_name.spindash:
-            keyboard.press(self.action.value[0])
-            time.sleep(self.delay)
-
-            for x in range(0, 3):
-                keyboard.press(self.action.value[1])
-                time.sleep(0.3)
-                keyboard.release(self.action.value[1])
-                time.sleep(0.1)
-
-            keyboard.release(self.action.value[0])
+        if self.action == ActionName.spindash:
+            bp.spindash(self.action.value, self.delay)
 
         # Execution instructions for jump_shield
-        elif self.action == action_name.jump_shield:
+        elif self.action == ActionName.jump_shield:
+            bp.jump_shield(self.action.value, self.delay)
 
-            keyboard.press(self.action.value[0])
-            time.sleep(self.delay)
-            keyboard.release(self.action.value[0])
-            time.sleep(0.1)
-            keyboard.press(self.action.value[1])
-            time.sleep(0.1)
-            keyboard.release(self.action.value[1])
-
-        # Execution instructions for jump_right and jump_left
+        # Execution instructions for jump_right or jump_left
         elif isinstance(self.action.value, list):
-            keyboard.press(self.action.value[0])
-            time.sleep(0.2)
-            keyboard.press(self.action.value[1])
-            time.sleep(self.delay)
-            keyboard.release(self.action.value[1])
-            keyboard.release(self.action.value[0])
-
+            bp.jump_left_or_right(self.action.value, self.delay)
         # Execution instructions for every other action
         else:
-
-            keyboard.press(self.action.value)
-            time.sleep(self.delay)
-            keyboard.release(self.action.value)
+            bp.general_action(self.action.value, self.delay)
 
         # Set stats after execution is complete
         self.set_core_stats()

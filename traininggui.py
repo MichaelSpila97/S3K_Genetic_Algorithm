@@ -4,11 +4,11 @@ import os
 import threading
 
 import gdv
-import Test_Driver
+import trainingdriver
 import filehandler
 
 
-class Test_GUI:
+class GUI:
 
     def __init__(self):
         self.root = tkinter.Tk()
@@ -38,7 +38,7 @@ class Test_GUI:
         self.packer()
 
         #   Queue and method to handle quene request are initlized here
-        self.queue = Test_Driver.gui_func_qu
+        self.queue = trainingdriver.gui_func_qu
         self.gui_request_handler()
 
         self.root.mainloop()
@@ -90,15 +90,15 @@ class Test_GUI:
     #   Method sets the global Test Driver continue_training varibale to the value of
     # self.iscontinuous
     def radio_selection(self):
-        Test_Driver.continue_training = self.getIsContinuous()
+        trainingdriver.continue_training = self.getIsContinuous()
 
     #   Method that starts a thread and begins the training of entities
     # Passes:
     #           gen: a list of entities defaults to an empty list if no lists are
-    # passed in
+    # passed inStatNumberMaps.act_e_map
     def request_training(self, gen=[]):
         print('request testing')
-        training_thread = threading.Thread(target=Test_Driver.begin_training, args=[gen], daemon=True)
+        training_thread = threading.Thread(target=trainingdriver.begin_training, args=[gen], daemon=True)
         training_thread.start()
 
     #   Method that loads data, in the .pickle format, that the user chooses
