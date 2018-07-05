@@ -1,5 +1,10 @@
 
                         		Sonic 3 And Knuckles Genetic Algorithm Project
+					
+					PLEASE USE CODE ON EITHER FROM VER1 OR VER2 BRANCH
+					THE MASTER AS OF NOW HAS AN OUTDATTED VERSION OF 
+				 	THE ALGORITHM FROM VER 1 BRANCH
+					
 
           		The goal of the project is to see if a genetic algorithm could complete sonic 3&k 
      		with only the core statistic provided to it. I have so far built a functional but rough 
@@ -30,9 +35,12 @@
 
                         You can find the specific screen position and expected pixels
                     summation in enumval.py. You also will have change what pixel the program 
-		    is looking for when doing pixel summation in gdr.py in the calc_num_id method. 
+		    is looking for when doing pixel summation in gdr.py in the calc_num_id method.
 		    In upcoming version of this project I will try to make a more convenient way of 
 		    changing these value.
+		    
+		    PS: enumval.py is only on Ver1 branch as of now. So please use Ver1 if you want to 
+		        mess around with this project.
 
       2) Do I need any module outside the standard library for this program.
 
@@ -77,11 +85,8 @@
               The more stable a entities gene sequence is then the more fit that entity
               and the better chance they have at passing of their genes
 
-        4) Which Version is currently on the master?
 
-           Answer: Version 1
-
-        5) General Todo's for the entire projects
+        4) General Todo's for the entire projects
 
             1) Polish Version One to be more readable before working on Version 2
             2) Use Version One to create Version 2
