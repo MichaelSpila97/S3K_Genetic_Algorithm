@@ -14,8 +14,10 @@ class GUI:
         self.root = tkinter.Tk()
 
         # No-Data Training Button and Load_data Training Button
-        self.ndtrain_button = tkinter.Button(self.root, text="No Data Training", command=self.request_training)
-        self.ldtrain_button = tkinter.Button(self.root, text="Load Data Training", command=self.load_data)
+        self.ndtrain_button = tkinter.Button(self.root, text="No Data Training",
+                                            command=self.request_training)
+        self.ldtrain_button = tkinter.Button(self.root, text="Load Data Training",
+                                            command=self.load_data)
 
         # Statistics Labels
         self.score_label = tkinter.Label(self.root, text=f'Score: {gdv.curr_score}')
@@ -26,15 +28,16 @@ class GUI:
         #   The Radio Buttons for deciding between Continuous Traning and Non-Continuous Training and
         # the variable the buttons will modifying when they are pressed on
         self.iscontinuous = tkinter.IntVar()
-        self.conrb = tkinter.Radiobutton(self.root, text='Continuous Traning', variable=self.iscontinuous,
-        value=1, command=self.radio_selection)
-        self.noncrb = tkinter.Radiobutton(self.root, text='Non-Continuous Training', variable=self.iscontinuous,
-        value=0, command=self.radio_selection)
+        self.conRB = tkinter.Radiobutton(self.root, text='Continuous Traning',
+                     variable=self.iscontinuous, value=1, command=self.radio_selection)
+
+        self.noncRB = tkinter.Radiobutton(self.root, text='Non-Continuous Training',
+                      variable=self.iscontinuous, value=0, command=self.radio_selection)
 
         #   Object List for the packer method to use when packing all object into the GUI
         self.obj_list = [self.score_label, self.ring_label, self.lives_label,
                         self.act_label, self.ndtrain_button, self.ldtrain_button,
-                        self.conrb, self.noncrb]
+                        self.conRB, self.noncRB]
         self.packer()
 
         #   Queue and method to handle quene request are initlized here
@@ -54,14 +57,14 @@ class GUI:
     #                  2) Toggling Buttons State
     def gui_request_handler(self):
         if not self.queue.empty():
-            while not self.queue.empty():
-                request = self.queue.get()
 
-                if request == 'Update Texts':
-                    self.change_labels_texts()
+            request = self.queue.get()
 
-                elif request == 'Toggle Button':
-                    self.toggle_buttons_state()
+            if request == 'Update Texts':
+                self.change_labels_texts()
+
+            elif request == 'Toggle Button':
+                self.toggle_buttons_state()
 
         self.root.after('100', self.gui_request_handler)
 

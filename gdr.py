@@ -101,18 +101,19 @@ def calc_num_id(num_image, num_map):
 
     for pixels in image:
         # If and else determines which types of pixels will be used in the calculations
-        # Used for determining the screenshots for lives
+        # Used for determining the screenshots for live
         if num_map.get('152') == 0:
-            if pixels[0] == 224 and pixels[1] == 224 and pixels[2] == 225:
+            if pixels == (224, 224, 225):
                 result = result + 1
+
         # Used for determining if the screenshot indicates the game is at the start screen
         elif num_map.get('774') == 'Go':
-            if pixels[0] == 224 and pixels[1] == 0 and pixels[2] == 0:
+            if pixels == (224, 0, 0):
                 result = result + 1
+
         # Used for determing all other screenshots
         else:
-            if pixels[0] == 224 and pixels[1] == 224 and pixels[2] == 225 or pixels[0] == 160 and pixels[1] == 160 and pixels[2] == 225:
-
+            if pixels == (224, 224, 225) or pixels == (160, 160, 225):
                 result = result + 1
 
     return result

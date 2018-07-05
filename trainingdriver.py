@@ -1,7 +1,5 @@
 
-from copy import deepcopy
 from buttonpress import start_next_game
-
 
 import threading
 import queue
@@ -37,7 +35,7 @@ def main():
 #
 # Passes:
 #       gen: the list that contains entities from a single generation. Is empty list if nothing is passed.
-def begin_training(gen=[]):
+def begin_training(gen=None):
 
     gen_num = 0
 
@@ -65,9 +63,9 @@ def begin_training(gen=[]):
         print(f'Generation {gen_num} training has begun')
         while gdv.curr_lives > 0:
 
-            ent = deepcopy(entity.Entity(name=f'G0E{3 - (gdv.curr_lives - 1)}'))
+            ent = entity.Entity(name=f'G0E{3 - (gdv.curr_lives - 1)}')
             ent.play_game()
-            gen.append(deepcopy(ent))
+            gen.append(ent)
 
     os.mkdir(f'{os.getcwd()}/entity_data/Generation_{gen_num}')
     filehandler.save_data(gen, f'entity_data/Generation_{gen_num}/Raw_Gen_{gen_num}')

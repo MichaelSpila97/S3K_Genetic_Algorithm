@@ -42,12 +42,10 @@ def action_driver(entity):
     if entity.action_list:
         print('has action to replay')
 
-        list_place = 0
-
         old_list = deepcopy(entity.action_list)
         entity.setActionList([])
 
-        for actions in old_list:
+        for list_place, actions in enumerate(old_list):
 
             # Stops action replay if the entity dies
             if not entity.isAlive():
@@ -56,18 +54,19 @@ def action_driver(entity):
 
             # Creates a new action object based of current action in the old_list
             else:
-                act = action.Action(actions.getAction(), actions.getDelay(), actions.getMutation())
+                act = action.Action(actions.getAction(),
+                                    actions.getDelay(),
+                                    actions.getMutation())
+
                 act.execute_action()
 
                 entity.action_list.append(deepcopy(act))
                 act = None
 
             check_status(entity, list_place)
-            list_place += 1
-
-    print('Done replaying actions and creating new ones')
 
     list_place = len(entity.action_list) - 1
+
     # Continues to play and generate random action till the entity dies
     while entity.isAlive():
 

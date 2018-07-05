@@ -122,9 +122,8 @@ def calc_fitness(generation):
 # Returns:
 #        pos_gen: the evaluated Generation
 def pos_dna_eval(generation):
-    pos_gen = generation
 
-    for ent in pos_gen:
+    for ent in generation:
 
         ring_keeper = 0
         score_keeper = 0
@@ -158,8 +157,13 @@ def pos_dna_eval(generation):
 
                 reset_delay = True
 
-            Reach_end_of_act = ent.action_list[i].getAct() == 'Act 1 End' or ent.action_list[i].getAct() == 'Act 2 End' and allow_end_act_reward is True
-            Started_Next_Act = ent.action_list[i].getAct() == 'Act 1' or ent.action_list[i].getAct() == 'Act 2' and allow_end_act_reward is False
+            Reach_end_of_act = ent.action_list[i].getAct() == 'Act 1 End' or \
+                               ent.action_list[i].getAct() == 'Act 2 End' and \
+                               allow_end_act_reward is True
+
+            Started_Next_Act = ent.action_list[i].getAct() == 'Act 1' or \
+                               ent.action_list[i].getAct() == 'Act 2' and \
+                               allow_end_act_reward is False
 
             if Reach_end_of_act:
                 ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.5, 14400, 'dec'))
@@ -178,7 +182,7 @@ def pos_dna_eval(generation):
 
             i = i + 1
 
-    return pos_gen
+    return generation
 
 #   Function handles the negavtive evaluation of the dna sequence
 # of each enitiy in the generation gen_list
@@ -188,7 +192,6 @@ def pos_dna_eval(generation):
 # Returns:
 #        neg_gen: the evaluated Generation
 def neg_dna_eval(generation):
-    neg_gen = generation
 
     for ent in generation:
 
@@ -248,11 +251,9 @@ def neg_dna_eval(generation):
                 sdelay_keeper = 0
                 reset_sdelay_keeper = False
 
-            i = i + 1
+            i += 1
 
-        ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.25, 120, 'inc'))
-
-    return neg_gen
+    return generation
 
 # Function controls the adjustment of mutation values of action object from an action_list
 # Passes:

@@ -14,10 +14,10 @@ import action_handler
 class Entity:
 
 # _______________________________________________________________________________________________________________________________
-    def __init__(self, name, act_list=[], parents=None):
+    def __init__(self, name, act_list=None, parents=None):
 
         self.name = name
-        self.action_list = act_list
+        self.action_list = act_list or []
         self.fitness = 0
         self.generation = 0
         self.parents = parents
@@ -28,12 +28,12 @@ class Entity:
         action_str = ''
         i = 0
         time = 0
-        while i < len(self.action_list):
-            time = time + self.action_list[i].getDelay()
+        for i, action in enumerate(self.action_list):
+            time = time + action.getDelay()
             action_str = action_str + f"""
 Action: [{i}] {format(time, '.2f')}
-            {self.action_list[i]}\n"""
-            i = i + 1
+              {self.action_list[i]}\n"""
+
         return f"""
         Entity {self.name} Overall Stats:
                 Fitness Score: {self.fitness}
