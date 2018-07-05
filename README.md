@@ -1,10 +1,10 @@
 #Sonic3-K_Game_Genetic_Algorithm
 
 
-                            Algorithm Ver 1 Description
+                                       Algorithm Ver 1 Description
 
-                            Name: Whole Stability Algorithm
-                                      (DO NOT USE)
+                                       Name: Whole Stability Algorithm
+                                                (DO NOT USE)
 
     The Whole Stability Algorithm main and only goal is to complete game and produce an 
     action list with 90% or high stability rating. The Stability rating is also known as 
