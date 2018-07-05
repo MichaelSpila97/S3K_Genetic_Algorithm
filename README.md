@@ -6,7 +6,9 @@
                             Name: Whole Stability Algorithm
                                       (DO NOT USE)
 
-    The Whole Stability Algorithm main and only goal is to complete game and produce a action list with 90% or high stability rating. The Stability rating is also known as am entities fitness score. Below is a step by step instruction on how the algorithm works:
+    The Whole Stability Algorithm main and only goal is to complete game and produce an 
+    action list with 90% or high stability rating. The Stability rating is also known as 
+    an entities fitness score. Below is a step by step instruction on how the algorithm works:
 
 
             1. All entities in a generation play till death or time runs out in the game
@@ -67,4 +69,5 @@
              evolve toward stability
 
 
-          These problems drives me away from using this version of the algorithm to test out the question of this project. The amount time it takes and the amount of luck required for it progress in the game make it a very naive choice when it comes to answering the question of this project in an efficient time.
+These problems drives me away from using this version of the algorithm to test out the question of this project. 
+The amount time it takes and the amount of luck required for it progress in the game make it a very naive choice when it comes to answering the question of this project in an efficient time.
