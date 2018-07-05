@@ -6,7 +6,7 @@
                                    Name: Segmented Stability Algorithm
                                             (DO NOT USE)
 
-                     The Segmented Stability Algorithm works on the idea of the algorithm traing entitiy on smaller
+                     The Segmented Stability Algorithm works on the idea of the algorithm training entities on smaller
                 but equal segments of the game over and over again until an entities fitness rating is over 90%
                 then that entities DNA is used by other entities in futher genertaion as they tackle the next
                 segment of the game. The algorithm will be preformed as flowed:
