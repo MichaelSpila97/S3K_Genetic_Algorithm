@@ -45,22 +45,32 @@ def jump_left_or_right(action, delay):
 
 def start_next_game():
 
-        # Presses enter to move to save select screen
-        time.sleep(5)
-        keyboard.press('enter')
-        time.sleep(0.1)
-        keyboard.release('enter')
+    # Presses enter to move to save select screen
+    time.sleep(5)
+    keyboard.press('enter')
+    time.sleep(0.1)
+    keyboard.release('enter')
 
-        time.sleep(5)
+    time.sleep(5)
 
-        # Press left to move cursor over the no save selection
-        keyboard.press('left')
-        time.sleep(0.1)
-        keyboard.release('left')
+    # Press left to move cursor over the no save selection
+    keyboard.press('left')
+    time.sleep(0.1)
+    keyboard.release('left')
 
-        time.sleep(1)
+    time.sleep(1)
 
-        # Press enter to start the game
-        keyboard.press('enter')
-        time.sleep(0.2)
-        keyboard.release('enter')
+    # Press enter to start the game
+    keyboard.press('enter')
+    time.sleep(0.2)
+    keyboard.release('enter')
+
+def save_state():
+    keyboard.press('F2')
+    time.sleep(3)
+    keyboard.release('F2')
+
+def load_state():
+    keyboard.press('F3')
+    time.sleep(3)
+    keyboard.release('F3')

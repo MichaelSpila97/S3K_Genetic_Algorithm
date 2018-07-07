@@ -14,7 +14,7 @@ import action_handler
 class Entity:
 
 # _______________________________________________________________________________________________________________________________
-    def __init__(self, name, act_list=None, parents=None):
+    def __init__(self, name, act_list=None, parents=None, dna_cap=100):
 
         self.name = name
         self.action_list = act_list or []
@@ -22,6 +22,7 @@ class Entity:
         self.generation = 0
         self.parents = parents
         self.alive = True
+        self.dna_cap = dna_cap
 
 # ______________________________________________________________________________________________________________________________
     def __str__(self):

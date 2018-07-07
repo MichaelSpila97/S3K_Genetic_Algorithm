@@ -35,9 +35,10 @@ def main():
 #
 # Passes:
 #       gen: the list that contains entities from a single generation. Is empty list if nothing is passed.
-def begin_training(gen=None):
+def begin_training(num_of_entities, gen=None):
 
     gen_num = 0
+    total_entities = num_of_entities
 
     # Turns off Buttons so no more testing request can be made till testing is over
     gui_func_qu.put('Toggle Button')
@@ -61,11 +62,12 @@ def begin_training(gen=None):
     # Else need to create three new entities that will compose generation 0
     else:
         print(f'Generation {gen_num} training has begun')
-        while gdv.curr_lives > 0:
+        while num_of_entities > 0:
 
-            ent = entity.Entity(name=f'G0E{3 - (gdv.curr_lives - 1)}')
+            ent = entity.Entity(name=f'G0E{total_entities - (num_of_entities - 1)}')
             ent.play_game()
             gen.append(ent)
+            num_of_entities -= 1
 
     os.mkdir(f'{os.getcwd()}/entity_data/Generation_{gen_num}')
     filehandler.save_data(gen, f'entity_data/Generation_{gen_num}/Raw_Gen_{gen_num}')
@@ -87,17 +89,12 @@ def begin_training(gen=None):
 #        gen_num: The number of the gneration that is being passed in.
 def process_data(gen, gen_num):
     print(f'\nProcessing Generation {gen_num} data...\n')
-    print('1) Cleaning data\n')
     entity_handler.clean_dna(gen)
 
-    print('2) Evaluating data\n')
     clean_gen = filehandler.load_data(f'entity_data/Generation_{gen_num}/Clean_gen_{gen_num}.pickle')
     entity_handler.eval_entity(clean_gen)
 
     eval_gen = filehandler.load_data(f'entity_data/Generation_{gen_num}/Eval_gen_{gen_num}.pickle')
-    for entities in eval_gen:
-        print(f"{entities.getName()}'s Fitness Score: {entities.getFitness()}")
-    print('\n3) Creating offspring\n')
     entity_handler.reproduce(eval_gen)
 
     if continue_training == 1:

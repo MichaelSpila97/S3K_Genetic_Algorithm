@@ -1,5 +1,6 @@
 import tkinter
 from tkinter import filedialog
+from tkinter import messagebox
 import os
 import threading
 
@@ -13,32 +14,40 @@ class GUI:
     def __init__(self):
         self.root = tkinter.Tk()
 
-        # No-Data Training Button and Load_data Training Button
-        self.ndtrain_button = tkinter.Button(self.root, text="No Data Training",
-                                            command=self.request_training)
-        self.ldtrain_button = tkinter.Button(self.root, text="Load Data Training",
-                                            command=self.load_data)
-
         # Statistics Labels
         self.score_label = tkinter.Label(self.root, text=f'Score: {gdv.curr_score}')
         self.ring_label = tkinter.Label(self.root, text=f'Rings: {gdv.curr_rings}')
         self.lives_label = tkinter.Label(self.root, text=f'Lives: {gdv.curr_lives}')
         self.act_label = tkinter.Label(self.root, text=f'{gdv.curr_act}')
 
+        self.entity_num_L = tkinter.Label(self.root, text='Enter Number Of Entities(Default=10): ')
+        self.entity_num_E = tkinter.Entry(self.root)
+        self.entity_num_E.insert(2, 10)
+
         #   The Radio Buttons for deciding between Continuous Traning and Non-Continuous Training and
         # the variable the buttons will modifying when they are pressed on
         self.iscontinuous = tkinter.IntVar()
         self.conRB = tkinter.Radiobutton(self.root, text='Continuous Traning',
-                     variable=self.iscontinuous, value=1, command=self.radio_selection)
+                     variable=self.iscontinuous, value=1,
+                     command=self.radio_selection)
 
         self.noncRB = tkinter.Radiobutton(self.root, text='Non-Continuous Training',
-                      variable=self.iscontinuous, value=0, command=self.radio_selection)
+                      variable=self.iscontinuous, value=0,
+                      command=self.radio_selection)
+
+        # No-Data Training Button and Load_data Training Button
+        self.ndtrain_button = tkinter.Button(self.root, text="No Data Training",
+                                            command=self.request_training)
+        self.ldtrain_button = tkinter.Button(self.root, text="Load Data Training",
+                                            command=self.load_data)
 
         #   Object List for the packer method to use when packing all object into the GUI
         self.obj_list = [self.score_label, self.ring_label, self.lives_label,
-                        self.act_label, self.ndtrain_button, self.ldtrain_button,
-                        self.conRB, self.noncRB]
-        self.packer()
+                        self.act_label, [self.entity_num_L, self.entity_num_E],
+                        [self.conRB, self.noncRB],
+                        [self.ndtrain_button, self.ldtrain_button]]
+
+        self.create_grid()
 
         #   Queue and method to handle quene request are initlized here
         self.queue = trainingdriver.gui_func_qu
@@ -47,9 +56,13 @@ class GUI:
         self.root.mainloop()
 
     #   Method packs all GUI Objects
-    def packer(self):
-        for obj in self.obj_list:
-            obj.pack()
+    def create_grid(self):
+        for row_count, obj in enumerate(self.obj_list):
+            if isinstance(obj, list):
+                for column_count, item in enumerate(obj):
+                    item.grid(row=row_count, column=column_count)
+            else:
+                obj.grid(row=row_count)
 
     #       Method handles the request that come in to the self.queue
     # Request Supported:
@@ -100,11 +113,19 @@ class GUI:
     #           gen: a list of entities defaults to an empty list if no lists are
     # passed inStatNumberMaps.act_e_map
     def request_training(self, gen=[]):
-        print('request testing')
-        training_thread = threading.Thread(target=trainingdriver.begin_training, args=[gen], daemon=True)
-        training_thread.start()
 
-    #   Method that loads data, in the .pickle format, that the user chooses
+        num_entity = 0
+        try:
+            num_entity = int(self.entity_num_E.get())
+            if num_entity < 1 or num_entity > 10:
+                raise ValueError
+            training_thread = threading.Thread(target=trainingdriver.begin_training, args=[num_entity, gen], daemon=True)
+            training_thread.start()
+
+        except ValueError:
+            messagebox.showerror("Error", "Inputed Invalid Value.\nPlease enter an positve non-zero Integer <= 10")
+
+    #  Method that loads data, in the .pickle format, that the user chooses
     def load_data(self):
         data = []
 
