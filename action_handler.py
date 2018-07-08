@@ -36,39 +36,19 @@ def check_status(entity, list_place):
 # from its action list
 # Passes:
 #       entity: an Entity Object
-def action_driver(entity):
+def master_driver(master_entity):
 
     # If entity has already actions in its action list
-    if entity.action_list:
-        print('has action to replay')
 
-        old_list = deepcopy(entity.action_list)
-        entity.setActionList([])
+    print('The master entity has actions to play out')
 
-        for list_place, actions in enumerate(old_list):
+    for list_place, actions in enumerate(master_entity.getActionList()):
+            actiond.execute_action()
+            check_status(list_place, master_entity.getActionList())
 
-            # Stops action replay if the entity dies
-            if not entity.isAlive():
-                print('Entity died while replaying actions')
-                return
 
-            # Creates a new action object based of current action in the old_list
-            else:
-                act = action.Action(actions.getAction(),
-                                    actions.getDelay(),
-                                    actions.getMutation())
-
-                act.execute_action()
-
-                entity.action_list.append(deepcopy(act))
-                act = None
-
-            check_status(entity, list_place)
-
-    list_place = len(entity.action_list) - 1
-
-    # Continues to play and generate random action till the entity dies
-    while entity.isAlive():
+def generate_driver(entity):
+    for list_place in range(entity.getDNACap()):
 
         ng.seed()
 
@@ -84,4 +64,17 @@ def action_driver(entity):
         # Checks status of entity
         check_status(entity, list_place)
         list_place += 1
+
+def replay_driver(entity):
+
+    for listplace, actions in enumerate(ntity.getActionList()):
+
+        actions.execute_action()
+
+        check_status(entity, listplace)
+
+        if not entity.isAlive()
+            return
+
+
 # _______________________________________________________________________________________________________________________________

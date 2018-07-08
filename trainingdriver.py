@@ -76,7 +76,7 @@ def begin_training(num_of_entities, gen=None):
 
     gui_func_qu.put('Toggle Button')
 
-    process_data(gen, gen_num)
+    process_data(gen,num_of_entities)
 # ______________________________________________________________________________
 #   Function that process the newly generated generation data from a training session .
 # It Cleans the data of errors, evaluated each entities data and fitness, and then
@@ -87,24 +87,20 @@ def begin_training(num_of_entities, gen=None):
 # Passes:
 #        gen = List that contains entities that belong to the same generation
 #        gen_num: The number of the gneration that is being passed in.
-def process_data(gen, gen_num):
-    print(f'\nProcessing Generation {gen_num} data...\n')
+def process_data(gen, num_of_entities):
+    print(f'\nProcessing Generation {gen[0].getGeneration()} data...\n')
     entity_handler.clean_dna(gen)
 
     clean_gen = filehandler.load_data(f'entity_data/Generation_{gen_num}/Clean_gen_{gen_num}.pickle')
     entity_handler.eval_entity(clean_gen)
 
     eval_gen = filehandler.load_data(f'entity_data/Generation_{gen_num}/Eval_gen_{gen_num}.pickle')
-    entity_handler.reproduce(eval_gen)
+    entity_handler.reproduce(eval_gen, num_of_entities)
 
     if continue_training == 1:
-        print(f'Movining on to Generation {gen_num + 1} training')
+        print(f'Movining on to Generation {gen[0].getGeneration() training')
         offspring = filehandler.load_data(f'entity_data/Generation_{gen_num}/Offspring_gen_{gen_num}.pickle')
-        while not gdv.isAtStartScreen():
-            pass
-
         gdv.reset_stats()
-        start_next_game()
         begin_training(offspring)
 
 # ______________________________________________________________________________

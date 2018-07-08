@@ -127,28 +127,44 @@ def pos_dna_eval(generation):
 
         ring_keeper = 0
         score_keeper = 0
+        lives_keeper = ent.getActionList()[0].getLivesCount()
         delay_keeper = 0
 
         reset_delay = False
         allow_end_act_reward = True
 
-        i = 0
 
-        curr_lives = ent.action_list[i].getLivesCount()
+        for i, actions in enumerate(ent.getActionList()):
 
-        while ent.action_list[i].getLivesCount() >= curr_lives:
+            # Actions to Reward:
+            rings_or_score_increased = ring_keeper < actions.getRingCount() or \
+                                   score_keeper < actions.getScoreCount():
 
-            delay_keeper = delay_keeper + ent.action_list[i].getDelay()
+            lives_increased = actions.getLivesCount() > lives_keeper
 
+
+            Reach_end_of_act = actions.getAct() == 'Act 1 End' and \
+                               allow_end_act_reward is True
+
+            Reach_end_of_zone = action.getAct() == 'Act 2 End' and \
+                                allow_end_act_reward is True
+
+            Started_Next_Act = actions.getAct() == 'Act 1' or \
+                               actions.getAct() == 'Act 2' and \
+                               allow_end_act_reward is False
+
+            # Modifiers to actions:
+            in_last_five_seconds = delay_keeper <= 5
+
+            delay_keeper = delay_keeper + actions.getDelay()
             #   Positive evaluation for the current action and previous action
             # will occur if the ring or score count has increased
-            if ring_keeper < ent.action_list[i].getRingCount() or \
-               score_keeper < ent.action_list[i].getScoreCount():
+            if rings_or_score_increased:
 
                 #   If the increases occured within five seconds of previous increase
                 #   Then the positive reward for the current action an previous
                 # action will increase to 0.100
-                if delay_keeper <= 5:
+                if in_last_five_seconds:
                     ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.100, 10, 'dec'))
                 #   Else the reward for the current and previous action will be
                 # the standarded 0.05
@@ -157,17 +173,16 @@ def pos_dna_eval(generation):
 
                 reset_delay = True
 
-            Reach_end_of_act = ent.action_list[i].getAct() == 'Act 1 End' or \
-                               ent.action_list[i].getAct() == 'Act 2 End' and \
-                               allow_end_act_reward is True
-
-            Started_Next_Act = ent.action_list[i].getAct() == 'Act 1' or \
-                               ent.action_list[i].getAct() == 'Act 2' and \
-                               allow_end_act_reward is False
+            if lives_increased:
+                ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.3, 15, 'dec'))
 
             if Reach_end_of_act:
                 ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.5, 14400, 'dec'))
                 allow_end_act_reward = False
+
+            if Reach_end_of_zone:
+                ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.5, 14400, 'dec'))
+                allow_end_act_reward = True
 
             if Started_Next_Act:
                 allow_end_act_reward = True
@@ -177,10 +192,9 @@ def pos_dna_eval(generation):
                 delay_keeper = 0
                 reset_delay = False
 
-            ring_keeper = ent.action_list[i].getRingCount()
-            score_keeper = ent.action_list[i].getScoreCount()
-
-            i = i + 1
+            ring_keeper = actions.getRingCount()
+            score_keeper = actions.getScoreCount()
+            lives_keeper = actions.getLivesCount()
 
     return generation
 
@@ -207,21 +221,28 @@ def neg_dna_eval(generation):
 
         reset_sdelay_keeper = False
         reset_rdelay_keeper = False
+        give_life_penalty = True
 
         i = 0
 
-        while ent.action_list[i].getLivesCount() >= lives_keeper:
+        for i, actions in enumerate(ent.getActionList()):
 
-            rdelay_keeper = rdelay_keeper + ent.action_list[i].getDelay()
-            sdelay_keeper = sdelay_keeper + ent.action_list[i].getDelay()
+            rdelay_keeper = rdelay_keeper + actions.getDelay()
+            sdelay_keeper = sdelay_keeper + actions.getDelay()
+
+            #Actions to be Penilized
+            defenseless = actions.getRingCount() == 0 and ring_keeper != 0
+            ring_stagnation = rdelay_keeper >= 30 and actions.getRingCount() == ring_keeper
+            score_stagnation = sdelay_keeper >= 30 and actions.getScoreCount() == score_keeper
+            life_lost = actions.getLivesCount() < lives_keeper
 
             # Penilize the current action and previous action if the entity losses rings
-            if ent.action_list[i].getRingCount() == 0 and ring_keeper != 0:
+            if defenseless:
 
                 ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.050, 10, 'inc'))
 
             # Penilize the current actions and previous action if the entities rings has not changed
-            if rdelay_keeper >= 30 and ent.action_list[i].getRingCount() == ring_keeper:
+            if ring_stagnation:
 
                 # If the entity has been holding no rings for awhile give them higher penility
                 if ring_keeper == 0:
@@ -233,13 +254,19 @@ def neg_dna_eval(generation):
                 reset_rdelay_keeper = True
 
             # Penilize the current actions and previous action if the entities score has not changed
-            if sdelay_keeper >= 30 and ent.action_list[i].getScoreCount() == score_keeper:
+            if score_stagnation:
 
                 ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.050, 30, 'inc'))
                 reset_sdelay_keeper = True
 
-            ring_keeper = ent.action_list[i].getRingCount()
-            score_keeper = ent.action_list[i].getScoreCount()
+            if i != 0:
+                if life_lost and give_life_penalty:
+                    ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.25, 30, 'inc'))
+                    give_life_penalty = False
+
+            ring_keeper = actions.getRingCount()
+            score_keeper = actions.getScoreCount()
+            lives_keeper = actions.getLivesCount()
 
             # Resets rdelay onces a penalty has been assesed for ring counts
             if reset_rdelay_keeper:
@@ -250,8 +277,6 @@ def neg_dna_eval(generation):
             if reset_sdelay_keeper:
                 sdelay_keeper = 0
                 reset_sdelay_keeper = False
-
-            i += 1
 
     return generation
 
@@ -298,11 +323,11 @@ def mutation_adjuster(action_list, index, amount, delay, direction):
 # -------------------------------Beginning of Reproductin Functions---------------------------
 #   Wrapper function that execute all reproduction functions and saves the state of
 # the generation object after reproduction is done
-def reproduce(generation):
+def reproduce(generation, num_of_entities):
     mating_pool = assign_entities_to_pools(generation)
     config_mp = configure_mating_percents(deepcopy(mating_pool))
-    gen_num = get_gen_num(generation[0])
-    new_generation = choose_and_mate(config_mp, gen_num)
+    gen_num = generation[0].getGeneration()
+    new_generation = choose_and_mate(config_mp, gen_num, num_of_entities)
     gen_num = generation[0].getGeneration()
     filehandler.save_data(new_generation, f'entity_data/Generation_{gen_num}/Offspring_gen_{gen_num}')
 
@@ -403,13 +428,13 @@ def configure_mating_percents(mating_pool):
 #
 # Returns:
 #           new_generation: The new generation created from the mating of parents entities
-def choose_and_mate(mating_pool, gen_num):
+def choose_and_mate(mating_pool, gen_num, num_of_entities):
     print('     Choosing and mating')
     choose_pool = choose_pool_creater(mating_pool)
 
     new_generation = []
 
-    while len(new_generation) < 3:
+    while len(new_generation) < num_of_entities:
         parents = choose_parents(choose_pool)
         new_generation.append(create_new_entity(parents, gen_num, len(new_generation) + 1))
 
@@ -571,20 +596,5 @@ def choose_pool_creater(elements):
 
     return choose_pool
 
-#   Function that obtains the generation number for the next generation
-# of entities through their parent generation name string
-#
-# Passes:
-#        entitiy: A entity from the parent generation
-#
-# Returns:
-#        gen_num: a integer that is the number of the next generation
-def get_gen_num(entity):
-    ent_name = entity.getName()
-    gen_num = ''
-    i = 1
-    while ent_name[i].isdigit():
-        gen_num += ent_name[i]
-        i += 1
-    return int(gen_num)
+
 # ____________________________________________________________________________________________

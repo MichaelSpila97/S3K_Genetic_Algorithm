@@ -1,6 +1,6 @@
 
 import action_handler
-
+from buttonpress import load_state
 # _______________________________________________________________________________________________________________________________
 # Entity is an object that represent a single attempt by the computer to complete Sonic 3 and Knunkles
 # Each Entity have the following attributes to them:
@@ -22,8 +22,8 @@ class Entity:
         self.generation = 0
         self.parents = parents
         self.alive = True
-        self.dna_cap = dna_cap
-
+        self.dnacap = dna_cap
+        self.master_ent = None
 # ______________________________________________________________________________________________________________________________
     def __str__(self):
         action_str = ''
@@ -49,9 +49,23 @@ Action: [{i}] {format(time, '.2f')}
     def play_game(self):
         print(f'{self.name} is Training')
         if self.isAlive():
-            action_handler.action_driver(self)
+            load_state()
+            if self.getMasterEntity() != None:
+                if self.getMasterEntity().getActionList() != []:
+                    action_handler.master_driver(self.getMasterEntity())
+
+            if self.getActionList() != []:
+                action_handler.replay_driver(self)
+            else:
+                action_handler.generate_driver(self)
         else:
             print(f'A dead entity cannot play')
+
+        if len(self.getActionList()) != self.getDNACap():
+            print('Entity did not produce enough DNA\n Giving Entity A Second Chace...')
+            self.setActionList([])
+            self.resurrect()
+            self.play_game()
 
 # _____________________________________________________________________________________________________________________________
     # Getter for alive attribute
@@ -85,6 +99,11 @@ Action: [{i}] {format(time, '.2f')}
     def getParents(self):
         return self.parents
 
+    def getDNACap(self):
+        return self.dnacap
+
+    def getMasterEntity(self):
+        return self.master_ent
 # ------------------Getter methods for all Entity attributes(except alive)----------------------------------------------
     def setActionList(self, new_act_list):
         self.action_list = new_act_list
@@ -100,3 +119,9 @@ Action: [{i}] {format(time, '.2f')}
 
     def setGeneration(self, new_gen):
         self.generation = new_gen
+
+    def getDNACap(self, new_dnacap):
+        self.dnacap = new_dnacap
+
+    def getMasterEntity(self, new_masterentity):
+        self.master_ent = new_masterentity
