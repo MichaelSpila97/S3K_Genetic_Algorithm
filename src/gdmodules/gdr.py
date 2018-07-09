@@ -1,6 +1,6 @@
 from PIL import ImageGrab
 
-import gdv
+from ..gdmodules import gdv
 
 # ______________________________________________________________________________
 #   Collection of functions responsible for the retrival of data from the game

@@ -2,8 +2,8 @@
 import random
 from copy import deepcopy
 
-from enumval import ActionName
-import action
+from ..enumval import ActionName
+from ..classes import action
 
 ng = random.Random()
 
@@ -43,11 +43,12 @@ def master_driver(master_entity):
     print('The master entity has actions to play out')
 
     for list_place, actions in enumerate(master_entity.getActionList()):
-            actiond.execute_action()
+            actions.execute_action()
             check_status(list_place, master_entity.getActionList())
 
 
 def generate_driver(entity):
+    print('Generatiing new actions')
     for list_place in range(entity.getDNACap()):
 
         ng.seed()
@@ -64,17 +65,17 @@ def generate_driver(entity):
         # Checks status of entity
         check_status(entity, list_place)
         list_place += 1
+        print(list_place)
 
 def replay_driver(entity):
 
-    for listplace, actions in enumerate(ntity.getActionList()):
+    for listplace, actions in enumerate(entity.getActionList()):
 
         actions.execute_action()
 
         check_status(entity, listplace)
 
-        if not entity.isAlive()
+        if not entity.isAlive():
             return
-
 
 # _______________________________________________________________________________________________________________________________

@@ -1,15 +1,10 @@
-
-from buttonpress import start_next_game
-
 import threading
 import queue
 import os
 
-import gdv
-import entity
-import filehandler
-import entity_handler
-import traininggui
+from src.classes import entity, traininggui
+from src.handlers import filehandler, entity_handler
+from src.gdmodules import gdv
 
 gui_func_qu = queue.Queue(maxsize=5)
 continue_training = 0
@@ -44,8 +39,6 @@ def begin_training(num_of_entities, gen=None):
     gui_func_qu.put('Toggle Button')
 
     # Automatics press correct buttons to start game if the program is at the start screen
-    if gdv.isAtStartScreen():
-        start_next_game()
 
     # Waits for statistic to appear on screen to begin training
     while not gdv.isTrainingStarted():
@@ -54,7 +47,7 @@ def begin_training(num_of_entities, gen=None):
     # If thier are entities in the gen list
     if gen:
         # Gets Generation number from entities for file and directory nameing purposes
-        gen_num = gen[0].generation
+        gen_num = gen[0].getGeneration()
         print(f'Generation {gen_num} training has begun')
         for entities in gen:
             entities.play_game()
@@ -76,7 +69,7 @@ def begin_training(num_of_entities, gen=None):
 
     gui_func_qu.put('Toggle Button')
 
-    process_data(gen,num_of_entities)
+    process_data(gen, num_of_entities)
 # ______________________________________________________________________________
 #   Function that process the newly generated generation data from a training session .
 # It Cleans the data of errors, evaluated each entities data and fitness, and then
@@ -88,7 +81,8 @@ def begin_training(num_of_entities, gen=None):
 #        gen = List that contains entities that belong to the same generation
 #        gen_num: The number of the gneration that is being passed in.
 def process_data(gen, num_of_entities):
-    print(f'\nProcessing Generation {gen[0].getGeneration()} data...\n')
+    gen_num = gen[0].getGeneration()
+    print(f'\nProcessing Generation {gen_num} data...\n')
     entity_handler.clean_dna(gen)
 
     clean_gen = filehandler.load_data(f'entity_data/Generation_{gen_num}/Clean_gen_{gen_num}.pickle')
@@ -98,7 +92,7 @@ def process_data(gen, num_of_entities):
     entity_handler.reproduce(eval_gen, num_of_entities)
 
     if continue_training == 1:
-        print(f'Movining on to Generation {gen[0].getGeneration() training')
+        print(f'Movining on to Generation {gen_num} training')
         offspring = filehandler.load_data(f'entity_data/Generation_{gen_num}/Offspring_gen_{gen_num}.pickle')
         gdv.reset_stats()
         begin_training(offspring)

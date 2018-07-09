@@ -1,10 +1,9 @@
 from copy import deepcopy
 from random import shuffle, choice, seed
 
-import action
-import action_handler as ah
-import filehandler
-import entity
+from ..classes import action, entity
+from ..handlers import action_handler as ah, filehandler
+
 
 # ____________________________________________________________________________________________
 # --------------------------Beginning of Cleaning Functions---------------------------------
@@ -133,20 +132,18 @@ def pos_dna_eval(generation):
         reset_delay = False
         allow_end_act_reward = True
 
-
         for i, actions in enumerate(ent.getActionList()):
 
             # Actions to Reward:
             rings_or_score_increased = ring_keeper < actions.getRingCount() or \
-                                   score_keeper < actions.getScoreCount():
+                                       score_keeper < actions.getScoreCount()
 
             lives_increased = actions.getLivesCount() > lives_keeper
-
 
             Reach_end_of_act = actions.getAct() == 'Act 1 End' and \
                                allow_end_act_reward is True
 
-            Reach_end_of_zone = action.getAct() == 'Act 2 End' and \
+            Reach_end_of_zone = actions.getAct() == 'Act 2 End' and \
                                 allow_end_act_reward is True
 
             Started_Next_Act = actions.getAct() == 'Act 1' or \
@@ -230,7 +227,7 @@ def neg_dna_eval(generation):
             rdelay_keeper = rdelay_keeper + actions.getDelay()
             sdelay_keeper = sdelay_keeper + actions.getDelay()
 
-            #Actions to be Penilized
+            # Actions to be Penilized
             defenseless = actions.getRingCount() == 0 and ring_keeper != 0
             ring_stagnation = rdelay_keeper >= 30 and actions.getRingCount() == ring_keeper
             score_stagnation = sdelay_keeper >= 30 and actions.getScoreCount() == score_keeper

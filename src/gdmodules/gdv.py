@@ -1,7 +1,8 @@
 import time
 from copy import deepcopy
-from enumval import StatNumberMaps, StatScreenPos
-from gdr import grab_stat
+
+from src.enumval import StatNumberMaps, StatScreenPos
+from src.gdmodules.gdr import grab_stat
 import trainingdriver
 
 # ______________________________________________________________________________

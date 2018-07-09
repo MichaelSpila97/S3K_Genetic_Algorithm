@@ -1,6 +1,6 @@
 
-import action_handler
-from buttonpress import load_state
+from ..handlers import action_handler
+from ..buttonpress import load_state
 # _______________________________________________________________________________________________________________________________
 # Entity is an object that represent a single attempt by the computer to complete Sonic 3 and Knunkles
 # Each Entity have the following attributes to them:
@@ -24,6 +24,7 @@ class Entity:
         self.alive = True
         self.dnacap = dna_cap
         self.master_ent = None
+
 # ______________________________________________________________________________________________________________________________
     def __str__(self):
         action_str = ''
@@ -50,7 +51,7 @@ Action: [{i}] {format(time, '.2f')}
         print(f'{self.name} is Training')
         if self.isAlive():
             load_state()
-            if self.getMasterEntity() != None:
+            if self.getMasterEntity() is not None:
                 if self.getMasterEntity().getActionList() != []:
                     action_handler.master_driver(self.getMasterEntity())
 
@@ -104,6 +105,7 @@ Action: [{i}] {format(time, '.2f')}
 
     def getMasterEntity(self):
         return self.master_ent
+
 # ------------------Getter methods for all Entity attributes(except alive)----------------------------------------------
     def setActionList(self, new_act_list):
         self.action_list = new_act_list
@@ -120,8 +122,8 @@ Action: [{i}] {format(time, '.2f')}
     def setGeneration(self, new_gen):
         self.generation = new_gen
 
-    def getDNACap(self, new_dnacap):
+    def setDNACap(self, new_dnacap):
         self.dnacap = new_dnacap
 
-    def getMasterEntity(self, new_masterentity):
+    def setMasterEntity(self, new_masterentity):
         self.master_ent = new_masterentity

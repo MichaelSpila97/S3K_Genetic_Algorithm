@@ -1,7 +1,7 @@
+from ..enumval import ActionName
+from ..gdmodules import gdv
+from .. import buttonpress as bp
 
-from enumval import ActionName
-import buttonpress as bp
-import gdv
 # ______________________________________________________________________________
 #   Action is an object that represent a single action executed by the computer
 # during a session of Sonic 3 and Knukles

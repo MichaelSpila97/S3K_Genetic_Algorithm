@@ -4,9 +4,10 @@ from tkinter import messagebox
 import os
 import threading
 
-import gdv
 import trainingdriver
-import filehandler
+
+from ..gdmodules import gdv
+from src.handlers import filehandler
 
 
 class GUI:
