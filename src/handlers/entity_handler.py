@@ -3,7 +3,8 @@ from random import shuffle, choice, seed
 
 from ..classes import action, entity
 from ..handlers import action_handler as ah, filehandler
-
+from behavior_mods.penatly import *
+from behavior_mods.reward import *
 
 # ____________________________________________________________________________________________
 # --------------------------Beginning of Cleaning Functions---------------------------------
@@ -124,31 +125,20 @@ def pos_dna_eval(generation):
 
     for ent in generation:
 
-        ring_keeper = 0
-        score_keeper = 0
-        lives_keeper = ent.getActionList()[0].getLivesCount()
+        prev_rings = 0
+        prev_score = 0
+        prev_lives = ent.getActionList()[0].getLivesCount()
         delay_keeper = 0
 
         reset_delay = False
-        allow_end_act_reward = True
+        rewardact = True
 
         for i, actions in enumerate(ent.getActionList()):
 
-            # Actions to Reward:
-            rings_or_score_increased = ring_keeper < actions.getRingCount() or \
-                                       score_keeper < actions.getScoreCount()
-
-            lives_increased = actions.getLivesCount() > lives_keeper
-
-            Reach_end_of_act = actions.getAct() == 'Act 1 End' and \
-                               allow_end_act_reward is True
-
-            Reach_end_of_zone = actions.getAct() == 'Act 2 End' and \
-                                allow_end_act_reward is True
-
-            Started_Next_Act = actions.getAct() == 'Act 1' or \
-                               actions.getAct() == 'Act 2' and \
-                               allow_end_act_reward is False
+            curr_rings = actions.getRingCount()
+            curr_score = actions.getScoreCount()
+            curr_lives = actions.getLivesCount()
+            curr_act = actions.getAct()
 
             # Modifiers to actions:
             in_last_five_seconds = delay_keeper <= 5
@@ -156,7 +146,7 @@ def pos_dna_eval(generation):
             delay_keeper = delay_keeper + actions.getDelay()
             #   Positive evaluation for the current action and previous action
             # will occur if the ring or score count has increased
-            if rings_or_score_increased:
+            if ringsOrScoreIncreased(curr_rings, curr_score, prev_rings, prev_score):
 
                 #   If the increases occured within five seconds of previous increase
                 #   Then the positive reward for the current action an previous
@@ -170,28 +160,28 @@ def pos_dna_eval(generation):
 
                 reset_delay = True
 
-            if lives_increased:
+            if livesIncreased(curr_lives, prev_lives):
                 ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.3, 15, 'dec'))
 
-            if Reach_end_of_act:
+            if completedAct(curr_act, rewardact):
                 ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.5, 14400, 'dec'))
-                allow_end_act_reward = False
+                rewardact = False
 
-            if Reach_end_of_zone:
+            if completedZone(curr_act, rewardact):
                 ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.5, 14400, 'dec'))
-                allow_end_act_reward = True
+                rewardact = True
 
-            if Started_Next_Act:
-                allow_end_act_reward = True
+            if startedAct(curr_act, rewardact):
+                rewardact = True
 
             # Resets the delay to 0 once a reward has been distributed
             if reset_delay:
                 delay_keeper = 0
                 reset_delay = False
 
-            ring_keeper = actions.getRingCount()
-            score_keeper = actions.getScoreCount()
-            lives_keeper = actions.getLivesCount()
+            prev_rings = actions.getRingCount()
+            prev_score = actions.getScoreCount()
+            prev_lives = actions.getLivesCount()
 
     return generation
 
@@ -206,9 +196,9 @@ def neg_dna_eval(generation):
 
     for ent in generation:
 
-        ring_keeper = 0
-        score_keeper = 0
-        lives_keeper = ent.action_list[0].getLivesCount()
+        prev_rings = 0
+        prev_score = 0
+        prev_lives = ent.getActionList()[0].getLivesCount()
 
         # Ring delay keeper
         rdelay_keeper = 0
@@ -218,31 +208,24 @@ def neg_dna_eval(generation):
 
         reset_sdelay_keeper = False
         reset_rdelay_keeper = False
-        give_life_penalty = True
-
-        i = 0
+        penilize_life = True
 
         for i, actions in enumerate(ent.getActionList()):
 
             rdelay_keeper = rdelay_keeper + actions.getDelay()
             sdelay_keeper = sdelay_keeper + actions.getDelay()
-
-            # Actions to be Penilized
-            defenseless = actions.getRingCount() == 0 and ring_keeper != 0
-            ring_stagnation = rdelay_keeper >= 30 and actions.getRingCount() == ring_keeper
-            score_stagnation = sdelay_keeper >= 30 and actions.getScoreCount() == score_keeper
-            life_lost = actions.getLivesCount() < lives_keeper
+            past_start = i != 0
 
             # Penilize the current action and previous action if the entity losses rings
-            if defenseless:
+            if isDefenseless(curr_rings, prev_rings):
 
                 ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.050, 10, 'inc'))
 
             # Penilize the current actions and previous action if the entities rings has not changed
-            if ring_stagnation:
+            if ringsAreStagnating(rdelay_keeper, curr_rings, prev_rings):
 
                 # If the entity has been holding no rings for awhile give them higher penility
-                if ring_keeper == 0:
+                if isDefenseless(curr_rings, prev_rings):
                     ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.10, 30, 'inc'))
                 # Else the penility will be the standard 0.05
                 else:
@@ -251,19 +234,19 @@ def neg_dna_eval(generation):
                 reset_rdelay_keeper = True
 
             # Penilize the current actions and previous action if the entities score has not changed
-            if score_stagnation:
+            if scoreIsStangnating(sdelay_keeper, curr_score, prev_score):
 
                 ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.050, 30, 'inc'))
                 reset_sdelay_keeper = True
 
-            if i != 0:
-                if life_lost and give_life_penalty:
+            if past_start:
+                if lostLife(curr_lives, prev_lives, penilize_life):
                     ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.25, 30, 'inc'))
-                    give_life_penalty = False
+                    penilize_life = False
 
-            ring_keeper = actions.getRingCount()
-            score_keeper = actions.getScoreCount()
-            lives_keeper = actions.getLivesCount()
+            prev_rings = actions.getRingCount()
+            prev_score = actions.getScoreCount()
+            prev_lives = actions.getLivesCount()
 
             # Resets rdelay onces a penalty has been assesed for ring counts
             if reset_rdelay_keeper:
@@ -321,12 +304,16 @@ def mutation_adjuster(action_list, index, amount, delay, direction):
 #   Wrapper function that execute all reproduction functions and saves the state of
 # the generation object after reproduction is done
 def reproduce(generation, num_of_entities):
+
+    old_gen_num = generation[0].getGeneration()
+
     mating_pool = assign_entities_to_pools(generation)
     config_mp = configure_mating_percents(deepcopy(mating_pool))
-    gen_num = generation[0].getGeneration()
-    new_generation = choose_and_mate(config_mp, gen_num, num_of_entities)
-    gen_num = generation[0].getGeneration()
-    filehandler.save_data(new_generation, f'entity_data/Generation_{gen_num}/Offspring_gen_{gen_num}')
+
+    new_generation = choose_and_mate(config_mp, old_gen_num, num_of_entities)
+
+    new_gen_num = generation[0].getGeneration()
+    filehandler.save_data(new_generation, f'entity_data/Generation_{new_gen_num}/Offspring_gen_{new_gen_num}')
 
 # Function assigns entities to one of the four mating pools based on thier fitness score
 #
@@ -343,12 +330,20 @@ def assign_entities_to_pools(generation):
 
         ent_fitness = entities.getFitness() * 100
         if ent_fitness < 30:
-            mating_pools[0].append(entities)
+            mating_pools[0].sort()
+            if len(mating_pools[0]) == 6:
+                if mating_pools[0][0].getFitness() < ent_fitness:
+                    maitng_pools[0][0] = entities
+            else:
+                mating_pools[0].append(entities)
         elif ent_fitness >= 30 and ent_fitness < 50:
+            mating_pools[1].sort()
             mating_pools[1].append(entities)
         elif ent_fitness >= 50 and ent_fitness < 70:
+            mating_pools[2].sort()
             mating_pools[2].append(entities)
         elif ent_fitness >= 70:
+            mating_pools[3].sort()
             mating_pools[3].append(entities)
 
     return mating_pools
@@ -379,22 +374,24 @@ def configure_mating_percents(mating_pool):
     # Initial Moving of mating percent values in occupied pools
     while b_pool_is_empty or t_pool_is_empty:
 
-        mating_pool[top_iter][0] += t_carry_percent
+        last_index = len(mating_pool[top_iter]) - 1
+        mating_pool[top_iter][last_index] += t_carry_percent
         t_carry_percent = 0
 
         if len(mating_pool[top_iter]) == 1:
-            t_carry_percent += mating_pool[top_iter][0]
-            mating_pool[top_iter][0] = 0
+            t_carry_percent += mating_pool[top_iter][last_index]
+            mating_pool[top_iter][last_index] = 0
             top_iter -= 1
         else:
             t_pool_is_empty = False
 
+        last_index = len(mating_pool[bottom_iter]) - 1
         mating_pool[bottom_iter][0] += b_carry_percent
         b_carry_percent = 0
 
         if len(mating_pool[bottom_iter]) == 1:
-            b_carry_percent += mating_pool[bottom_iter][0]
-            mating_pool[bottom_iter][0] = 0
+            b_carry_percent += mating_pool[bottom_iter][last_index]
+            mating_pool[bottom_iter][last_index] = 0
             bottom_iter += 1
         else:
             b_pool_is_empty = False
@@ -404,14 +401,15 @@ def configure_mating_percents(mating_pool):
 
     #   Second run over of mating pools to make sure no empty pools have non-zero
     # values
+
     while i != top_iter:
-
-        if mating_pool[i][0] != 0 and len(mating_pool[i]) == 1:
-            dangling_percent += mating_pool[i][0]
-            mating_pool[i][0] = 0
+        last_index = len(mating_pool[i]) - 1
+        if mating_pool[i][last_index] != 0 and len(mating_pool[i]) == 1:
+            dangling_percent += mating_pool[i][last_index]
+            mating_pool[i][last_index] = 0
         i += 1
-
-    mating_pool[top_iter][0] += dangling_percent
+    last_index = len(mating_pool[top_iter]) - 1
+    mating_pool[top_iter][last_index] += dangling_percent
 
     print(f'{mating_pool}\n     Finish configuring mating pool')
     return mating_pool
@@ -574,8 +572,8 @@ def choose_pool_creater(elements):
     for items in elements:
 
         if len(items) > 1:
-
-            equal_rep = items[0] // (len(items) - 1)
+            last_index = len(items) - 1
+            equal_rep = items[last_index] // (len(items) - 1)
             i = 1
             while i < len(items):
                 curr_list = equal_rep * [items[i]]
