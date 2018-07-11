@@ -308,7 +308,10 @@ def reproduce(generation, num_of_entities):
     old_gen_num = generation[0].getGeneration()
 
     mating_pool = assign_entities_to_pools(generation)
+    print(f'Mating Pool: {mating_pool}')
+
     config_mp = configure_mating_percents(deepcopy(mating_pool))
+    print(f'Config Mating Pool: {config_mp}')
 
     new_generation = choose_and_mate(config_mp, old_gen_num, num_of_entities)
 
@@ -330,21 +333,21 @@ def assign_entities_to_pools(generation):
 
         ent_fitness = entities.getFitness() * 100
         if ent_fitness < 30:
-            mating_pools[0].sort()
             if len(mating_pools[0]) == 6:
                 if mating_pools[0][0].getFitness() < ent_fitness:
                     maitng_pools[0][0] = entities
             else:
                 mating_pools[0].append(entities)
+            mating_pools[0].sort()
         elif ent_fitness >= 30 and ent_fitness < 50:
-            mating_pools[1].sort()
             mating_pools[1].append(entities)
+            mating_pools[1].sort()
         elif ent_fitness >= 50 and ent_fitness < 70:
-            mating_pools[2].sort()
             mating_pools[2].append(entities)
+            mating_pools[2].sort()
         elif ent_fitness >= 70:
-            mating_pools[3].sort()
             mating_pools[3].append(entities)
+            mating_pools[3].sort()
 
     return mating_pools
 
@@ -360,58 +363,23 @@ def assign_entities_to_pools(generation):
 #       mating_pool: Same as passes but the mating percent values have been moved to
 #                    to occupied pools
 def configure_mating_percents(mating_pool):
-    print('     configuring mating p')
 
-    top_iter = len(mating_pool) - 1
-    bottom_iter = 0
+    prev_pop_pool = False
+    unused_mating_percent = 0
 
-    t_carry_percent = 0
-    b_carry_percent = 0
+    for count, pools in enumerate(mating_pool):
+        per_place = len(pools)
+        if per_place == 1:
+            unused_mating_percent += pools[per_place]
+            pools[per_place] = 0
+        elif per_place != 1:
+            prev_pop_pool = count
 
-    b_pool_is_empty = True
-    t_pool_is_empty = True
+        if prev_pop_pool is not False:
+            per_place = len(mating_pool[prev_pop_pool])
+            mating_pool[prev_pop_pool][per_place] += unused_mating_percent
+            unused_mating_percent = 0
 
-    # Initial Moving of mating percent values in occupied pools
-    while b_pool_is_empty or t_pool_is_empty:
-
-        last_index = len(mating_pool[top_iter]) - 1
-        mating_pool[top_iter][last_index] += t_carry_percent
-        t_carry_percent = 0
-
-        if len(mating_pool[top_iter]) == 1:
-            t_carry_percent += mating_pool[top_iter][last_index]
-            mating_pool[top_iter][last_index] = 0
-            top_iter -= 1
-        else:
-            t_pool_is_empty = False
-
-        last_index = len(mating_pool[bottom_iter]) - 1
-        mating_pool[bottom_iter][0] += b_carry_percent
-        b_carry_percent = 0
-
-        if len(mating_pool[bottom_iter]) == 1:
-            b_carry_percent += mating_pool[bottom_iter][last_index]
-            mating_pool[bottom_iter][last_index] = 0
-            bottom_iter += 1
-        else:
-            b_pool_is_empty = False
-
-    i = 0
-    dangling_percent = 0
-
-    #   Second run over of mating pools to make sure no empty pools have non-zero
-    # values
-
-    while i != top_iter:
-        last_index = len(mating_pool[i]) - 1
-        if mating_pool[i][last_index] != 0 and len(mating_pool[i]) == 1:
-            dangling_percent += mating_pool[i][last_index]
-            mating_pool[i][last_index] = 0
-        i += 1
-    last_index = len(mating_pool[top_iter]) - 1
-    mating_pool[top_iter][last_index] += dangling_percent
-
-    print(f'{mating_pool}\n     Finish configuring mating pool')
     return mating_pool
 
 #   Fuction responsible faciliting the choosing of parents and creation of their
@@ -424,8 +392,8 @@ def configure_mating_percents(mating_pool):
 # Returns:
 #           new_generation: The new generation created from the mating of parents entities
 def choose_and_mate(mating_pool, gen_num, num_of_entities):
-    print('     Choosing and mating')
     choose_pool = choose_pool_creater(mating_pool)
+    print(f'choose pool: {choose_pool}')
 
     new_generation = []
 
@@ -433,7 +401,6 @@ def choose_and_mate(mating_pool, gen_num, num_of_entities):
         parents = choose_parents(choose_pool)
         new_generation.append(create_new_entity(parents, gen_num, len(new_generation) + 1))
 
-    print('     Finish Choosing and mating')
     return new_generation
 
 #   Fuction responsible for choosing the parents that will mate and create a new entity
@@ -445,7 +412,6 @@ def choose_and_mate(mating_pool, gen_num, num_of_entities):
 # Returns:
 #           par_list: the list of the two parents that will mate
 def choose_parents(choose_pool):
-    print('     Choosing parents')
     par_list = []
     while len(par_list) < 2:
         shuffle(choose_pool)
@@ -458,7 +424,6 @@ def choose_parents(choose_pool):
                 par_list.append(deepcopy(new_parent))
         seed()
 
-    print('     Finish Choosing parents')
     return par_list
 
 # Function that is responsibe for creating the new entitiy based on its parents DNA
@@ -471,14 +436,13 @@ def choose_parents(choose_pool):
 # Returns:
 #        new_entity: the new entity created from the parents DNA
 def create_new_entity(parents, gen_num, entity_num):
-    print('     Creatining new entity')
+
     new_entity = entity.Entity(name=f'G{gen_num + 1}E{entity_num}')
 
     new_entity.setGeneration(gen_num + 1)
     new_entity.setParents([parents[0].getName(), parents[1].getName()])
     new_entity.setActionList(construct_Dna(parents))
 
-    print('     Finish Creating new entity')
     return new_entity
 
 #   Function that is responsibe for creating the DNA based of the new entities parents
@@ -489,19 +453,13 @@ def create_new_entity(parents, gen_num, entity_num):
 # Returns:
 #        new_dna: the list of actions that is the dna for the new entity
 def construct_Dna(parent):
-    print('     Constructing DNA')
     new_dna = []
-
-    par1_dna_left = True
-    par2_dna_left = True
-
-    par1_itr = 0
-    par2_itr = 0
 
     par1_dna = parent[0].getActionList()
     par2_dna = parent[1].getActionList()
 
-    while par1_dna_left or par2_dna_left:
+    assert len(par1_dna) == len(par2_dna)
+    for iter in range(len(par1_dna)):
 
         par_choice_list = ["P1"] * 50 + ["P2"] * 50
         shuffle(par_choice_list)
@@ -511,28 +469,12 @@ def construct_Dna(parent):
 
         if par_choice == "P1":
 
-            if par1_dna_left:
-                new_dna.append(attempt_mutation(par1_dna[par1_itr]))
-            else:
-                new_dna.append(attempt_mutation(par2_dna[par2_itr]))
+            new_dna.append(attempt_mutation(par1_dna[iter]))
 
         elif par_choice == "P2":
 
-            if par2_dna_left:
-                new_dna.append(attempt_mutation(par2_dna[par2_itr]))
-            else:
-                new_dna.append(attempt_mutation(par1_dna[par1_itr]))
+            new_dna.append(attempt_mutation(par2_dna[iter]))
 
-        par1_itr += 1
-        par2_itr += 1
-
-        if par1_itr > len(par1_dna) - 1:
-            par1_dna_left = False
-
-        if par2_itr > len(par2_dna) - 1:
-            par2_dna_left = False
-
-    print('     Finish Constructing DNA')
     return new_dna
 
 #   Function that decides wheater a gene will mutate
@@ -567,27 +509,30 @@ def attempt_mutation(gene):
 #        choose_pool: A list that is the newly created choose pool
 def choose_pool_creater(elements):
     choose_pool = []
-    curr_max = None
+    target_len = 0
 
     for items in elements:
+        last_index = len(items) - 1
+        target_len += items[last_index]
 
         if len(items) > 1:
-            last_index = len(items) - 1
-            equal_rep = items[last_index] // (len(items) - 1)
-            i = 1
-            while i < len(items):
-                curr_list = equal_rep * [items[i]]
+            equal_rep = items[last_index] // (last_index)
+
+            for pos, ent in items:
+                if isinstance(ent, int):
+                    break
+
+                curr_list = equal_rep * ent
                 choose_pool += curr_list
 
-                if curr_max is None:
-                    curr_max = items[i]
-                elif curr_max.getFitness() < items[i].getFitness():
-                    curr_max = items[i]
+            fitness_ent_pos = last_index - 1
 
-                i += 1
-    if len(choose_pool) != 100:
-        while len(choose_pool) != 100:
-            choose_pool.append(curr_max)
+            while len(choose_pool) < target_len:
+                choose_pool.append(items[fitness_ent_pos])
+                fitness_ent_pos -= 1
+
+                if fitness_ent_pos < 0:
+                    fitness_ent_pos = last_index - 1
 
     return choose_pool
 
