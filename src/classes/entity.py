@@ -43,7 +43,7 @@ Action: [{i}] {format(time, '.2f')}
                 Parents to this Entity: {self.parents}
                 Entity's Status: {self.alive}
                 Actions:
-                         {action_str}        """
+                                """
 
 # ______________________________________________________________________________________________________________________________
     # This function directs living entities to attempt Sonic 3 and Knuckles

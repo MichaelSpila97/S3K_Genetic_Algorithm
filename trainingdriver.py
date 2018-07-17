@@ -16,6 +16,7 @@ continue_training = 0
 #   The main creates and execute thread responsible for capturing data from game screen
 # and call Test_GUI to build the programs gui
 def main():
+    # test_process_data()
     stat_thread = threading.Thread(target=gdv.get_core_stats, daemon=True)
     stat_thread.start()
 
@@ -30,6 +31,8 @@ def main():
 #
 # Passes:
 #       gen: the list that contains entities from a single generation. Is empty list if nothing is passed.
+
+
 def begin_training(num_of_entities, gen=None):
 
     gen_num = 0
@@ -98,7 +101,11 @@ def process_data(gen, num_of_entities):
         begin_training(offspring)
 
 # ______________________________________________________________________________
+def test_process_data():
+    gen = filehandler.load_data('entity_data/Generation_0/Raw_Gen_0.pickle')
+    process_data(gen, 10)
 
 
+# ______________________________________________________________________________
 if __name__ == '__main__':
     main()

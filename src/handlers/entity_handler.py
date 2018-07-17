@@ -3,8 +3,8 @@ from random import shuffle, choice, seed
 
 from ..classes import action, entity
 from ..handlers import action_handler as ah, filehandler
-from behavior_mods.penatly import *
-from behavior_mods.reward import *
+from .behavior_mods.penatly import *
+from .behavior_mods.reward import *
 
 # ____________________________________________________________________________________________
 # --------------------------Beginning of Cleaning Functions---------------------------------
@@ -217,15 +217,15 @@ def neg_dna_eval(generation):
             past_start = i != 0
 
             # Penilize the current action and previous action if the entity losses rings
-            if isDefenseless(curr_rings, prev_rings):
+            if isDefenseless(actions.getRingCount(), prev_rings):
 
                 ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.050, 10, 'inc'))
 
             # Penilize the current actions and previous action if the entities rings has not changed
-            if ringsAreStagnating(rdelay_keeper, curr_rings, prev_rings):
+            if ringsAreStagnating(rdelay_keeper, actions.getRingCount(), prev_rings):
 
                 # If the entity has been holding no rings for awhile give them higher penility
-                if isDefenseless(curr_rings, prev_rings):
+                if isDefenseless(actions.getRingCount(), prev_rings):
                     ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.10, 30, 'inc'))
                 # Else the penility will be the standard 0.05
                 else:
@@ -234,13 +234,13 @@ def neg_dna_eval(generation):
                 reset_rdelay_keeper = True
 
             # Penilize the current actions and previous action if the entities score has not changed
-            if scoreIsStangnating(sdelay_keeper, curr_score, prev_score):
+            if scoreIsStangnating(sdelay_keeper, actions.getScoreCount(), prev_score):
 
                 ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.050, 30, 'inc'))
                 reset_sdelay_keeper = True
 
             if past_start:
-                if lostLife(curr_lives, prev_lives, penilize_life):
+                if lostLife(actions.getLivesCount(), prev_lives, penilize_life):
                     ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.25, 30, 'inc'))
                     penilize_life = False
 
@@ -327,27 +327,31 @@ def reproduce(generation, num_of_entities):
 #        mating_pool: List of the four mating pools with the entities in their
 #                     respective pools
 def assign_entities_to_pools(generation):
-    mating_pools = [[5], [15], [30], [50]]
+    mating_pools = [[[2, 5]],
+                    [[2, 15]],
+                    [[2, 30]],
+                    [[2, 50]]]
 
     for entities in generation:
 
-        ent_fitness = entities.getFitness() * 100
+        ent_fitness = entities.getFitness()
         if ent_fitness < 30:
             if len(mating_pools[0]) == 6:
-                if mating_pools[0][0].getFitness() < ent_fitness:
-                    maitng_pools[0][0] = entities
+                least_fit_ent = mating_pools[0][0][0]
+                if least_fit_ent < ent_fitness:
+                    mating_pools[0][0] = [entities.getFitness(), entities]
             else:
-                mating_pools[0].append(entities)
-            mating_pools[0].sort()
+                mating_pools[0].append([entities.getFitness(), entities])
+            mating_pools[0].sort(key=lambda x: x[0])
         elif ent_fitness >= 30 and ent_fitness < 50:
-            mating_pools[1].append(entities)
-            mating_pools[1].sort()
+            mating_pools[1].append([entities.getFitness(), entities])
+            mating_pools[1].sort(key=lambda x: x[0])
         elif ent_fitness >= 50 and ent_fitness < 70:
-            mating_pools[2].append(entities)
-            mating_pools[2].sort()
+            mating_pools[2].append([entities.getFitness(), entities])
+            mating_pools[2].sort(key=lambda x: x[0])
         elif ent_fitness >= 70:
-            mating_pools[3].append(entities)
-            mating_pools[3].sort()
+            mating_pools[3].append([entities.getFitness(), entities])
+            mating_pools[3].sort(key=lambda x: x[0])
 
     return mating_pools
 
@@ -368,16 +372,16 @@ def configure_mating_percents(mating_pool):
     unused_mating_percent = 0
 
     for count, pools in enumerate(mating_pool):
-        per_place = len(pools)
-        if per_place == 1:
-            unused_mating_percent += pools[per_place]
-            pools[per_place] = 0
-        elif per_place != 1:
+        per_place = len(pools) - 1
+        if per_place == 0:
+            unused_mating_percent += pools[per_place][1]
+            pools[per_place][1] = 0
+        elif per_place != 0:
             prev_pop_pool = count
 
         if prev_pop_pool is not False:
-            per_place = len(mating_pool[prev_pop_pool])
-            mating_pool[prev_pop_pool][per_place] += unused_mating_percent
+            per_place = len(mating_pool[prev_pop_pool]) - 1
+            mating_pool[prev_pop_pool][per_place][1] += unused_mating_percent
             unused_mating_percent = 0
 
     return mating_pool
@@ -394,6 +398,7 @@ def configure_mating_percents(mating_pool):
 def choose_and_mate(mating_pool, gen_num, num_of_entities):
     choose_pool = choose_pool_creater(mating_pool)
     print(f'choose pool: {choose_pool}')
+    print(choose_pool[0])
 
     new_generation = []
 
@@ -513,27 +518,23 @@ def choose_pool_creater(elements):
 
     for items in elements:
         last_index = len(items) - 1
-        target_len += items[last_index]
-
+        target_len += items[last_index][1]
         if len(items) > 1:
-            equal_rep = items[last_index] // (last_index)
-
-            for pos, ent in items:
-                if isinstance(ent, int):
+            equal_rep = target_len // (last_index + 1)
+            for pos, ent in enumerate(items):
+                if isinstance(ent[1], int):
                     break
-
-                curr_list = equal_rep * ent
+                curr_list = equal_rep * [ent[1]]
                 choose_pool += curr_list
 
             fitness_ent_pos = last_index - 1
 
             while len(choose_pool) < target_len:
-                choose_pool.append(items[fitness_ent_pos])
+                choose_pool.append(items[fitness_ent_pos][1])
                 fitness_ent_pos -= 1
 
                 if fitness_ent_pos < 0:
                     fitness_ent_pos = last_index - 1
-
     return choose_pool
 
 
