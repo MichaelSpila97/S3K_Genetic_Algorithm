@@ -32,7 +32,7 @@ def clean_dna(generation):
 
         next_starting_score = deepcopy(entities.action_list[len(entities.action_list) - 1].score_count)
 
-        for dna in entities.action_list:
+        for count, dna in enumerate(entities.action_list):
         # ---------------------------------------------------------------------
         # Beggining of Score Cleaning Block
 
@@ -58,11 +58,11 @@ def clean_dna(generation):
             #   Sets actions at Beggining to zero if they are not zero
             #   Countinues until first legit zero appears in a action in the
             # action list
-            if dna.getRingCount() > 0 and i == 0:
-                j = 0
-                while entities.action_list[j].ring_count != 0:
-                    entities.action_list[j].ring_count = 0
-                    j += 1
+            if dna.getRingCount() > 0 and count == 0:
+                i = 0
+                while entities.action_list[i].ring_count != 0:
+                    entities.action_list[i].ring_count = 0
+                    i += 1
 
             #       If the ring count is legit then ring_keeper var should be set to
             # equal the current actions score count
@@ -79,7 +79,6 @@ def clean_dna(generation):
 
         # End of ring cleaning block
         # ---------------------------------------------------------------------
-            i += 1
 
         previous_starting_score = deepcopy(next_starting_score)
 
@@ -105,13 +104,12 @@ def calc_fitness(generation):
 
     for entities in generation:
         dna_len = len(entities.getActionList())
-        print(dna_len)
         mutation_total = 0
 
         for dna in entities.getActionList():
             mutation_total = mutation_total + dna.getMutation()
 
-        entities.setFitness(1 - (mutation_total / dna_len))
+        entities.setFitness(round(1 - (mutation_total / dna_len), 2))
 
     return fitgen
 #   Function handles the postive evaluation of the dna sequence of each enitiy
@@ -308,16 +306,28 @@ def reproduce(generation, num_of_entities):
     old_gen_num = generation[0].getGeneration()
 
     mating_pool = assign_entities_to_pools(generation)
-    print(f'Mating Pool: {mating_pool}')
+    print('Maiting Pool:')
+    print_list(mating_pool)
 
     config_mp = configure_mating_percents(deepcopy(mating_pool))
-    print(f'Config Mating Pool: {config_mp}')
+    print('Config Pool:')
+    print_list(config_mp)
 
     new_generation = choose_and_mate(config_mp, old_gen_num, num_of_entities)
 
     new_gen_num = generation[0].getGeneration()
     filehandler.save_data(new_generation, f'entity_data/Generation_{new_gen_num}/Offspring_gen_{new_gen_num}')
 
+
+def print_list(lis):
+
+    for count, item in enumerate(lis):
+        if isinstance(item, list):
+            print(f'{count}: ')
+            for i, obj in enumerate(item):
+                print(f'        {i}: {obj}')
+        else:
+            print(f'{count}: {item}')
 # Function assigns entities to one of the four mating pools based on thier fitness score
 #
 # Passes:
@@ -334,7 +344,7 @@ def assign_entities_to_pools(generation):
 
     for entities in generation:
 
-        ent_fitness = entities.getFitness()
+        ent_fitness = entities.getFitness() * 100
         if ent_fitness < 30:
             if len(mating_pools[0]) == 6:
                 least_fit_ent = mating_pools[0][0][0]
@@ -397,8 +407,8 @@ def configure_mating_percents(mating_pool):
 #           new_generation: The new generation created from the mating of parents entities
 def choose_and_mate(mating_pool, gen_num, num_of_entities):
     choose_pool = choose_pool_creater(mating_pool)
-    print(f'choose pool: {choose_pool}')
-    print(choose_pool[0])
+    # print(f'choose pool:')
+    # print_list(choose_pool)
 
     new_generation = []
 

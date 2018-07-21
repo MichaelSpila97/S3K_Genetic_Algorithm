@@ -8,7 +8,7 @@ import trainingdriver
 
 from ..gdmodules import gdv
 from src.handlers import filehandler
-
+from src.classes import entity
 
 class GUI:
 
@@ -24,6 +24,9 @@ class GUI:
         self.entity_num_L = tkinter.Label(self.root, text='Enter Number Of Entities(Default=10): ')
         self.entity_num_E = tkinter.Entry(self.root)
         self.entity_num_E.insert(2, 10)
+
+        self.ent_rp_L = tkinter.Label(self.root, text='Enter Entity Num for replay: ')
+        self.ent_rp_E = tkinter.Entry(self.root)
 
         #   The Radio Buttons for deciding between Continuous Traning and Non-Continuous Training and
         # the variable the buttons will modifying when they are pressed on
@@ -41,12 +44,14 @@ class GUI:
                                             command=self.request_training)
         self.ldtrain_button = tkinter.Button(self.root, text="Load Data Training",
                                             command=self.load_data)
-
+        self.replay_button = tkinter.Button(self.root, text="Replay Entity",
+                                            command=lambda: self.load_data(replay=True))
         #   Object List for the packer method to use when packing all object into the GUI
         self.obj_list = [self.score_label, self.ring_label, self.lives_label,
                         self.act_label, [self.entity_num_L, self.entity_num_E],
+                        [self.ent_rp_L, self.ent_rp_E],
                         [self.conRB, self.noncRB],
-                        [self.ndtrain_button, self.ldtrain_button]]
+                        [self.ndtrain_button, self.ldtrain_button, self.replay_button]]
 
         self.create_grid()
 
@@ -126,15 +131,30 @@ class GUI:
         except ValueError:
             messagebox.showerror("Error", "Inputed Invalid Value.\nPlease enter an positve non-zero Integer <= 10")
 
+    def request_replay(self, gen):
+        try:
+            entity_id = int(self.ent_rp_E.get())
+            if entity_id < 0 or entity_id > len(gen) - 1:
+                raise ValueError
+            ent = gen[entity_id]
+
+            replay_thread = threading.Thread(target=trainingdriver.replay_action, args=[ent], daemon=True)
+            replay_thread.start()
+        except ValueError:
+            messagebox.showerror("Error", f"Inputed Invalid Value.\nPlease enter an Enitiy ID number from 0 to{len(gen  - 1)} ")
+
     #  Method that loads data, in the .pickle format, that the user chooses
-    def load_data(self):
+    def load_data(self, replay=False):
         data = []
 
         answer = filedialog.askopenfilename(parent=self.root, initialdir=os.getcwd(),
         title="Please select a folder")
 
         data = filehandler.load_data(answer)
-        self.request_training(data)
+        if replay:
+            self.request_replay(data)
+        else:
+            self.request_training(data)
 
     # ---------------------------------------Getter Methods-----------------------------------------------
     def getRoot(self):

@@ -5,7 +5,7 @@ import os
 from src.classes import entity, traininggui
 from src.handlers import filehandler, entity_handler
 from src.gdmodules import gdv
-
+from src.buttonpress import load_state
 gui_func_qu = queue.Queue(maxsize=5)
 continue_training = 0
 # ______________________________________________________________________________
@@ -32,6 +32,9 @@ def main():
 # Passes:
 #       gen: the list that contains entities from a single generation. Is empty list if nothing is passed.
 
+def replay_action(ent):
+    ent.resurrect()
+    ent.play_game()
 
 def begin_training(num_of_entities, gen=None):
 
@@ -44,8 +47,7 @@ def begin_training(num_of_entities, gen=None):
     # Automatics press correct buttons to start game if the program is at the start screen
 
     # Waits for statistic to appear on screen to begin training
-    while not gdv.isTrainingStarted():
-        pass
+    load_state()
 
     # If thier are entities in the gen list
     if gen:
@@ -53,6 +55,7 @@ def begin_training(num_of_entities, gen=None):
         gen_num = gen[0].getGeneration()
         print(f'Generation {gen_num} training has begun')
         for entities in gen:
+            gdv.reset_stats()
             entities.play_game()
 
     # Else need to create three new entities that will compose generation 0
@@ -61,6 +64,7 @@ def begin_training(num_of_entities, gen=None):
         while num_of_entities > 0:
 
             ent = entity.Entity(name=f'G0E{total_entities - (num_of_entities - 1)}')
+            gdv.reset_stats()
             ent.play_game()
             gen.append(ent)
             num_of_entities -= 1
@@ -72,7 +76,7 @@ def begin_training(num_of_entities, gen=None):
 
     gui_func_qu.put('Toggle Button')
 
-    process_data(gen, num_of_entities)
+    process_data(gen, total_entities)
 # ______________________________________________________________________________
 #   Function that process the newly generated generation data from a training session .
 # It Cleans the data of errors, evaluated each entities data and fitness, and then
@@ -92,13 +96,19 @@ def process_data(gen, num_of_entities):
     entity_handler.eval_entity(clean_gen)
 
     eval_gen = filehandler.load_data(f'entity_data/Generation_{gen_num}/Eval_gen_{gen_num}.pickle')
+
+    eval_gen.sort(key=lambda fit: fit.getFitness(), reverse=True)
+
+    for count, ent in enumerate(eval_gen):
+        print(f'{count}: {ent}')
     entity_handler.reproduce(eval_gen, num_of_entities)
 
     if continue_training == 1:
-        print(f'Movining on to Generation {gen_num} training')
         offspring = filehandler.load_data(f'entity_data/Generation_{gen_num}/Offspring_gen_{gen_num}.pickle')
+        gen_num = offspring[0].getGeneration()
+        print(f'Movining on to Generation {gen_num} training')
         gdv.reset_stats()
-        begin_training(offspring)
+        begin_training(num_of_entities, offspring)
 
 # ______________________________________________________________________________
 def test_process_data():

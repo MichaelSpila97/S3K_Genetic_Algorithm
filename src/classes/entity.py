@@ -27,14 +27,6 @@ class Entity:
 
 # ______________________________________________________________________________________________________________________________
     def __str__(self):
-        action_str = ''
-        i = 0
-        time = 0
-        for i, action in enumerate(self.action_list):
-            time = time + action.getDelay()
-            action_str = action_str + f"""
-Action: [{i}] {format(time, '.2f')}
-              {self.action_list[i]}\n"""
 
         return f"""
         Entity {self.name} Overall Stats:
@@ -42,8 +34,8 @@ Action: [{i}] {format(time, '.2f')}
                 Generation: {self.generation}
                 Parents to this Entity: {self.parents}
                 Entity's Status: {self.alive}
-                Actions:
-                                """
+                """
+
 
 # ______________________________________________________________________________________________________________________________
     # This function directs living entities to attempt Sonic 3 and Knuckles

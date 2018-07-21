@@ -17,6 +17,7 @@ curr_act = ''
 
 at_start_screen = False
 training_start = False
+force_update = False
 
 live_info = ('lives', StatNumberMaps.live_num_map.value, StatScreenPos.lives.value)
 score_info = ('score', StatNumberMaps.score_num_map.value, StatScreenPos.score.value)
@@ -24,14 +25,14 @@ ring_info = ('rings', StatNumberMaps.ring_num_map.value, StatScreenPos.rings.val
 
 def reset_stats():
     print('Reseting Stats for next Training Session')
-    global curr_rings, curr_score, curr_lives, curr_act
+    global curr_rings, curr_score, curr_lives, curr_act, force_update
     curr_rings = 0
     curr_score = 0
     curr_lives = 3
-    curr_act = ''
+    force_update = True
 # ______________________________________________________________________________
 def get_core_stats():
-
+    global force_update
     while True:
         lives = deepcopy(curr_lives)
         rings = deepcopy(curr_rings)
@@ -44,8 +45,11 @@ def get_core_stats():
         validate_act()
 
         detect_change = lives != curr_lives or rings != curr_rings or score != curr_score or act != curr_act
-        if detect_change:
+        if detect_change or force_update:
             trainingdriver.gui_func_qu.put('Update Texts')
+            if force_update:
+                force_update = False
+
         time.sleep(0.1)
 # ______________________________________________________________________________
 # Passes:
