@@ -303,20 +303,25 @@ def mutation_adjuster(action_list, index, amount, delay, direction):
 # the generation object after reproduction is done
 def reproduce(generation, num_of_entities):
 
-    old_gen_num = generation[0].getGeneration()
+    gen_num = generation[0].getGeneration()
 
     mating_pool = assign_entities_to_pools(generation)
     print('Maiting Pool:')
     print_list(mating_pool)
 
-    config_mp = configure_mating_percents(deepcopy(mating_pool))
-    print('Config Pool:')
-    print_list(config_mp)
+    new_generation = []
+    if isinstance(mating_pool, list):
+        config_mp = configure_mating_percents(deepcopy(mating_pool))
+        print('Config Pool:')
+        print_list(config_mp)
 
-    new_generation = choose_and_mate(config_mp, old_gen_num, num_of_entities)
+        new_generation = choose_and_mate(config_mp, gen_num, num_of_entities)
 
-    new_gen_num = generation[0].getGeneration()
-    filehandler.save_data(new_generation, f'entity_data/Generation_{new_gen_num}/Offspring_gen_{new_gen_num}')
+    else:
+        print('MASTER HAS BEEN CREATED.\n SETTING NEW MASTER ANS MAKING A EMPTY GENERATION')
+        new_generation = assign_master(mating_pool, gen_num, num_of_entities)
+
+    filehandler.save_data(new_generation, f'entity_data/Generation_{gen_num}/Offspring_gen_{gen_num}')
 
 
 def print_list(lis):
@@ -359,9 +364,11 @@ def assign_entities_to_pools(generation):
         elif ent_fitness >= 50 and ent_fitness < 70:
             mating_pools[2].append([entities.getFitness(), entities])
             mating_pools[2].sort(key=lambda x: x[0])
-        elif ent_fitness >= 70:
+        elif ent_fitness >= 70 and ent_fitness < 90:
             mating_pools[3].append([entities.getFitness(), entities])
             mating_pools[3].sort(key=lambda x: x[0])
+        elif ent_fitness >= 90:
+            return entities
 
     return mating_pools
 
@@ -418,6 +425,23 @@ def choose_and_mate(mating_pool, gen_num, num_of_entities):
 
     return new_generation
 
+def assign_master(master, gen_num, num_of_entities):
+
+    new_generation = []
+
+    master_dna = master.getActionList()
+    if master.getMasterEntity() is not None:
+        master_dna = master.getMasterEntity.getActionList() + master_dna
+
+    master.setActionList(master_dna)
+
+    while len(new_generation) < num_of_entities:
+        empty_entity = entitiy.Entity(name=f'G{gen_num + 1}E{entity_num}')
+        empty_entity.setMasterEntity(master)
+        empty_entity.setGeneration(gen_num)
+        new_generation.append(empty_entity)
+
+    return new_generation
 #   Fuction responsible for choosing the parents that will mate and create a new entity
 #
 # Passes:

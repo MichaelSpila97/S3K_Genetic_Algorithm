@@ -8,7 +8,6 @@ import trainingdriver
 
 from ..gdmodules import gdv
 from src.handlers import filehandler
-from src.classes import entity
 
 class GUI:
 

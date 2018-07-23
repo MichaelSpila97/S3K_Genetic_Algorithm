@@ -14,7 +14,7 @@ from ..buttonpress import load_state
 class Entity:
 
 # _______________________________________________________________________________________________________________________________
-    def __init__(self, name, act_list=None, parents=None, dna_cap=100):
+    def __init__(self, name, act_list=None, parents=None, dna_cap=50):
 
         self.name = name
         self.action_list = act_list or []
