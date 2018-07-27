@@ -25,8 +25,8 @@ def generate_delay():
 def check_status(entity, list_place):
     if list_place > 0:
 
-        entity_curr_lives = entity.action_list[list_place].lives_count
-        entity_prev_lives = entity.action_list[list_place - 1].lives_count
+        entity_curr_lives = entity.getActionList()[list_place].lives_count
+        entity_prev_lives = entity.getActionList()[list_place - 1].lives_count
 
         if entity_curr_lives < entity_prev_lives:
             entity.died()
@@ -44,7 +44,7 @@ def master_driver(master_entity):
 
     for list_place, actions in enumerate(master_entity.getActionList()):
             actions.execute_action()
-            check_status(list_place, master_entity.getActionList())
+            check_status(master_entity, list_place)
 
 
 def generate_driver(entity):

@@ -55,18 +55,9 @@ def clean_dna(generation):
         # ---------------------------------------------------------------------
         # Beggining of Ring Cleaning Block
 
-            #   Sets actions at Beggining to zero if they are not zero
-            #   Countinues until first legit zero appears in a action in the
-            # action list
-            if dna.getRingCount() > 0 and count == 0:
-                i = 0
-                while entities.action_list[i].ring_count != 0:
-                    entities.action_list[i].ring_count = 0
-                    i += 1
-
-            #       If the ring count is legit then ring_keeper var should be set to
+            #  If the ring count is legit then ring_keeper var should be set to
             # equal the current actions score count
-            elif ring_keeper == dna.getRingCount() or \
+            if ring_keeper == dna.getRingCount() or \
                  ring_keeper < dna.getRingCount() or \
                  dna.getRingCount() == 0:
 
@@ -150,11 +141,11 @@ def pos_dna_eval(generation):
                 #   Then the positive reward for the current action an previous
                 # action will increase to 0.100
                 if in_last_five_seconds:
-                    ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.100, 10, 'dec'))
+                    ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.100, 5, 'dec'))
                 #   Else the reward for the current and previous action will be
                 # the standarded 0.05
                 else:
-                    ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.050, 5, 'dec'))
+                    ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.050, 3, 'dec'))
 
                 reset_delay = True
 
@@ -195,23 +186,17 @@ def neg_dna_eval(generation):
     for ent in generation:
 
         prev_rings = 0
-        prev_score = 0
         prev_lives = ent.getActionList()[0].getLivesCount()
 
         # Ring delay keeper
         rdelay_keeper = 0
 
-        # Score delay keeper
-        sdelay_keeper = 0
-
-        reset_sdelay_keeper = False
         reset_rdelay_keeper = False
         penilize_life = True
 
         for i, actions in enumerate(ent.getActionList()):
 
             rdelay_keeper = rdelay_keeper + actions.getDelay()
-            sdelay_keeper = sdelay_keeper + actions.getDelay()
             past_start = i != 0
 
             # Penilize the current action and previous action if the entity losses rings
@@ -224,37 +209,25 @@ def neg_dna_eval(generation):
 
                 # If the entity has been holding no rings for awhile give them higher penility
                 if isDefenseless(actions.getRingCount(), prev_rings):
-                    ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.10, 30, 'inc'))
+                    ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.10, 10, 'inc'))
                 # Else the penility will be the standard 0.05
                 else:
-                    ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.050, 30, 'inc'))
+                    ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.050, 10, 'inc'))
 
                 reset_rdelay_keeper = True
 
-            # Penilize the current actions and previous action if the entities score has not changed
-            if scoreIsStangnating(sdelay_keeper, actions.getScoreCount(), prev_score):
-
-                ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.050, 30, 'inc'))
-                reset_sdelay_keeper = True
-
             if past_start:
                 if lostLife(actions.getLivesCount(), prev_lives, penilize_life):
-                    ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.25, 30, 'inc'))
+                    ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.25, 10, 'inc'))
                     penilize_life = False
 
             prev_rings = actions.getRingCount()
-            prev_score = actions.getScoreCount()
             prev_lives = actions.getLivesCount()
 
             # Resets rdelay onces a penalty has been assesed for ring counts
             if reset_rdelay_keeper:
                 rdelay_keeper = 0
                 reset_rdelay_keeper = False
-
-            # Resets sdelay onces a penalty has been assessed for score counts
-            if reset_sdelay_keeper:
-                sdelay_keeper = 0
-                reset_sdelay_keeper = False
 
     return generation
 
@@ -325,14 +298,16 @@ def reproduce(generation, num_of_entities):
 
 
 def print_list(lis):
-
-    for count, item in enumerate(lis):
-        if isinstance(item, list):
-            print(f'{count}: ')
-            for i, obj in enumerate(item):
-                print(f'        {i}: {obj}')
-        else:
-            print(f'{count}: {item}')
+    if isinstance(lis, list):
+        for count, item in enumerate(lis):
+            if isinstance(item, list):
+                print(f'{count}: ')
+                for i, obj in enumerate(item):
+                    print(f'        {i}: {obj}')
+            else:
+                print(f'{count}: {item}')
+    else:
+        print(lis)
 # Function assigns entities to one of the four mating pools based on thier fitness score
 #
 # Passes:
@@ -364,10 +339,10 @@ def assign_entities_to_pools(generation):
         elif ent_fitness >= 50 and ent_fitness < 70:
             mating_pools[2].append([entities.getFitness(), entities])
             mating_pools[2].sort(key=lambda x: x[0])
-        elif ent_fitness >= 70 and ent_fitness < 90:
+        elif ent_fitness >= 70 and ent_fitness < 95:
             mating_pools[3].append([entities.getFitness(), entities])
             mating_pools[3].sort(key=lambda x: x[0])
-        elif ent_fitness >= 90:
+        elif ent_fitness >= 95:
             return entities
 
     return mating_pools
@@ -420,6 +395,7 @@ def choose_and_mate(mating_pool, gen_num, num_of_entities):
     new_generation = []
 
     while len(new_generation) < num_of_entities:
+        print('new_entity')
         parents = choose_parents(choose_pool)
         new_generation.append(create_new_entity(parents, gen_num, len(new_generation) + 1))
 
@@ -431,14 +407,14 @@ def assign_master(master, gen_num, num_of_entities):
 
     master_dna = master.getActionList()
     if master.getMasterEntity() is not None:
-        master_dna = master.getMasterEntity.getActionList() + master_dna
+        master_dna = master.getMasterEntity().getActionList() + master_dna
 
     master.setActionList(master_dna)
 
     while len(new_generation) < num_of_entities:
-        empty_entity = entitiy.Entity(name=f'G{gen_num + 1}E{entity_num}')
+        empty_entity = entity.Entity(name=f'G{gen_num + 1}E{len(new_generation)}')
         empty_entity.setMasterEntity(master)
-        empty_entity.setGeneration(gen_num)
+        empty_entity.setGeneration(gen_num + 1)
         new_generation.append(empty_entity)
 
     return new_generation
@@ -453,13 +429,14 @@ def assign_master(master, gen_num, num_of_entities):
 def choose_parents(choose_pool):
     par_list = []
     while len(par_list) < 2:
+        print("Choosing Parents...")
         shuffle(choose_pool)
         new_parent = choice(choose_pool)
 
         if len(par_list) == 0:
             par_list.append(deepcopy(new_parent))
         else:
-            if par_list[0].getFitness() != new_parent.getFitness():
+            if par_list[0].getName() != new_parent.getName():
                 par_list.append(deepcopy(new_parent))
         seed()
 
@@ -481,7 +458,7 @@ def create_new_entity(parents, gen_num, entity_num):
     new_entity.setGeneration(gen_num + 1)
     new_entity.setParents([parents[0].getName(), parents[1].getName()])
     new_entity.setActionList(construct_Dna(parents))
-
+    new_entity.setMasterEntity(parents[0].getMasterEntity())
     return new_entity
 
 #   Function that is responsibe for creating the DNA based of the new entities parents
@@ -500,18 +477,10 @@ def construct_Dna(parent):
     assert len(par1_dna) == len(par2_dna)
     for iter in range(len(par1_dna)):
 
-        par_choice_list = ["P1"] * 50 + ["P2"] * 50
-        shuffle(par_choice_list)
-        par_choice = choice(par_choice_list)
-
-        seed()
-
-        if par_choice == "P1":
-
+        if par1_dna[iter].getMutation() < par2_dna[iter].getMutation():
             new_dna.append(attempt_mutation(par1_dna[iter]))
 
-        elif par_choice == "P2":
-
+        else:
             new_dna.append(attempt_mutation(par2_dna[iter]))
 
     return new_dna

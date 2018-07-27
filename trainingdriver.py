@@ -16,12 +16,12 @@ continue_training = 0
 #   The main creates and execute thread responsible for capturing data from game screen
 # and call Test_GUI to build the programs gui
 def main():
-    # test_process_data()
-    stat_thread = threading.Thread(target=gdv.get_core_stats, daemon=True)
-    stat_thread.start()
+    test_process_data()
+    # stat_thread = threading.Thread(target=gdv.get_core_stats, daemon=True)
+    # stat_thread.start()
 
     # Builds Gui that displays in game stats and used to start test
-    traininggui.GUI()
+    # traininggui.GUI()
 
 
 # ______________________________________________________________________________
@@ -112,7 +112,7 @@ def process_data(gen, num_of_entities):
 
 # ______________________________________________________________________________
 def test_process_data():
-    gen = filehandler.load_data('entity_data/Generation_0/Raw_Gen_0.pickle')
+    gen = filehandler.load_data('entity_data/Generation_35/Raw_Gen_35.pickle')
     process_data(gen, 10)
 
 
