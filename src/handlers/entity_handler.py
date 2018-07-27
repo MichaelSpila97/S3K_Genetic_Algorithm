@@ -28,7 +28,6 @@ def clean_dna(generation):
     ring_keeper = 0
 
     for entities in generation:
-        i = 0
 
         next_starting_score = deepcopy(entities.action_list[len(entities.action_list) - 1].score_count)
 
