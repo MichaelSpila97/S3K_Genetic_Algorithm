@@ -554,7 +554,7 @@ def stagnation_checker(gen_num):
     while gen_num > (initial_gen_num - 10) and gen_num >= 0:
         curr_avg = filehandler.load_data(f'entity_data/Generation_{gen_num}/Avg_Fitness.pickle')
         stagnating = (initial_avg - 0.01) <= curr_avg <= (initial_avg + 0.01)
-        print(f'{initial_avg - 0.01} <= {curr_avg} <= {initial_avg + 0.01}: {stagnating}')
+        print(f'Generation {gen_num}: {initial_avg - 0.01} <= {curr_avg} <= {initial_avg + 0.01} is {stagnating}')
         if not stagnating:
             return False
         gen_num -= 1
