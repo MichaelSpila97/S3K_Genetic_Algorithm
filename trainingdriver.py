@@ -112,7 +112,7 @@ def process_data(gen, num_of_entities):
 
 # ______________________________________________________________________________
 def test_process_data():
-    gen = filehandler.load_data('entity_data/Generation_35/Raw_Gen_35.pickle')
+    gen = filehandler.load_data('entity_data/Generation_0/Raw_Gen_0.pickle')
     process_data(gen, 10)
 
 

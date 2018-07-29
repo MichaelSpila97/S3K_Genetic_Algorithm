@@ -65,10 +65,9 @@ def generate_driver(entity):
         # Checks status of entity
         check_status(entity, list_place)
         list_place += 1
-        print(list_place)
 
 def replay_driver(entity):
-
+    print("Replaying Actions....")
     for listplace, actions in enumerate(entity.getActionList()):
 
         actions.execute_action()
@@ -77,5 +76,21 @@ def replay_driver(entity):
 
         if not entity.isAlive():
             return
+
+    while len(entity.getActionList()) < entity.getDNACap():
+        print("Adding New Actions to attempt to resolve stagnation")
+        ng.seed()
+
+        # Generates and execute new action
+        new_action = action.Action(generate_action(), 1)
+        new_action.execute_action()
+
+        # Adds new action to entities action list
+        entity.getActionList().append(deepcopy(new_action))
+
+        new_action = None
+
+        # Checks status of entity
+        check_status(entity, len(entity.getActionList()) - 1)
 
 # _______________________________________________________________________________________________________________________________

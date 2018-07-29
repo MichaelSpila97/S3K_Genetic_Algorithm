@@ -85,13 +85,14 @@ def eval_entity(generation):
 
     ngen = neg_dna_eval(deepcopy(generation))
     pgen = pos_dna_eval(deepcopy(ngen))
-    fgen = calc_fitness(deepcopy(pgen))
     gen_num = generation[0].getGeneration()
+    fgen = calc_fitness(deepcopy(pgen), gen_num)
+
     filehandler.save_data(fgen, f'entity_data/Generation_{gen_num}/Eval_gen_{gen_num}')
 
-def calc_fitness(generation):
+def calc_fitness(generation, gen_num):
     fitgen = generation
-
+    fit_avg = 0
     for entities in generation:
         dna_len = len(entities.getActionList())
         mutation_total = 0
@@ -100,7 +101,10 @@ def calc_fitness(generation):
             mutation_total = mutation_total + dna.getMutation()
 
         entities.setFitness(round(1 - (mutation_total / dna_len), 2))
+        fit_avg += entities.getFitness()
 
+    fit_avg = round(fit_avg / len(generation), 2)
+    filehandler.save_data(fit_avg, f'entity_data/Generation_{gen_num}/Avg_Fitness')
     return fitgen
 #   Function handles the postive evaluation of the dna sequence of each enitiy
 # in the generation gen_list
@@ -392,11 +396,10 @@ def choose_and_mate(mating_pool, gen_num, num_of_entities):
     # print_list(choose_pool)
 
     new_generation = []
-
+    isStag = stagnation_checker(gen_num)
     while len(new_generation) < num_of_entities:
-        print('new_entity')
         parents = choose_parents(choose_pool)
-        new_generation.append(create_new_entity(parents, gen_num, len(new_generation) + 1))
+        new_generation.append(create_new_entity(parents, gen_num, len(new_generation) + 1, isStag))
 
     return new_generation
 
@@ -428,7 +431,6 @@ def assign_master(master, gen_num, num_of_entities):
 def choose_parents(choose_pool):
     par_list = []
     while len(par_list) < 2:
-        print("Choosing Parents...")
         shuffle(choose_pool)
         new_parent = choice(choose_pool)
 
@@ -450,7 +452,7 @@ def choose_parents(choose_pool):
 #
 # Returns:
 #        new_entity: the new entity created from the parents DNA
-def create_new_entity(parents, gen_num, entity_num):
+def create_new_entity(parents, gen_num, entity_num, isStagnating):
 
     new_entity = entity.Entity(name=f'G{gen_num + 1}E{entity_num}')
 
@@ -458,6 +460,11 @@ def create_new_entity(parents, gen_num, entity_num):
     new_entity.setParents([parents[0].getName(), parents[1].getName()])
     new_entity.setActionList(construct_Dna(parents))
     new_entity.setMasterEntity(parents[0].getMasterEntity())
+    if isStagnating:
+        print("Stagnation has been detected!!! Extending DNA CAP to double the current one")
+        new_entity.setDNACap(parents[0].getDNACap() * 2)
+    else:
+        new_entity.setDNACap(parents[0].getDNACap())
     return new_entity
 
 #   Function that is responsibe for creating the DNA based of the new entities parents
@@ -539,5 +546,24 @@ def choose_pool_creater(elements):
                     fitness_ent_pos = last_index - 1
     return choose_pool
 
+def stagnation_checker(gen_num):
+
+    initial_avg = filehandler.load_data(f'entity_data/Generation_{gen_num}/Avg_Fitness.pickle')
+    initial_gen_num = gen_num
+    num_of_stag = 0
+    while gen_num > (initial_gen_num - 10) and gen_num >= 0:
+        curr_avg = filehandler.load_data(f'entity_data/Generation_{gen_num}/Avg_Fitness.pickle')
+        stagnating = (initial_avg - 0.01) <= curr_avg <= (initial_avg + 0.01)
+        print(f'{initial_avg - 0.01} <= {curr_avg} <= {initial_avg + 0.01}: {stagnating}')
+        if not stagnating:
+            return False
+        gen_num -= 1
+        num_of_stag += 1
+
+    print(f'Number of Stagnating Generation: {num_of_stag}')
+    if num_of_stag != 10:
+        return False
+
+    return True
 
 # ____________________________________________________________________________________________
