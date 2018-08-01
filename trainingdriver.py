@@ -53,14 +53,14 @@ def begin_training(num_of_entities, gen=None):
     if gen:
         # Gets Generation number from entities for file and directory nameing purposes
         gen_num = gen[0].getGeneration()
-        print(f'Generation {gen_num} training has begun')
+        print(f'Generation {gen_num} training has begun:\n')
         for entities in gen:
             gdv.reset_stats()
             entities.play_game()
 
     # Else need to create three new entities that will compose generation 0
     else:
-        print(f'Generation {gen_num} training has begun')
+        print(f'Generation {gen_num} training has begun:\n')
         while num_of_entities > 0:
 
             ent = entity.Entity(name=f'G0E{total_entities - (num_of_entities - 1)}')
@@ -72,7 +72,7 @@ def begin_training(num_of_entities, gen=None):
     os.mkdir(f'{os.getcwd()}/entity_data/Generation_{gen_num}')
     filehandler.save_data(gen, f'entity_data/Generation_{gen_num}/Raw_Gen_{gen_num}')
 
-    print(f'Generation {gen_num} training has ended')
+    print(f'Generation {gen_num} training has ended\n')
 
     gui_func_qu.put('Toggle Button')
 
@@ -99,6 +99,7 @@ def process_data(gen, num_of_entities):
 
     eval_gen.sort(key=lambda fit: fit.getFitness(), reverse=True)
 
+    print(f'ENTITIES OF GENERATION {gen_num}:\n')
     for count, ent in enumerate(eval_gen):
         print(f'{count}: {ent}')
     entity_handler.reproduce(eval_gen, num_of_entities)
@@ -106,7 +107,7 @@ def process_data(gen, num_of_entities):
     if continue_training == 1:
         offspring = filehandler.load_data(f'entity_data/Generation_{gen_num}/Offspring_gen_{gen_num}.pickle')
         gen_num = offspring[0].getGeneration()
-        print(f'Movining on to Generation {gen_num} training')
+        print(f'Movining on to Generation {gen_num} training\n')
         gdv.reset_stats()
         begin_training(num_of_entities, offspring)
 

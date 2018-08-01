@@ -40,7 +40,7 @@ def master_driver(master_entity):
 
     # If entity has already actions in its action list
 
-    print('The master entity has actions to play out')
+    print('     The master entity has actions to play out....')
 
     for list_place, actions in enumerate(master_entity.getActionList()):
             actions.execute_action()
@@ -48,7 +48,7 @@ def master_driver(master_entity):
 
 
 def generate_driver(entity):
-    print('Generatiing new actions')
+    print('     Generatiing new actions....')
     for list_place in range(entity.getDNACap()):
 
         ng.seed()
@@ -67,7 +67,7 @@ def generate_driver(entity):
         list_place += 1
 
 def replay_driver(entity):
-    print("Replaying Actions....")
+    print("     Replaying Actions....")
     for listplace, actions in enumerate(entity.getActionList()):
 
         actions.execute_action()
@@ -78,7 +78,7 @@ def replay_driver(entity):
             return
 
     while len(entity.getActionList()) < entity.getDNACap():
-        print("Adding New Actions to attempt to resolve stagnation")
+        print("     Adding New Actions to attempt to resolve stagnation")
         ng.seed()
 
         # Generates and execute new action
@@ -92,5 +92,5 @@ def replay_driver(entity):
 
         # Checks status of entity
         check_status(entity, len(entity.getActionList()) - 1)
-
+    print('')
 # _______________________________________________________________________________________________________________________________

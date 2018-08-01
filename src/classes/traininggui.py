@@ -14,6 +14,7 @@ class GUI:
     def __init__(self):
         self.root = tkinter.Tk()
 
+        self.root.title("S3K Genetic Algorithm")
         # Statistics Labels
         self.score_label = tkinter.Label(self.root, text=f'Score: {gdv.curr_score}')
         self.ring_label = tkinter.Label(self.root, text=f'Rings: {gdv.curr_rings}')
@@ -94,7 +95,7 @@ class GUI:
         labels[0].config(text=f'Score: {gdv.curr_score}')
         labels[1].config(text=f'Rings: {gdv.curr_rings}')
         labels[2].config(text=f'Lives: {gdv.curr_lives}')
-        labels[3].config(text=f'Act: {gdv.curr_act}')
+        labels[3].config(text=f'{gdv.curr_act}')
 
     #   Method that handles the chanining of state of the two regular button when
     # a request is made
@@ -117,8 +118,8 @@ class GUI:
     # Passes:
     #           gen: a list of entities defaults to an empty list if no lists are
     # passed inStatNumberMaps.act_e_map
-    def request_training(self, gen=[]):
-
+    def request_training(self, gen=None):
+        gen = gen or []
         num_entity = 0
         try:
             num_entity = int(self.entity_num_E.get())
@@ -160,7 +161,7 @@ class GUI:
         return self.root
 
     def getButtons(self):
-        return [self.ndtrain_button, self.ldtrain_button]
+        return [self.ndtrain_button, self.ldtrain_button, self.replay_button]
 
     def getLabels(self):
         return [self.score_label, self.ring_label, self.lives_label, self.act_label]

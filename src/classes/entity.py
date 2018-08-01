@@ -40,7 +40,7 @@ class Entity:
 # ______________________________________________________________________________________________________________________________
     # This function directs living entities to attempt Sonic 3 and Knuckles
     def play_game(self):
-        print(f'{self.name} is Training')
+        print(f'    {self.name} is Training....')
         if self.isAlive():
             load_state()
             if self.getMasterEntity() is not None:
@@ -52,13 +52,14 @@ class Entity:
             else:
                 action_handler.generate_driver(self)
         else:
-            print(f'A dead entity cannot play')
+            print(f'    A dead entity cannot play')
 
         if len(self.getActionList()) != self.getDNACap():
-            print('Entity did not produce enough DNA\n Giving Entity A Second Chace...')
+            print('     Entity did not produce enough DNA\n     Giving Entity A Second Chace...')
             self.setActionList([])
             self.resurrect()
             self.play_game()
+        print('')
 
 # _____________________________________________________________________________________________________________________________
     # Getter for alive attribute
@@ -68,7 +69,7 @@ class Entity:
 # ______________________________________________________________________________________________________________________________
     # Sets alive variable to false if it died in game
     def died(self):
-        print(f'{self.name} is dead')
+        print(f'    {self.name} is dead\n')
         self.alive = False
 
 # ___________________________________________________________________________________________________________________________

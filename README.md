@@ -61,7 +61,7 @@
             7. Said entity DNA will be used as the base for all others entities DNA moving and
                the length of the DNA for each entity moving forward will increase by the set amount
 
-            8 This process will continue until an entity has completed the game.
+            8. This process will continue until an entity has completed the game.
 
 
                                     Why, In Theory, This is Better Than Ver1:
