@@ -1,5 +1,7 @@
 
 import random
+import time
+
 from copy import deepcopy
 
 from ..enumval import ActionName
@@ -44,8 +46,9 @@ def master_driver(master_entity):
 
     for list_place, actions in enumerate(master_entity.getActionList()):
             actions.execute_action()
+            print(str(actions))
             check_status(master_entity, list_place)
-
+            time.sleep(0.1)
 
 def generate_driver(entity):
     print('     Generatiing new actions....')
@@ -55,6 +58,7 @@ def generate_driver(entity):
 
         # Generates and execute new action
         new_action = action.Action(generate_action(), 1)
+        print(str(new_action))
         new_action.execute_action()
 
         # Adds new action to entities action list
@@ -65,17 +69,20 @@ def generate_driver(entity):
         # Checks status of entity
         check_status(entity, list_place)
         list_place += 1
+        time.sleep(0.1)
 
 def replay_driver(entity):
     print("     Replaying Actions....")
     for listplace, actions in enumerate(entity.getActionList()):
 
+        print(str(actions))
         actions.execute_action()
 
         check_status(entity, listplace)
 
         if not entity.isAlive():
             return
+        time.sleep(0.1)
 
     while len(entity.getActionList()) < entity.getDNACap():
         print("     Adding New Actions to attempt to resolve stagnation")
@@ -92,5 +99,6 @@ def replay_driver(entity):
 
         # Checks status of entity
         check_status(entity, len(entity.getActionList()) - 1)
+        time.sleep(0.1)
     print('')
 # _______________________________________________________________________________________________________________________________

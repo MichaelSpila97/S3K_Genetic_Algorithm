@@ -45,12 +45,8 @@ class Action:
     def __str__(self):
         return f"""
         Action:                       {self.action}
-        Action delay:                 {self.delay}
-        Ring count during execution:  {self.ring_count}
-        Score count during execution: {self.score_count}
-        Lives count during execution: {self.lives_count}
-        Act during execution:         {self.act}
-        Mutation Chance:              {self.mutation}"""
+        Mutation Chance:              {self.mutation}
+                                                     """
 
     # __________________________________________________________________________
     # Function for setting the core stats of the action object during execution

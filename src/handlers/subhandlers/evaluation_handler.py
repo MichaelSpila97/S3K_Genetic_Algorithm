@@ -46,7 +46,7 @@ def pos_dna_eval(generation):
             curr_act = actions.getAct()
 
             # Modifiers to actions:
-            in_last_five_seconds = delay_keeper <= 5
+            in_last_five_seconds = delay_keeper <= 2
 
             delay_keeper = delay_keeper + actions.getDelay()
             #   Positive evaluation for the current action and previous action
@@ -57,11 +57,11 @@ def pos_dna_eval(generation):
                 #   Then the positive reward for the current action an previous
                 # action will increase to 0.100
                 if in_last_five_seconds:
-                    ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.100, 5, 'dec'))
+                    ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.100, 3, 'dec'))
                 #   Else the reward for the current and previous action will be
                 # the standarded 0.05
                 else:
-                    ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.050, 3, 'dec'))
+                    ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.050, 2, 'dec'))
 
                 reset_delay = True
 
@@ -118,17 +118,17 @@ def neg_dna_eval(generation):
             # Penilize the current action and previous action if the entity losses rings
             if isDefenseless(actions.getRingCount(), prev_rings):
 
-                ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.050, 10, 'inc'))
+                ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.050, 2, 'inc'))
 
             # Penilize the current actions and previous action if the entities rings has not changed
             if ringsAreStagnating(rdelay_keeper, actions.getRingCount(), prev_rings):
 
                 # If the entity has been holding no rings for awhile give them higher penility
                 if isDefenseless(actions.getRingCount(), prev_rings):
-                    ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.10, 10, 'inc'))
+                    ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.10, 3, 'inc'))
                 # Else the penility will be the standard 0.05
                 else:
-                    ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.050, 10, 'inc'))
+                    ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.050, 3, 'inc'))
 
                 reset_rdelay_keeper = True
 

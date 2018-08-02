@@ -35,10 +35,10 @@ def assign_entities_to_pools(generation):
         elif ent_fitness >= 50 and ent_fitness < 70:
             mating_pools[2].append([entities.getFitness(), entities])
             mating_pools[2].sort(key=lambda x: x[0])
-        elif ent_fitness >= 70 and ent_fitness < 95:
+        elif ent_fitness >= 70 and ent_fitness < 98:
             mating_pools[3].append([entities.getFitness(), entities])
             mating_pools[3].sort(key=lambda x: x[0])
-        elif ent_fitness >= 95:
+        elif ent_fitness >= 98:
             return entities
 
     return mating_pools

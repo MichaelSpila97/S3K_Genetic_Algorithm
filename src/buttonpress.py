@@ -27,17 +27,17 @@ def spindash(action, delay):
 def jump_shield(action, delay):
 
     keyboard.press(action[0])
-    time.sleep(delay)
+    time.sleep(0.5)
     keyboard.release(action[0])
-    time.sleep(0.1)
+    time.sleep(0.01)
     keyboard.press(action[1])
-    time.sleep(0.1)
+    time.sleep(delay)
     keyboard.release(action[1])
 
 def jump_left_or_right(action, delay):
 
     keyboard.press(action[0])
-    time.sleep(0.5)
+    time.sleep(1)
     keyboard.press(action[1])
     time.sleep(delay)
     keyboard.release(action[1])
