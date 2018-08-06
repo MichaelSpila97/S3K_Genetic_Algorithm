@@ -75,7 +75,6 @@ def clean_dna(generation):
     gen_num = generation[0].getGeneration()
     filehandler.save_data(generation, f'entity_data/Generation_{gen_num}/Clean_gen_{gen_num}')
 # ____________________________________________________________________________________________
-# --------------------------Beginning of Evaluating Functions---------------------------------
 #   Wrapper function that execute all evaluation functions and saves the state of
 # the generation object after evaluation
 def eval_entity(generation):
@@ -89,32 +88,34 @@ def eval_entity(generation):
 
 
 # ____________________________________________________________________________________________
-# -------------------------------Beginning of Reproductin Functions---------------------------
 #   Wrapper function that execute all reproduction functions and saves the state of
 # the generation object after reproduction is done
 def reproduce(generation, num_of_entities):
 
     gen_num = generation[0].getGeneration()
-
     mating_pool = assign_entities_to_pools(generation)
+
     print('Maiting Pool:')
     print_list(mating_pool)
 
     new_generation = []
+
+    # Creates next generation with current dna data if no master was created
     if isinstance(mating_pool, list):
         config_mp = configure_mating_percents(deepcopy(mating_pool))
         print('Config Pool:')
         print_list(config_mp)
-
         new_generation = choose_and_mate(config_mp, gen_num, num_of_entities)
 
+    # Creates next generation with no dna data and appends new master if a master was created
     else:
         print('MASTER HAS BEEN CREATED.\n SETTING NEW MASTER ANS MAKING A EMPTY GENERATION\n')
         new_generation = assign_master(mating_pool, gen_num, num_of_entities)
+
     print('\n')
     filehandler.save_data(new_generation, f'entity_data/Generation_{gen_num}/Offspring_gen_{gen_num}')
 
-
+# Generic function for print out list of objects. Mainly used to print out generation of entities
 def print_list(lis):
     if isinstance(lis, list):
         for count, item in enumerate(lis):

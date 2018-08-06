@@ -34,10 +34,10 @@ def check_status(entity, list_place):
             entity.died()
 
 # _______________________________________________________________________________________________________________________________
-#   Function that controls the execution of an entities actions
+#   Function that controls the execution of the master_entities actions
 # from its action list
 # Passes:
-#       entity: an Entity Object
+#       A master entity
 def master_driver(master_entity):
 
     # If entity has already actions in its action list
@@ -49,7 +49,11 @@ def master_driver(master_entity):
             print(str(actions))
             check_status(master_entity, list_place)
             time.sleep(0.1)
-
+# _______________________________________________________________________________________________________________________________
+#   Function that generates new action for entities that have no actions in
+# thier action list
+# Passes:
+#       A entity
 def generate_driver(entity):
     print('     Generatiing new actions....')
     for list_place in range(entity.getDNACap()):
@@ -71,6 +75,12 @@ def generate_driver(entity):
         list_place += 1
         time.sleep(0.1)
 
+# _______________________________________________________________________________________________________________________________
+#   Function that replays action from a entity's action list. If stagnation was
+# detected then the function will generate new action for the entity till is new
+# dna cap is reached
+# Passes:
+#       A entity
 def replay_driver(entity):
     print("     Replaying Actions....")
     for listplace, actions in enumerate(entity.getActionList()):
@@ -84,6 +94,7 @@ def replay_driver(entity):
             return
         time.sleep(0.1)
 
+    # Will enter loop if dnacap was increased due to stagnation
     while len(entity.getActionList()) < entity.getDNACap():
         print("     Adding New Actions to attempt to resolve stagnation")
         ng.seed()

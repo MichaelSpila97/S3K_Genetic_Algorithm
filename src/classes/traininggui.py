@@ -117,10 +117,12 @@ class GUI:
     #   Method that starts a thread and begins the training of entities
     # Passes:
     #           gen: a list of entities defaults to an empty list if no lists are
-    # passed inStatNumberMaps.act_e_map
+    #                passed in
     def request_training(self, gen=None):
         gen = gen or []
         num_entity = 0
+
+        # Trys to begin training and fails if user inputed a invaild number of entities
         try:
             num_entity = int(self.entity_num_E.get())
             if num_entity < 1 or num_entity > 10:
@@ -131,7 +133,12 @@ class GUI:
         except ValueError:
             messagebox.showerror("Error", "Inputed Invalid Value.\nPlease enter an positve non-zero Integer <= 10")
 
+    #   Method that starts a thread that will replay an entiteis actions
+    # Passes:
+    #           gen: a list of entities
     def request_replay(self, gen):
+
+        # Trys to begin replay of entities actions and fails if user inputed a invaild entity id
         try:
             entity_id = int(self.ent_rp_E.get())
             if entity_id < 0 or entity_id > len(gen) - 1:
@@ -144,6 +151,9 @@ class GUI:
             messagebox.showerror("Error", f"Inputed Invalid Value.\nPlease enter an Enitiy ID number from 0 to{len(gen  - 1)} ")
 
     #  Method that loads data, in the .pickle format, that the user chooses
+    # Passes:
+    #         replay: A boolean value that decides weather data was being loaded for
+    #                 replaying an entities actions
     def load_data(self, replay=False):
         data = []
 

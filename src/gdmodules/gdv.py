@@ -2,7 +2,7 @@ import time
 from copy import deepcopy
 
 from src.enumval import StatNumberMaps, StatScreenPos
-from src.gdmodules.gdr import grab_stat
+from ..gdmodules import gdr
 import trainingdriver
 
 # ______________________________________________________________________________
@@ -39,14 +39,16 @@ def get_core_stats():
         score = deepcopy(curr_score)
         act = deepcopy(curr_act)
 
-        validate_lives(grab_stat(live_info))
-        validate_score(grab_stat(score_info))
-        validate_rings(grab_stat(ring_info))
+        validate_lives(gdr.grab_stat(live_info))
+        validate_score(gdr.grab_stat(score_info))
+        validate_rings(gdr.grab_stat(ring_info))
         validate_act()
 
         detect_change = lives != curr_lives or rings != curr_rings or score != curr_score or act != curr_act
         if detect_change or force_update:
             trainingdriver.gui_func_qu.put('Update Texts')
+            #   If thier was a foce update set force_update to false to stop another force update
+            # from occuring immediatly afterwards
             if force_update:
                 force_update = False
 
@@ -119,8 +121,8 @@ def validate_lives(lives):
 #        curr_act: the global variable that represent the act status
 def validate_act():
     global curr_act
-    act_b_status = grab_stat(('Bact', StatNumberMaps.act_b_map.value, StatScreenPos.act_b.value))
-    act_e_status = grab_stat(('Eact', StatNumberMaps.act_e_map.value, StatScreenPos.act_e.value))
+    act_b_status = gdr.grab_stat(('Bact', StatNumberMaps.act_b_map.value, StatScreenPos.act_b.value))
+    act_e_status = gdr.grab_stat(('Eact', StatNumberMaps.act_e_map.value, StatScreenPos.act_e.value))
 
     act_b_fail_str = 'Could not obtain Bact'
     act_e_fail_str = 'Could not obtain Eact'
@@ -149,9 +151,9 @@ def isTrainingStarted():
     fscore_str = 'Could not obtain score'
     flives_str = 'Could not obtain lives'
 
-    if grab_stat(ring_info) == fring_str and \
-       grab_stat(score_info) == fscore_str and \
-       grab_stat(live_info) == flives_str:
+    if gdr.grab_stat(ring_info) == fring_str and \
+       gdr.grab_stat(score_info) == fscore_str and \
+       gdr.grab_stat(live_info) == flives_str:
 
         training_start = False
     else:
@@ -167,7 +169,7 @@ def isTrainingStarted():
 def isAtStartScreen():
     global at_start_screen
 
-    if grab_stat(('ss', StatNumberMaps.start_screen_map.value, StatScreenPos.start_game.value)) == 'Go':
+    if gdr.grab_stat(('ss', StatNumberMaps.start_screen_map.value, StatScreenPos.start_game.value)) == 'Go':
         at_start_screen = True
     else:
         at_start_screen = False

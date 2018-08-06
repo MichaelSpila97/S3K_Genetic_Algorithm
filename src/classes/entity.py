@@ -9,6 +9,9 @@ from ..buttonpress import load_state
 #     generation:  This represent the generation the entity belongs to
 #     parents:     This is a list that contains the parents to the entity. Will be empty if the entity belongs to Gen 0
 #     alive:       This represent wheater the entity living status. Used to stop entities run if it dies during the game
+#     dnacap:      This is the number of action an entities is allowed to take before its ingame attempt is over
+#     master_ent:  The entity that is used to play out action sequences that were evaluated as being the fittess
+#                  set of actions for previous generations play attempts
 # _______________________________________________________________________________________________________________________________
 
 class Entity:
@@ -43,17 +46,23 @@ class Entity:
         print(f'    {self.name} is Training....')
         if self.isAlive():
             load_state()
+
+            # Master plays actions out first is it has been created
             if self.getMasterEntity() is not None:
                 if self.getMasterEntity().getActionList() != []:
                     action_handler.master_driver(self.getMasterEntity())
 
+            # Then if previous action were created those action will be played out
             if self.getActionList() != []:
                 action_handler.replay_driver(self)
+
+            # Else new action must be generated for this entity
             else:
                 action_handler.generate_driver(self)
         else:
             print(f'    A dead entity cannot play')
 
+        # For an entity that either prematurly died during the action generation step
         if len(self.getActionList()) != self.getDNACap():
             print('     Entity did not produce enough DNA\n     Giving Entity A Second Chace...')
             self.setActionList([])

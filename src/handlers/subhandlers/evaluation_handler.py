@@ -3,22 +3,6 @@ import src.handlers.filehandler as filehandler
 from ..behavior_mods.penatly import *
 from ..behavior_mods.reward import *
 
-def calc_fitness(generation, gen_num):
-    fitgen = generation
-    fit_avg = 0
-    for entities in generation:
-        dna_len = len(entities.getActionList())
-        mutation_total = 0
-
-        for dna in entities.getActionList():
-            mutation_total = mutation_total + dna.getMutation()
-
-        entities.setFitness(round(1 - (mutation_total / dna_len), 2))
-        fit_avg += entities.getFitness()
-
-    fit_avg = round(fit_avg / len(generation), 2)
-    filehandler.save_data(fit_avg, f'entity_data/Generation_{gen_num}/Avg_Fitness')
-    return fitgen
 #   Function handles the postive evaluation of the dna sequence of each enitiy
 # in the generation gen_list
 # Passes:
@@ -146,6 +130,31 @@ def neg_dna_eval(generation):
                 reset_rdelay_keeper = False
 
     return generation
+
+#   Function Calculates the fitness of each entity in a generation and creates a file
+# that contains the generation fitness average that is used to detect staganation.
+#
+# Passes:
+#        generation: the list of entities that make up a generation
+#        gen_num:    the number that idetifies which generatin is being evaluated
+# Returns:
+#        fitgen: the generation of entities with thier fitness calcuated
+def calc_fitness(generation, gen_num):
+    fitgen = generation
+    fit_avg = 0
+    for entities in generation:
+        dna_len = len(entities.getActionList())
+        mutation_total = 0
+
+        for dna in entities.getActionList():
+            mutation_total = mutation_total + dna.getMutation()
+
+        entities.setFitness(round(1 - (mutation_total / dna_len), 2))
+        fit_avg += entities.getFitness()
+
+    fit_avg = round(fit_avg / len(generation), 2)
+    filehandler.save_data(fit_avg, f'entity_data/Generation_{gen_num}/Avg_Fitness')
+    return fitgen
 
 # Function controls the adjustment of mutation values of action object from an action_list
 # Passes:
