@@ -4,14 +4,15 @@ from ...classes import action, entity
 from ...handlers import action_handler as ah, filehandler
 
 last_stag_gen = -1
-# Function assigns entities to one of the four mating pools based on thier fitness score
-#
+#   Function assigns entities to one of the four mating pools based on thier fitness score.
+# Also used to determine if a master has been created.
 # Passes:
 #        generation: List of entities that belong to a generation
 #
 # Returns:
 #        mating_pool: List of the four mating pools with the entities in their
-#                     respective pools
+#                     respective pools or returns the master entity if it has
+#                     been found
 def assign_entities_to_pools(generation):
     mating_pools = [[[2, 5]],
                     [[2, 15]],
@@ -38,6 +39,7 @@ def assign_entities_to_pools(generation):
         elif ent_fitness >= 70 and ent_fitness < 98:
             mating_pools[3].append([entities.getFitness(), entities])
             mating_pools[3].sort(key=lambda x: x[0])
+        # Master entity has been found
         elif ent_fitness >= 98:
             return entities
 
@@ -95,17 +97,30 @@ def choose_and_mate(mating_pool, gen_num, num_of_entities):
         new_generation.append(create_new_entity(parents, gen_num, len(new_generation) + 1, isStag))
 
     return new_generation
-
+#   Fuction responsible for assign the found masters as the new master of the next generation
+# and creating a new generation with no actions in thier action list
+#
+# Passes:
+#           master:          The entities whose fitness score is greater than or equal to 98%
+#           gen_num:         The generation number of the current generation
+#           num_of_entities: The number of entities that will be created for the next
+#                            generation
+#
+# Returns:
+#           new_generation: The new generation created from the mating of parents entities
 def assign_master(master, gen_num, num_of_entities):
 
     new_generation = []
 
     master_dna = master.getActionList()
+
+    # Adds previous master DNA to new master DNA to create the new master
     if master.getMasterEntity() is not None:
         master_dna = master.getMasterEntity().getActionList() + master_dna
 
     master.setActionList(master_dna)
 
+    # Creates new master generation
     while len(new_generation) < num_of_entities:
         empty_entity = entity.Entity(name=f'G{gen_num + 1}E{len(new_generation)}')
         empty_entity.setMasterEntity(master)
@@ -149,10 +164,13 @@ def create_new_entity(parents, gen_num, entity_num, isStagnating):
 
     new_entity = entity.Entity(name=f'G{gen_num + 1}E{entity_num}')
 
+    # Sets basic entities statistics
     new_entity.setGeneration(gen_num + 1)
     new_entity.setParents([parents[0].getName(), parents[1].getName()])
     new_entity.setActionList(construct_Dna(parents))
     new_entity.setMasterEntity(parents[0].getMasterEntity())
+
+    # Doubles DNA Cap if Stagnating else keep DNA Cap the same
     if isStagnating:
         new_entity.setDNACap(parents[0].getDNACap() * 2)
     else:
@@ -213,16 +231,23 @@ def attempt_mutation(gene):
 #
 # Returns:
 #        choose_pool: A list that is the newly created choose pool
-def choose_pool_creater(elements):
+def choose_pool_creater(mating_pool):
     choose_pool = []
     target_len = 0
 
-    for items in elements:
-        last_index = len(items) - 1
-        target_len += items[last_index][1]
-        if len(items) > 1:
+    for pools in mating_pool:
+        # Obtains the total amount of space each pool will occupy in the choose pool
+        last_index = len(pools) - 1
+        target_len += pools[last_index][1]
+
+        # If there are entities to occupy the targeted amount of space in the choose pool
+        if len(pools) > 1:
+            #   Determines how much space each entity from the pools get in the choose_pool so that
+            # targent amount of space is equal divided among the entities
             equal_rep = target_len // (last_index + 1)
-            for pos, ent in enumerate(items):
+
+            # Allocates equal amount of spaces to each entitiy from the pool into the choose pool
+            for pos, ent in enumerate(pools):
                 if isinstance(ent[1], int):
                     break
                 curr_list = equal_rep * [ent[1]]
@@ -230,21 +255,45 @@ def choose_pool_creater(elements):
 
             fitness_ent_pos = last_index - 1
 
+            #   If there is still space remaining in the target length of the choose pool for the current pool to
+            # occupy then added a entity from the current pool one at a time until the targent length in met
+            #
+            # Note: Starts adding from the back of the pool so that the entity with the highest fitness has an
+            # slight advantage over entities with lower fitness in mating process
             while len(choose_pool) < target_len:
-                choose_pool.append(items[fitness_ent_pos][1])
+                choose_pool.append(pools[fitness_ent_pos][1])
                 fitness_ent_pos -= 1
 
                 if fitness_ent_pos < 0:
                     fitness_ent_pos = last_index - 1
+
     return choose_pool
 
+#   Function that checks to see if the generation fitness avarage has been stagnating
+# for the past 10 generation
+#
+# Passes:
+#          gen_num: The number that represent which generatin the program is currently on
+#
+# Returns:
+#        True: if Stagnation occured
+#        False: if thier is no current stagnation
 def stagnation_checker(gen_num):
     global last_stag_gen
 
     print('\nStagnation Report:\n')
+
+    # Loads in the fitness average of the current generation the program is on
     initial_avg = filehandler.load_data(f'entity_data/Generation_{gen_num}/Avg_Fitness.pickle')
     initial_gen_num = gen_num
+
+    # Keeps track of the number of stagnating generation
     num_of_stag = 0
+
+    # Looks back at previous 10 generation until:
+    #       A generation Average deviates from the current stagnating avaerage
+    #       10 generation are in the range of the stagnating Value
+    #       or the 0ith generation is reached
     while gen_num > (initial_gen_num - 10) and gen_num >= 0:
         curr_avg = filehandler.load_data(f'entity_data/Generation_{gen_num}/Avg_Fitness.pickle')
         stagnating = (initial_avg - 0.01) <= curr_avg <= (initial_avg + 0.01) and last_stag_gen != gen_num
@@ -254,10 +303,13 @@ def stagnation_checker(gen_num):
         gen_num -= 1
         num_of_stag += 1
 
+    # Must been at least 10 generation with values within stagnation range in order for stagnation to occur
     print(f'\nNumber of Stagnating Generation: {num_of_stag}\n')
     if num_of_stag != 10:
         return False
 
+    #   Sets the intial gen num as last stagnation generation in order to prevent concurrent stagnation
+    # detection to occur
     last_stag_gen = initial_gen_num
     print(f'last stagnating generation: {last_stag_gen}')
     print("STAGNATION HAS BEEN DETECTED!!!\n Extending DNA CAP to double the current one\n")

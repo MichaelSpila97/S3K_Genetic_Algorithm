@@ -146,9 +146,12 @@ def calc_fitness(generation, gen_num):
         dna_len = len(entities.getActionList())
         mutation_total = 0
 
+        # Adds up all mutation values from each action in the action list
         for dna in entities.getActionList():
             mutation_total = mutation_total + dna.getMutation()
 
+        #   Divides the mutation total by the DNA Length and subtract by one to get
+        # entities fitness
         entities.setFitness(round(1 - (mutation_total / dna_len), 2))
         fit_avg += entities.getFitness()
 

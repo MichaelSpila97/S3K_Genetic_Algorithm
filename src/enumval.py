@@ -1,5 +1,15 @@
 from enum import Enum
 
+# -------------------------------------------------------------------------
+#   This file contains the enumerated values used for capturing in game data
+# and for the specfic button that are need to be pressed for an action to
+# be preformed.
+#
+# Note: The current enum values for caputuring in game data is calibrated for
+#       the steam version of Sonic 3 & Knuckles at 1920 x 1080 Fullscreen @
+#       60 Hz. Unless you have this setup you will have to mine for the values
+#       corresponding to your setup. The Snap_Miner tool and Paint.net may be of
+#       use to you when mining for these values.
 class StatScreenPos(Enum):
 
     #   X and Y coordinates for collection what the hud time is displaying
@@ -15,9 +25,13 @@ class StatScreenPos(Enum):
     rings = (604, 202, 621, 241)
     lives = (501, 1011, 518, 1044)
 
+    #   The boxes are postion for taking snaps that determine the begining of an act
+    # and the end of an act
     act_b = (1410, 774, 1449, 813)
     act_e = (1374, 290, 1413, 329)
 
+    #   Used for determining if you are at the start screen of the game. Not used in this version
+    # since save states are used to load into the game
     start_game = (654, 929, 725, 962)
 
 class StatNumberMaps(Enum):
@@ -30,10 +44,13 @@ class StatNumberMaps(Enum):
     live_num_map = {'152': 0, '191': 1, '141': [2, 7], '137': 3,
     '253': 4, '157': 5, '177': 6, '197': 8, '181': 9}
 
+    #   The num maps are used to determine the begining of an act
+    # and the end of an act
     act_b_map = {'739': 1, '638': 2}
-
     act_e_map = {'734': 1, '638': 2}
 
+    #   Used for determining if you are at the start screen of the game. Not used in this version
+    # since save states are used to load into the game
     start_screen_map = {'774': 'Go'}
 
 class ActionName(Enum):

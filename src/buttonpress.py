@@ -1,7 +1,10 @@
 
 import keyboard
 import time
-
+# -----------------------------------------------------------------------------------
+#   This file contains the basic action each entity can preform during it attempts at
+# the game.
+# -----------------------------------------------------------------------------------
 def general_action(action, delay):
 
     if action == '':
