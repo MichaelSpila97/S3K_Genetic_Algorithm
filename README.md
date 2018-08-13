@@ -8,7 +8,7 @@
 
                  The Segmented Stability Algorithm works on the idea of the algorithm training entities on
              smaller but equal segments of the game over and over again until an entities fitness rating is
-             over 90% then that entities DNA is used by other entities in further generation as they tackle
+             over 98% then that entities DNA is used by other entities in further generation as they tackle
              the next segment of the game. The algorithm will be preformed as flowed:
 
 
@@ -27,10 +27,11 @@
 
                   Negative Eval if:
                       1. Entity loses Rings
-                      2. Entity loses Score
-                      3. Does not increase either statistic for a minute
-                      4. Is in a defenseless state, meaning has no rings
+                      2. Entity does not increase ring count in a secomd
+                      3. Entity is in a defenseless state, meaning has no rings
+                      4. Entity loses life
 
+          
               3. Entities are then placed into mating pools of the follow based on
                  there Fitness Score
 
@@ -42,28 +43,50 @@
                  Mid-Low Pool) Guarantee 15% chance to mate if Fitness Score
                                is > 30% and < 50%
 
-                 Low-Pool) Guarantee 5% chance to mate if Fitness Score is < 30%    
-
-             4. Entities then begin to mate and produce offspring based on there     
+                 Low-Pool) Guarantee 5% chance to mate if Fitness Score is < 30%
+                 
+                 Notes:
+                        1)If a pool does not have any entities inside it then its mating percentage is added on to the next
+                          pool above it that haves entities in it.
+                 
+                        2)If multiple entities are in the same pool that pools percent of the overall
+                          mating pool is split between all the entities in that pool.
+                       
+                        Ex: 5 entities in the Mid-Low Pool mean each entity gets a 3% chance to mate
+                
+            Two diffrent outcomes can occurs after evaluation is complete and reproduction begins:
+                      a) No entity fitness is above 98% and reproduction of new entities occurs normally
+                      b) An entities fitness is above or equal to 98% and a master entitiy is created
+            
+             4a. Entities then begin to mate and produce offspring based on there     
                 action list
 
                 Crossover of Gene occurs as follows:
 
-                  1) Each parent has a 50% chance of their gene being chosen
+                  1) The gene with the lowest mutation rate is chosen
 
-                  2) If a parent gene is chosen it still has an x% chance of mutation  
-                     occurring before it is used in its offspring action list
+                  2) The choosen gene will then have a chance to mutate, based on its mutation rate, before it
+                     is placed in the new entities action list
+                     
+             4b. After the master entitiy is found:
+                
+                 1) Any previous master entities DNA is added before the current master DNA
+                 
+                 2) X number of children entitiy are created with empty action list and the master entity
+                    attached to them
 
             5. The Entities offspring then go on to play the game like their parents
 
-            6. This process repeats until an entity has a fitness rating of 90%.
-
-            7. Said entity DNA will be used as the base for all others entities DNA moving and
-               the length of the DNA for each entity moving forward will increase by the set amount
-
-            8. This process will continue until an entity has completed the game.
-
-
+            6. If after 10 generation no new master has been found or the overall fitness of the last generation
+               has stayed around the same value, then stagataion has occurred and the DNA cap must be risen 
+               in attempt to solve stagnation.
+               
+               Note: Stagation cannot occur back to back, meaning 10 generation must past after the last stagation occured
+                     before stagnation is detected again.
+            
+            7. This process will continue until an entity has completed the game.
+            
+     
                                     Why, In Theory, This is Better Than Ver1:
 
                      1) Equal DNA length mean each entity will be evaluated more fairly
