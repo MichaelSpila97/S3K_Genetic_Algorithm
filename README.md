@@ -3,17 +3,16 @@
 		
 						 Goal of the Project:
 							
-		This project beside being used as a tool to learn python was to attempt to make a genetic algorithmn
-	that functioned off a very simple data set. The reason I choose Sonic 3 and Knuckles to be my testing enviroment
-	for this algorithm was because it was always a goal of mine to write a program that could play the game. While 
-	I relized as I was far into the project that my genetic algorithm was far off from playing the game better than 
-	any human, let alone beating that game, I still wanted to see how far this simple algorithm could get in 
-	beating the game.  I will reiterate that the main goal of the project at the end of the day was to teach me 
-	the basics of pythons and give me a oppurtunity to create and work on a programming project. While the genetic 
-	algorithm is far from even beating an ACT in S3&k, it did succeded in teaching me about python, git hub, and 
+		This project beside being used as a tool to learn python was to attempt to make a genetic 
+	algorithmn that functioned off a very simple data set. The reason I choose Sonic 3 and Knuckles 
+	to be my testing enviroment for this algorithm was because it was always a goal of mine to write 
+	a program that could play the game. While I relized as I was far into the project that my genetic 
+	algorithm was far off from playing the game better than any human, let alone beating that game, I 
+	still wanted to see how far this simple algorithm could get in beating the game.  I will reiterate 
+	that the main goal of the project at the end of the day was to teach me the basics of pythons and 
+	give me a oppurtunity to create and work on a programming project. While the genetic algorithm is 
+	far from even beating an ACT in S3&k, it did succeded in teaching me about python, git hub, and 
 	working on a programing project as a whole.
-	
-	
 	
 						 Installation info:
 						
@@ -87,6 +86,8 @@
 		   a) Smart generation of new actions
 		   b) Recognition of objects on the screens
 		   c) mabye add in machine learning....
+		
+		5) Better looking readme........
 		   
     
 		  
