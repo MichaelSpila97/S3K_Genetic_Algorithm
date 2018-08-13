@@ -7,7 +7,7 @@ import pickle
 
 def save_data(data, filename):
 
-    print('saving data')
+    print(f'saving {filename}.pickle ')
     pickle_out = open(f'{filename}.pickle', "wb")
     pickle.dump(data, pickle_out)
     pickle_out.close()

@@ -1,9 +1,16 @@
 import time
 from copy import deepcopy
+<<<<<<< HEAD:gdv.py
 
 import gdr
 import Test_Driver
 
+=======
+>>>>>>> Ver2:src/gdmodules/gdv.py
+
+from src.enumval import StatNumberMaps, StatScreenPos
+from ..gdmodules import gdr
+import trainingdriver
 
 # ______________________________________________________________________________
 #        This contains the collection of funciton that validate and stores the
@@ -17,30 +24,45 @@ curr_act = ''
 
 at_start_screen = False
 training_start = False
+force_update = False
+
+live_info = ('lives', StatNumberMaps.live_num_map.value, StatScreenPos.lives.value)
+score_info = ('score', StatNumberMaps.score_num_map.value, StatScreenPos.score.value)
+ring_info = ('rings', StatNumberMaps.ring_num_map.value, StatScreenPos.rings.value)
 
 def reset_stats():
     print('Reseting Stats for next Training Session')
+<<<<<<< HEAD:gdv.py
     global curr_rings, curr_score, curr_lives, curr_act
+=======
+    global curr_rings, curr_score, curr_lives, curr_act, force_update
+>>>>>>> Ver2:src/gdmodules/gdv.py
     curr_rings = 0
     curr_score = 0
     curr_lives = 3
-    curr_act = ''
+    force_update = True
 # ______________________________________________________________________________
 def get_core_stats():
+    global force_update
     while True:
         lives = deepcopy(curr_lives)
         rings = deepcopy(curr_rings)
         score = deepcopy(curr_score)
         act = deepcopy(curr_act)
 
-        validate_lives(gdr.live_grab())
-        validate_score(gdr.score_grab())
-        validate_rings(gdr.ring_grab())
+        validate_lives(gdr.grab_stat(live_info))
+        validate_score(gdr.grab_stat(score_info))
+        validate_rings(gdr.grab_stat(ring_info))
         validate_act()
 
         detect_change = lives != curr_lives or rings != curr_rings or score != curr_score or act != curr_act
-        if detect_change:
-            Test_Driver.gui_func_qu.put('Update Texts')
+        if detect_change or force_update:
+            trainingdriver.gui_func_qu.put('Update Texts')
+            #   If thier was a foce update set force_update to false to stop another force update
+            # from occuring immediatly afterwards
+            if force_update:
+                force_update = False
+
         time.sleep(0.1)
 # ______________________________________________________________________________
 # Passes:
@@ -70,7 +92,7 @@ def validate_score(score):
 def validate_rings(rings):
     global curr_rings
 
-    if rings == 'Could not obtain ring count':
+    if rings == 'Could not obtain rings':
         return curr_rings
 
     # ring cannot decrease to a non zero value
@@ -93,7 +115,7 @@ def validate_rings(rings):
 def validate_lives(lives):
     global curr_lives
 
-    if lives == 'Could not obtain lives count':
+    if lives == 'Could not obtain lives':
         return curr_lives
 
     # lives should not increase or decreases more than once at a time
@@ -110,11 +132,11 @@ def validate_lives(lives):
 #        curr_act: the global variable that represent the act status
 def validate_act():
     global curr_act
-    act_b_status = gdr.act_beginning_grab()
-    act_e_status = gdr.act_end_grab()
+    act_b_status = gdr.grab_stat(('Bact', StatNumberMaps.act_b_map.value, StatScreenPos.act_b.value))
+    act_e_status = gdr.grab_stat(('Eact', StatNumberMaps.act_e_map.value, StatScreenPos.act_e.value))
 
-    act_b_fail_str = 'Could not obtain the beginning of the act'
-    act_e_fail_str = 'Could not obtain the end of the act'
+    act_b_fail_str = 'Could not obtain Bact'
+    act_e_fail_str = 'Could not obtain Eact'
 
     if act_b_status != act_b_fail_str:
         curr_act = f'Act {act_b_status}'
@@ -136,11 +158,14 @@ def isTrainingStarted():
 
     global training_start
 
-    fring_str = 'Could not obtain ring count'
+    fring_str = 'Could not obtain rings'
     fscore_str = 'Could not obtain score'
-    flives_str = 'Could not obtain lives count'
+    flives_str = 'Could not obtain lives'
 
-    if gdr.ring_grab() == fring_str and gdr.score_grab() == fscore_str and gdr.live_grab() == flives_str:
+    if gdr.grab_stat(ring_info) == fring_str and \
+       gdr.grab_stat(score_info) == fscore_str and \
+       gdr.grab_stat(live_info) == flives_str:
+
         training_start = False
     else:
         training_start = True
@@ -155,9 +180,8 @@ def isTrainingStarted():
 def isAtStartScreen():
     global at_start_screen
 
-    if gdr.start_game_grab() == 'Go':
+    if gdr.grab_stat(('ss', StatNumberMaps.start_screen_map.value, StatScreenPos.start_game.value)) == 'Go':
         at_start_screen = True
-
     else:
         at_start_screen = False
 
