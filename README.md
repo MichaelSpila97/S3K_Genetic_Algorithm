@@ -34,8 +34,8 @@
 		   I have dual montior so the GUI I built along side this program to run it more smoothly and 
 		   to see if the computer computer was recognizing values correclty will be combursome to use.
 		   
-		   The point is if you do not have my exact set up then you will most likly run into issue running
-		   the algorithm.
+		   The point is if you do not have my exact set up then you will most likly run into issue 
+		   runningthe algorithm.
 		   
 		   Here is my set up again just so you don't have to scan the previous paragraph for it.
 		   
@@ -47,10 +47,11 @@
 						  3) Quality: Simply
 						  4) Played at full screen
 						  
-		  If you do not have said specs or cannot/will not run the game on you machine like I have you will
-		  have to dig for the screen position and values that identify the data on the screen. I have create a 
-		  small tool that will help you with this process called snap_miner. This tool and process on how to
-		  obtain these values are explained in the wiki of this repository.
+		  If you do not have said specs or cannot/will not run the game on you machine like I 
+		  have you will have to dig for the screen position and values that identify the data 
+		  on the screen. I have created a small tool that will help you with this process called 
+		  snap_miner. This tool and process on how to obtain these values are explained in the 
+		  wiki of this repository.
 		  
 		  
 		  3) If you have any other issue with getting this project to work just shoot me a message 
@@ -58,19 +59,19 @@
 		     
 		  			  	Other things to note:
 						
-		1) The master has Version 2 of this genetic algorithm currently on it. If you mess around with the
-		   the first one simple go the Ver1 branch a pull form thier
+		1) The master has Version 2 of this genetic algorithm currently on it. If you want to mess 
+		    around with the first one simple go the Ver1 branch a pull form thier
 		   
-		2) Please if you have any suggestion on how to improve this project in anyway please shoot me a 
-		   message I would love to hear them.
+		2) Please if you have any suggestion on how to improve this project in anyway please 
+		   shoot me a message I would love to hear them.
 		   
-		3) More specific info on the genetic algorithm and how it works is in the wiki section of this 
-		   repository.
+		3) More specific info on the genetic algorithm and how it works is in the wiki section 
+		   of this repository.
 		   
 						   Future Plans:
 						   				   
-		This project is far from complete and I would like to lay out a couple of future plans to improve 
-	this project. The following list is my current plans for improving this project.
+		This project is far from complete and I would like to lay out a couple of future plans 
+		to improve this project. The following list is my current plans for improving this project.
 	
 	
 		1) Find a way to send keyboard inputs only to the game process so the computer can be used 
