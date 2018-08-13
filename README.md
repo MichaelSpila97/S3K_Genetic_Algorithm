@@ -46,8 +46,8 @@
                  Low-Pool) Guarantee 5% chance to mate if Fitness Score is < 30%
                  
                  Notes:
-                        1)If a pool does not have any entities inside it then its mating percentage is added on to the next
-                          pool above it that haves entities in it.
+                        1)If a pool does not have any entities inside it then its mating percentage is 
+                          added on to the next pool above it that haves entities in it.
                  
                         2)If multiple entities are in the same pool that pools percent of the overall
                           mating pool is split between all the entities in that pool.
@@ -65,8 +65,8 @@
 
                   1) The gene with the lowest mutation rate is chosen
 
-                  2) The choosen gene will then have a chance to mutate, based on its mutation rate, before it
-                     is placed in the new entities action list
+                  2) The choosen gene will then have a chance to mutate, based on its 
+                      mutation rate, before it is placed in the new entities action list
                      
              4b. After the master entitiy is found:
                 
@@ -81,8 +81,8 @@
                has stayed around the same value, then stagataion has occurred and the DNA cap must be risen 
                in attempt to solve stagnation.
                
-               Note: Stagation cannot occur back to back, meaning 10 generation must past after the last stagation occured
-                     before stagnation is detected again.
+               Note: Stagation cannot occur back to back, meaning 10 generation must past 
+                     after the last stagation occured before stagnation is detected again.
             
             7. This process will continue until an entity has completed the game.
             
