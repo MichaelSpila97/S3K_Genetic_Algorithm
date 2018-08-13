@@ -1,95 +1,94 @@
 
-                        		Sonic 3 And Knuckles Genetic Algorithm Project
-
-					PLEASE USE CODE ON EITHER FROM VER1 OR VER2 BRANCH
-					THE MASTER AS OF NOW HAS AN OUTDATTED VERSION OF
-				 	THE ALGORITHM FROM VER 1 BRANCH
-
-
-          		The goal of the project is to see if a genetic algorithm could complete sonic 3&k 
-     		with only the core statistic provided to it. I have so far built a functional but rough
-     		genetic algorithm that could in theory test out these results. However due to the time
-     	        it takes and some other flaws, I have decide to abandoned my current Algorithm for a
-     		new version that I think will do better. So as of now there are two version of this
-     		algorithm. Version 1 is the currently built and flawed version of the genetic algorithm
-     		and Version 2 is the genetic algorithm that is a work in progress. Descriptions and work
-     		to be done for each algorithm are in the readme of their particular branches. The branch
-     		that preforms the best will eventually be merge with the master but until version 2 is
-     		complete this rough commit of version 1 will be present on the master. Below is some
-     		general notes, questions and descriptions of this project:
-
-      1) Can I run this algorithm on any machine with any version of Sonic 3 and
-         Knuckles without having to modify the source code?
-
-         Answer:    	Unless you have a monitor with a 1920x1080 display and have the     
-                    Steam version of Sonic3&K from the Sega Mega Drive and Genesis Collection,
-		    you will not be able to run the algorithm without modifying values
-		    within the source code.
-
-                    	The program obtain in game values through screenshotting over a
-                    value of interest, adding up the total amount of a particular pixel
-                    value, and then pulling a numeric value between 0-9 that corresponds
-                    to the result of the previous preformed summation. This means that
-		    screen positions, pixel values, and expected values are hard coded
-		    so that the program can quickly and accurately obtain the in game data
-
-                        You can find the specific screen position and expected pixels
-                    summation in enumval.py. You also will have change what pixel the program
-		    is looking for when doing pixel summation in gdr.py in the calc_num_id method.
-		    In upcoming version of this project I will try to make a more convenient way of
-		    changing these value.
-
-		    PS: enumval.py is only on Ver1 branch as of now. So please use Ver1 if you want to
-		        mess around with this project.
-
-      2) Do I need any module outside the standard library for this program.
-
-         Answer: Yes you need the following:
-
-                1) Keyboard module
-                2) Pillow module
-
-      3) The general description of the algorithm:
-
-            This genetic algorithm works under the same principles of evolution most
-          other genetic algorithms function under:
-
-                1) Entities are created
-                2) If need data is collected on entities for calculation of Fitness
-                3) Entities each are give a fitness score based on their data
-                4) Said fitness Score is used to choose which entities will be
-                   allowed to produced
-                5) Entities who were chosen are allowed to produce and create new
-                   entities
-                      Crossover: Each new entity consists of their parents DNA,
-                                  usually a 50-50   
-                      Mutation: possibility of a new entities gene changing into  
-                                something other than the intended gene
-                6) Once reproduction is complete, the offspring of entities that mated  
-                   form the next generation and beginning the process a new until the goal of the algorithm is reached.
-
-              This project algorithm follows all these principles; However, their
-          is one slight difference in this projects genetic algorithm.
-
-          This is the Idea of Evolving Towards Stability:
-
-                Instead of Fitness working on a score based system the fitness of entity
-              will be determined by how stable their DNA sequence is.
-
-                  Stability is based on the summation of each genes mutation chance divided by
-		  the length of the entities DNA.((Sum of gen_mut)/len(DNA))  
-
-              Higher score means an entities gene sequence is unstable while a lower
-              score means a entities gene sequence is stable.
-
-              The more stable a entities gene sequence is then the more fit that entity
-              and the better chance they have at passing of their genes
-
-
-        4) General Todo's for the entire projects
-
-            1) Polish Version One to be more readable before working on Version 2
-            2) Use Version One to create Version 2
-            3) Create a more convenient way to change hardcode values for obtaining
-               data. Config file?
-            4) Proofread projects writing
+                        	   Sonic 3 And Knuckles Genetic Algorithm Project
+		
+						 Goal of the Project:
+							
+		This project beside being used as a tool to learn python was to attempt to make a genetic algorithmn
+	that functioned off a very simple data set. The reason I choose Sonic 3 and Knuckles to be my testing enviroment
+	for this algorithm was because it was always a goal of mine to write a program that could play the game. While 
+	I relized as I was far into the project that my genetic algorithm was far off from playing the game better than 
+	any human, let alone beating that game, I still wanted to see how far this simple algorithm could get in 
+	beating the game.  I will reiterate that the main goal of the project at the end of the day was to teach me 
+	the basics of pythons and give me a oppurtunity to create and work on a programming project. While the genetic 
+	algorithm is far from even beating an ACT in S3&k, it did succeded in teaching me about python, git hub, and 
+	working on a programing project as a whole.
+	
+	
+	
+						 Installation info:
+						
+		If you want to run this algorithm yourself their is a couple things you going to have to 
+	do before it will work on your computer.
+	
+		1) The following dependencies are need for the project to work:
+			
+			a) PIL module: https://pillow.readthedocs.io/en/latest/installation.html
+			b) Keyboard module: https://pypi.org/project/keyboard/
+			
+		
+		2) Data is captured through sreenshots and the addition of certain pixels and as result of that
+		   the program is hard coded to take screenshots of certian place on the screen.
+	           
+		   Unless you have 1920x1080 mointors to run S3&K, then the program will most likely not
+		   recognize any of the data on the screen.  Even with that set up you may run into problem
+		   if you do not use the steam version of S3&k in the room mode on full screen. On top that
+		   I have dual montior so the GUI I built along side this program to run it more smoothly and 
+		   to see if the computer computer was recognizing values correclty will be combursome to use.
+		   
+		   The point is if you do not have my exact set up then you will most likly run into issue running
+		   the algorithm.
+		   
+		   Here is my set up again just so you don't have to scan the previous paragraph for it.
+		   
+		   		Display: Dual Monitiors that can display 1080 X 1920
+				Game Version: Sega Mega Drive & Genesis Collection
+				In Game Settings:
+						  1) Room Launcher used
+						  2) Res: 1920 X 1080 @ 60 HZ
+						  3) Quality: Simply
+						  4) Played at full screen
+						  
+		  If you do not have said specs or cannot/will not run the game on you machine like I have you will
+		  have to dig for the screen position and values that identify the data on the screen. I have create a 
+		  small tool that will help you with this process called snap_miner. This tool and process on how to
+		  obtain these values are explained in the wiki of this repository.
+		  
+		  
+		  3) If you have any other issue with getting this project to work just shoot me a message 
+		     and I'll try to help you.
+		     
+		  			  	Other things to note:
+						
+		1) The master has Version 2 of this genetic algorithm currently on it. If you mess around with the
+		   the first one simple go the Ver1 branch a pull form thier
+		   
+		2) Please if you have any suggestion on how to improve this project in anyway please shoot me a 
+		   message I would love to hear them.
+		   
+		3) More specific info on the genetic algorithm and how it works is in the wiki section of this 
+		   repository.
+		   
+						   Future Plans:
+						   				   
+		This project is far from complete and I would like to lay out a couple of future plans to improve 
+	this project. The following list is my current plans for improving this project.
+	
+	
+		1) Find a way to send keyboard inputs only to the game process so the computer can be used 
+		   while training occurs
+		   
+		2) Changes data obtaining mechisims from snapshotting and pixel addtion to mining data from
+		   games process so project can be used on multuple machines without having to mine for 
+		   necessary data points.
+		   
+		3) Improve look and functionality of GUI
+		
+		4) Add improved algorithm logic in the form of:
+		   a) Smart generation of new actions
+		   b) Recognition of objects on the screens
+		   c) mabye add in machine learning....
+		   
+    
+		  
+		  
+				
