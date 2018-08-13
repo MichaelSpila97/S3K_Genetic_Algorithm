@@ -1,12 +1,5 @@
 import time
 from copy import deepcopy
-<<<<<<< HEAD:gdv.py
-
-import gdr
-import Test_Driver
-
-=======
->>>>>>> Ver2:src/gdmodules/gdv.py
 
 from src.enumval import StatNumberMaps, StatScreenPos
 from ..gdmodules import gdr
@@ -32,11 +25,7 @@ ring_info = ('rings', StatNumberMaps.ring_num_map.value, StatScreenPos.rings.val
 
 def reset_stats():
     print('Reseting Stats for next Training Session')
-<<<<<<< HEAD:gdv.py
-    global curr_rings, curr_score, curr_lives, curr_act
-=======
     global curr_rings, curr_score, curr_lives, curr_act, force_update
->>>>>>> Ver2:src/gdmodules/gdv.py
     curr_rings = 0
     curr_score = 0
     curr_lives = 3

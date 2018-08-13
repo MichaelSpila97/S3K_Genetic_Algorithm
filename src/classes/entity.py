@@ -30,41 +30,20 @@ class Entity:
 
 # ______________________________________________________________________________________________________________________________
     def __str__(self):
-<<<<<<< HEAD:entity.py
-        action_str = ''
-        i = 0
-        time = 0
-        while i < len(self.action_list):
-            time = time + self.action_list[i].getDelay()
-            action_str = action_str + f"""
-Action: [{i}] {format(time, '.2f')}
-            {self.action_list[i]}\n"""
-            i = i + 1
-=======
 
->>>>>>> Ver2:src/classes/entity.py
         return f"""
         Entity {self.name} Overall Stats:
                 Fitness Score: {self.fitness}
                 Generation: {self.generation}
                 Parents to this Entity: {self.parents}
                 Entity's Status: {self.alive}
-<<<<<<< HEAD:entity.py
-                Actions:
-                         {action_str}        """
-=======
                 """
 
->>>>>>> Ver2:src/classes/entity.py
 
 # ______________________________________________________________________________________________________________________________
     # This function directs living entities to attempt Sonic 3 and Knuckles
     def play_game(self):
-<<<<<<< HEAD:entity.py
-        print(f'{self.name} is Training')
-=======
         print(f'    {self.name} is Training....')
->>>>>>> Ver2:src/classes/entity.py
         if self.isAlive():
             load_state()
 
@@ -99,11 +78,7 @@ Action: [{i}] {format(time, '.2f')}
 # ______________________________________________________________________________________________________________________________
     # Sets alive variable to false if it died in game
     def died(self):
-<<<<<<< HEAD:entity.py
-        print(f'{self.name} is dead')
-=======
         print(f'    {self.name} is dead\n')
->>>>>>> Ver2:src/classes/entity.py
         self.alive = False
 
 # ___________________________________________________________________________________________________________________________
