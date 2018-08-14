@@ -8,9 +8,9 @@ snap_num_map = {'402': 0, '376': 1, '456': 2, '388': 3,
 
 # Enter Path name where you would like your test images stored
 path_name = "images"
-pic_name = "currentpic"
+pic_name = "zoomexample"
 def main():
-    image = ImageGrab.grab(snap_location)
+    image = ImageGrab.grab()
 
     total = gdr.calc_num_id(num_image=image, num_map=snap_num_map)
 
