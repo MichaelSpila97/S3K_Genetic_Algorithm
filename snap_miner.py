@@ -8,7 +8,7 @@ snap_num_map = {'402': 0, '376': 1, '456': 2, '388': 3,
 
 # Enter Path name where you would like your test images stored
 path_name = "images"
-
+pic_name = "currentpic"
 def main():
     image = ImageGrab.grab(snap_location)
 
@@ -19,7 +19,7 @@ def main():
     if not os.path.isdir(path_name):
         os.mkdir(path_name)
 
-    image.save(f'{path_name}/currentpic.png')
+    image.save(f'{path_name}/{pic_name}.png')
 
 
 if __name__ == '__main__':

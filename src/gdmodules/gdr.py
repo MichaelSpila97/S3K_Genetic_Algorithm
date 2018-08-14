@@ -43,6 +43,7 @@ def calc_num_total(num_map, pos_box):
     total = 0
     num_id = 0
     num = 0
+    distance_between = 36
     curr_box = [pos_box[0], pos_box[1], pos_box[2], pos_box[3]]
 
     while True:
@@ -77,13 +78,13 @@ def calc_num_total(num_map, pos_box):
             numbers_place = numbers_place * 10
 
         # Adjust boxes for next number to be screenshotted
-        curr_box[0] = curr_box[0] - 36
-        curr_box[2] = curr_box[2] - 36
+        curr_box[0] = curr_box[0] - distance_between
+        curr_box[2] = curr_box[2] - distance_between
 
     if total == 0 and numbers_place == 1:
-        return(None)
+        return None
     else:
-        return(total)
+        return total
 # ______________________________________________________________________________
 #       Function that calculated the num_id used to identify what number
 # a screenshot represents
