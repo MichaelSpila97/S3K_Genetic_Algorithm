@@ -2,93 +2,94 @@
 
 Hello welcome to my first every independent programming project!!!
 
-The projects goal was to see if a genetic algorithm could successfully play S3&K off only the basic in game statisics shown throught the HUD and Begining and End Act cards. 
+The projects goal was to see if a Genetic Algorithm could successfully play S3&K only off the basic in game statistics show on the screen.
 
-These Stats are:
+These statists are:
 1. Rings
 2. Score
 3. Lives
-4. Act begining
+4. Act beginning
 5. Act End
 
-No other forms of statisc such as sonics positions, enemy position or goal position were used. Beside curiosity, the reason the program uses such a simple data for the algorithms functionality was due to the way data was obtained. 
+No other forms of statics such as Sonic's positions and any object's position were used.
 
-The program does not mine the in game data from the processes memory, but takes screenshots of the sprites that represent the data and reads it in from the screenshot. 
+### What were the results?
 
-The in game repersentation of the HUD is always positioned exactly in the same space on the screen making it viable to hardcode in position to take screenshots and use defined pixel count totals to use as representation for each in game stats. 
+The algorithm did display improved play as each generation passed by. Rings and score would guide the algorithm to move Sonic in the right direction of the stage.
 
-If I were to apply this method to says Sonics position it would most certainly be unrealiable and break half the time. 
+However; even though the algorithm was improving from it first attempt at the game over each generation, the improvement were not enough to guide it through an entire act, let alone the entire game.
 
-The point is the combination of curiosity and techincal limitation drove me to use screenshoting and pixel counting to read in data from the game and in turn created a very intersting programming challange for my first project.
+The algorithm would constantly leave rings and enemies behind when attempting to move through the stage. When it would be trying new sets of action after reinforcing it previous action the algorithm would inevitable move sonic back towards those rings and enemies and gain score, reinforcing bad actions.
 
-### So was it successful?
+Also there were periods in the act where rings and/or score would not be available until after a set of obstacles that was very difficult for the algorithm to overcome. Even if it got lucky and cleared it the algorithm would move on to the next entity before having a chance to reinforce the action.
 
-Well if you definition of success was game modifiying its behavior based on the in game statistis then yes; However, due to the simple data set and other things the genetic algorithm is far from playing the game proficiantly let alone beating it.
+This is why through all the training and test done the algorithm could only even make it up to hole in Angel Island Act 1 that lead to the first giant ring to the left of the stage and a bunch of ledges with trampolines to the left of the screen.
 
-Again the goal of the project was to see if a simple data set could guide a genetic algorithm to play S3&K. Even though I have a couple more modifcation to the project to see if it can make the algorithm perform I am leaning towards it not being able to play proficently off a simple data set. 
-
-Despite these disappointing findings I am still happy with the results of this project since it did end up teaching me a lot about python and working on my own programming project.
+In its current state the genetic algorithm can modify the way it moves sonic based on the rings and score its receive. However, it is far from using those statistic to improve its play to the point where it can beat an entire act.
 
 ### Futute Plans
 
-I plan to make a range improvement to this in the future if I have the time to do so.
+As such, the project is far from being completed and still needs many improvements.
 
-These imporvements are:
+These are the list of improvements I'm planning for:
 
 1. Improve easy of use over multiple computers by:
-	* Getting data from process to avoid the need to mine screen postion and pixel count totals
-	  or find a way for the computer to automate said process over many kinds of computers
-	* Find a way to send a keyboard press directly to games process so you can do other things while training is running
-	* Better looking GUI
-	
-2. Better way to read data generate from program(No more console prininting the data)
+    * Getting data from the games process to remove screen reader entirely
+    * Send keyboard inputs to game's process so computer can run algorithm while screen is off focus
+    * Better looking and functioning GUI
 
-3. Implement better generation of action based off previous actions
+2. Create better way to display algorithm's data
 
-4. Improve time it take to run each trainining session
+3. Improve algorithms logic by:
+    * Using previous action to influence the which action the algorithm will choose when generating new actions
+    * Implement way for algorithm to backtrack if it gets stuck
 
-5. Better looking python code
+4. Improve time it take to run each training session
 
-If you have any more suggestion on how I can improve this project just shoot me a message and we can discuss your reccomendation.
+If you have any more suggestion on how I can improve this project just shoot me a message and we can discuss your recommendation.
+
 ## Getting Started
 
-For those who are curious enough to try to run this project on thier computer here are a couple things you need to do before you will be able to run this project.
+These are the following steps to set up the algorithm on your machine:
 
-1. Have a copy of Sonic 3 & Kunckles preferablely the steam version(Obviously)
-2. Have the following depencey installed on your machine:
+1. Have the Steam Version of Sonic 3 & Knuckles and change the following options in the
+   simple launcher:
+
+	 * Display: Windowed
+	 * Window Size: 640 X 480
+	 * Filter: None
+
+	 Note: The simply launcher can be accessed by going into the Sega Classics Folder in
+	       the C:Steam/steamapps/common directory 
+
+2. Have the following dependencies installed on your machine:
 
 	* PIL module: https://pillow.readthedocs.io/en/latest/installation.html
 	* Keyboard module: https://pypi.org/project/keyboard/
 
-3. And unless you have the following set up:
-	* Two Monitors: 1080 X 1920 
-	* Run Game at 1080 X 1920 @ 60hz full screen
-	
- 	You will more than likely have to find out the position of the HUD element on your screen and what pixel counting total 	represent each in game element.
-	
-	Here is a link to the wiki page that details how to do this:
-	https://github.com/MichaelSpila97/S3K_Genetic_Algorithm/wiki/How-to-setup-the-screen-reader-for-your-machine
-	
-	I know this is cubersome and time conusming but until I find away for the computer to do it automatically this is the  	  
-	only way I know, besides mining the in game process, for the computer to recoginze the in game stats
+3. Set your display settings as the following:
+
+    * Change the size of text, apps, and other items: 100%
+		* Resolution: 1920 X 1080
+		* Orientation: Landscape
 
 ### What if I Just want to see an entity play the game?
-If you only want to see a prerecorded example of the algorithm playing the game then you can skip step 3 and just use the entity data I provided in the entity_data folder. 
+If you only want to see a prerecorded example of the algorithm playing the game then you can skip step 3 and just use the entity data I provided in the entity_data folder.
 
 Before running trainningdriver.py make a save state at the very beginning of Angel Isalnd Act 1. If I add any more data for more acts do the exact same thing for the cooresponding acts.
 
 Then just simple run tranningdriver.py, pick a entity between 1 - 10 and select the raw or offspring version of the entity file. Make sure Sonic 3 & Knuckles window is active when you finish selecting the programming and it should start playing the game.
 
 **Note:** If you are not using the steam version of Sonic 3 & Knuckles you will have to slight modify the load and save state 	 
-button press in buttonpress.py. 
-	  
-Simply open buttonpress.py, go to the bottom of the file and change 'F2' to what button is save state for you and 'F3' to what ever button is load state for you. 
+button press in buttonpress.py.
 
-If any other button presses do match up with how the controls are set up for your version of Sonic 3 & Kunckles then off course change those cooresponidng button in the file to whatever they are for you.
+Simply open buttonpress.py, go to the bottom of the file and change 'F2' to what button is save state for you and 'F3' to what ever button is load state for you.
+
+If any other button presses do match up with how the controls are set up for your version of Sonic 3 & Knuckles then off course change those corresponding button in the file to whatever they are for you.
 
 ## Author
 
- **Michael Spila**: Undergrad Computer Science Major at the University of Pittsburgh 
+ **Michael Spila**: Undergrad Computer Science Major at the University of Pittsburgh
 
 ##  Acknowledgments
 
@@ -98,17 +99,17 @@ The following people inspired the following parts of my project:
 
 **The Coding Train** - The use of a genetic algorithm for this project
 
-Below is links to thier respective articles and/or videos that inspired said part of this project:
+Below is links to their respective articles and/or videos that inspired said part of this project:
 
 Chris Kiehl's _How to Build a Python Bot That Can Play Web Games_: https://code.tutsplus.com/tutorials/how-to-build-a-python-bot-that-can-play-web-games--active-11117
 
 The Coding Train's _Genetic Algorithm Nature Of Code_ Youtube Series: https://www.youtube.com/watch?v=9zfeTw-uFCw&index=2&list=PLRqwX-V7Uu6bw4n02JP28QDuUdNi3EXxJ
 
-Without these people and thier online material this project would have not came to furiation 
+Without these people and their online material this project would have not came to fruition
 
 So Thank You:
 
    * Chris Kiehl
-   * Coding Traing
+   * Coding Train
 
 For providing amazing programming content
