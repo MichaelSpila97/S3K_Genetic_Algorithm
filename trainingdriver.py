@@ -12,6 +12,7 @@ from src.gdmodules import gdv
 from src.buttonpress import load_state
 gui_func_qu = queue.Queue(maxsize=5)
 continue_training = 0
+
 # ______________________________________________________________________________
 #   This contains the function responsible for facilitating the training and processing
 # of entities and thier data. Also responsible for automating the process of training
@@ -27,13 +28,13 @@ def main():
     # -----------------------------------------------------------------------------------
     # test_process_data('entity_data/Generation_0/Raw_Gen_0.pickle')
     # -----------------------------------------------------------------------------------
-
+    setup_game()
     # Creates and starts thread responsible for obtaining ingame stats
-    stat_thread = threading.Thread(target=gdv.get_core_stats, daemon=True)
-    stat_thread.start()
+    # stat_thread = threading.Thread(target=gdv.get_core_stats, daemon=True)
+    # stat_thread.start()
 
     # Builds Gui that displays in game stats and used to start test
-    traininggui.GUI()
+    # traininggui.GUI()
 
 
 def replay_action(ent):
@@ -159,6 +160,8 @@ def setup_game():
         print(f'top: {top}')
         print(f'right: {right}')
         print(f'bottom: {bottom}')
+
+
 # ______________________________________________________________________________
 if __name__ == '__main__':
     main()

@@ -8,7 +8,7 @@ snap_num_map = {'402': 0, '376': 1, '456': 2, '388': 3,
 
 # Enter Path name where you would like your test images stored
 path_name = "images"
-pic_name = "testingexample3"
+pic_name = "fullscreen"
 def main():
     image = ImageGrab.grab()
 
