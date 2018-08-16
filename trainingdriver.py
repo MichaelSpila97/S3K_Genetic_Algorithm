@@ -1,6 +1,10 @@
 import threading
 import queue
 import os
+import win32gui
+import win32con
+import keyboard
+import time
 
 from src.classes import entity, traininggui
 from src.handlers import filehandler, entity_handler
@@ -134,6 +138,27 @@ def test_process_data(data_loaction):
     process_data(gen, 10)
 
 
+def setup_game():
+        segamegadriveclassics = "SEGAGenesisClassics.exe"
+        os.chdir("E:\Steam\steamapps\common\Sega Classics")
+        gamethread = threading.Thread(target=lambda: os.system(segamegadriveclassics), daemon=True)
+
+        gamethread.start()
+
+        time.sleep(2)
+        keyboard.press('enter')
+        time.sleep(0.1)
+        keyboard.release('enter')
+        time.sleep(3)
+        window = win32gui.FindWindow(None, 'SEGA Genesis Classics - Sonic 3 & Knuckles')
+
+        win32gui.SetWindowPos(window, win32con.HWND_TOPMOST, 0, 0, 640, 480, 0)
+
+        left, top, right, bottom = win32gui.GetWindowRect(window)
+        print(f'left: {left}')
+        print(f'top: {top}')
+        print(f'right: {right}')
+        print(f'bottom: {bottom}')
 # ______________________________________________________________________________
 if __name__ == '__main__':
     main()

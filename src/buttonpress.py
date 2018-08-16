@@ -69,11 +69,11 @@ def start_next_game():
     keyboard.release('enter')
 
 def save_state():
-    keyboard.press('F2')
+    keyboard.press('F5')
     time.sleep(3)
-    keyboard.release('F2')
+    keyboard.release('F5')
 
 def load_state():
-    keyboard.press('F3')
+    keyboard.press('F10')
     time.sleep(3)
-    keyboard.release('F3')
+    keyboard.release('F10')
