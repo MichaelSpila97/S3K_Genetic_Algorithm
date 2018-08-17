@@ -43,7 +43,7 @@ def calc_num_total(num_map, pos_box):
     total = 0
     num_id = 0
     num = 0
-    distance_between = 36
+    distance_between = 16
     curr_box = [pos_box[0], pos_box[1], pos_box[2], pos_box[3]]
 
     while True:
@@ -61,16 +61,11 @@ def calc_num_total(num_map, pos_box):
         #   Need to determine if two or seven if num_id pulls the list from the
         # the live num map since thier is no distince pixel addtion for two and
         # seven for lives
-        if isinstance(num, list):
-            num = check_if_two_or_seven(numbers_place)
 
         # Reaches end of number and will break
         if num is None:
             break
 
-        elif num == 'Go':
-            total = num
-            break
         #   Calulates the total of the number and increases the current places
         # to the next number place in line
         elif isinstance(num, int):
@@ -100,22 +95,14 @@ def calc_num_id(num_image, num_map):
     image = list(num_image.getdata())
     result = 0
 
-    for pixels in image:
-        # If and else determines which types of pixels will be used in the calculations
-        # Used for determining the screenshots for live
-        if num_map.get('152') == 0:
-            if pixels == (224, 224, 225):
-                result = result + 1
+    for count, pixels in enumerate(image):
 
-        # Used for determining if the screenshot indicates the game is at the start screen
-        elif num_map.get('774') == 'Go':
-            if pixels == (224, 0, 0):
-                result = result + 1
+        if pixels == (224, 224, 225) or pixels == (160, 160, 225):
+            row = count % 14
+            col = count - 14 * row
 
-        # Used for determing all other screenshots
-        else:
-            if pixels == (224, 224, 225) or pixels == (160, 160, 225):
-                result = result + 1
+            pix_val = row + col
+            result += pix_val
 
     return result
 

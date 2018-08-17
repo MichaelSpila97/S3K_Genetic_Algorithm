@@ -53,14 +53,14 @@ If you have any more suggestion on how I can improve this project just shoot me 
 These are the following steps to set up the algorithm on your machine:
 
 1. Have the Steam Version of Sonic 3 & Knuckles and change the following options in the
-   simple launcher:
+   Room Launcher:
 
 	 * Display: Windowed
 	 * Window Size: 640 X 480
-	 * Filter: None
+	 * Vsync: On
 
 	 Note: The simply launcher can be accessed by going into the Sega Classics Folder in
-	       the C:Steam/steamapps/common directory 
+	       the C:Steam/steamapps/common directory
 
 2. Have the following dependencies installed on your machine:
 

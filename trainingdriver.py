@@ -3,7 +3,6 @@ import queue
 import os
 import win32gui
 import win32con
-import keyboard
 import time
 
 from src.classes import entity, traininggui
@@ -31,7 +30,7 @@ def main():
     # Creates and starts thread responsible for obtaining ingame stats
     stat_thread = threading.Thread(target=gdv.get_core_stats, daemon=True)
     stat_thread.start()
-
+    setup_game()
     # Builds Gui that displays in game stats and used to start test
     traininggui.GUI()
 
@@ -139,26 +138,27 @@ def test_process_data(data_loaction):
 
 
 def setup_game():
-        segamegadriveclassics = "SEGAGenesisClassics.exe"
+        segamegadriveclassics = "SEGAGameRoom.exe"
         os.chdir("E:\Steam\steamapps\common\Sega Classics")
         gamethread = threading.Thread(target=lambda: os.system(segamegadriveclassics), daemon=True)
 
         gamethread.start()
 
-        time.sleep(2)
-        keyboard.press('enter')
-        time.sleep(0.1)
-        keyboard.release('enter')
-        time.sleep(3)
-        window = win32gui.FindWindow(None, 'SEGA Genesis Classics - Sonic 3 & Knuckles')
-
-        win32gui.SetWindowPos(window, win32con.HWND_TOPMOST, 0, 0, 640, 480, 0)
+        time.sleep(5)
+        window = win32gui.FindWindow(None, 'SEGA Mega Drive Classics')
 
         left, top, right, bottom = win32gui.GetWindowRect(window)
+
+        win32gui.SetWindowPos(window, win32con.HWND_TOPMOST, 0, 0, 646, 509, 0)
+
+        left, top, right, bottom = win32gui.GetWindowRect(window)
+
         print(f'left: {left}')
         print(f'top: {top}')
         print(f'right: {right}')
         print(f'bottom: {bottom}')
+
+
 # ______________________________________________________________________________
 if __name__ == '__main__':
     main()
