@@ -52,27 +52,29 @@ If you have any more suggestion on how I can improve this project just shoot me 
 
 These are the following steps to set up the algorithm on your machine:
 
-1. Have a desktop copy of Sonic 3 & Knuckles, preferably the steam version
+1. Have the Steam Version of Sonic 3 & Knuckles and change the following options in the
+   Room Launcher:
+
+	 * Display: Windowed
+	 * Window Size: 640 X 480
+	 * Vsync: On
+
 
 2. Have the following dependencies installed on your machine:
 
 	* PIL module: https://pillow.readthedocs.io/en/latest/installation.html
 	* Keyboard module: https://pypi.org/project/keyboard/
 
-3. And unless you have the following set up:
-	* Two Monitors: 1080 X 1920
-	* Run Game at 1080 X 1920 @ 60hz Full Screen
+3. Set your display settings as the following:
 
- 	You will have to set up the screen reader for your particular machine.
-
-	Here is a link to the wiki page that details how to do this:
-	https://github.com/MichaelSpila97/S3K_Genetic_Algorithm/wiki/How-to-setup-the-screen-reader-for-your-machine
-
+    * Change the size of text, apps, and other items: 100%
+		* Resolution: 1920 X 1080
+		* Orientation: Landscape
 
 ### What if I Just want to see an entity play the game?
 If you only want to see a prerecorded example of the algorithm playing the game then you can skip step 3 and just use the entity data I provided in the entity_data folder.
 
-Before running trainningdriver.py make a save state at the very beginning of Angel Isalnd Act 1. If I add any more data for more acts do the exact same thing for the cooresponding acts.
+Before running trainningdriver.py make a save state at the very beginning of Angel Island Act 1. If I add any more data for more acts do the exact same thing for the corresponding acts.
 
 Then just simple run tranningdriver.py, pick a entity between 1 - 10 and select the raw or offspring version of the entity file. Make sure Sonic 3 & Knuckles window is active when you finish selecting the programming and it should start playing the game.
 
@@ -106,6 +108,6 @@ Without these people and their online material this project would have not came 
 So Thank You:
 
    * Chris Kiehl
-   * Coding Traing
+   * Coding Train
 
 For providing amazing programming content

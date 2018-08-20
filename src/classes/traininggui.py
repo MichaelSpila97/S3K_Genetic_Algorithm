@@ -1,6 +1,7 @@
 import tkinter
-from tkinter import filedialog
-from tkinter import messagebox
+from tkinter import filedialog, messagebox
+import tkinter.font as font
+
 import os
 import threading
 
@@ -13,13 +14,16 @@ class GUI:
 
     def __init__(self):
         self.root = tkinter.Tk()
+        self.root.geometry('600x500+700+0')
+
+        myfont = font.Font(family='Helvetica', size=36, weight='bold')
 
         self.root.title("S3K Genetic Algorithm")
         # Statistics Labels
-        self.score_label = tkinter.Label(self.root, text=f'Score: {gdv.curr_score}')
-        self.ring_label = tkinter.Label(self.root, text=f'Rings: {gdv.curr_rings}')
-        self.lives_label = tkinter.Label(self.root, text=f'Lives: {gdv.curr_lives}')
-        self.act_label = tkinter.Label(self.root, text=f'{gdv.curr_act}')
+        self.score_label = tkinter.Label(self.root, text=f'Score: {gdv.curr_score}', font=myfont)
+        self.ring_label = tkinter.Label(self.root, text=f'Rings: {gdv.curr_rings}', font=myfont)
+        self.lives_label = tkinter.Label(self.root, text=f'Lives: {gdv.curr_lives}', font=myfont)
+        self.act_label = tkinter.Label(self.root, text=f'{gdv.curr_act}', font=myfont)
 
         self.entity_num_L = tkinter.Label(self.root, text='Enter Number Of Entities(Default=10): ')
         self.entity_num_E = tkinter.Entry(self.root)
@@ -68,7 +72,7 @@ class GUI:
                 for column_count, item in enumerate(obj):
                     item.grid(row=row_count, column=column_count)
             else:
-                obj.grid(row=row_count)
+                obj.grid(row=row_count, column=1)
 
     #       Method handles the request that come in to the self.queue
     # Request Supported:

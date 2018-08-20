@@ -12,46 +12,35 @@ from enum import Enum
 #       use to you when mining for these values.
 class StatScreenPos(Enum):
 
-    #   X and Y coordinates for collection what the hud time is displaying
-    #   Not in use since keeping track of the in game timer using screenshots
-    # is very unreliable
-    # ones_sec = (604,125,621,163)
-    # min_digit = (496,125,513,163)
-    # tens_sec = (568,125,585,163)
-
     # Position of the ones digit for each of the values bellow
     # subtract x1 and x2 by 36 to move to obtain other digits
-    score = (712, 47, 729, 85)
-    rings = (604, 202, 621, 241)
-    lives = (501, 1011, 518, 1044)
+    score = (211, 45, 224, 68)
+    rings = (163, 114, 176, 137)
+    lives = (117, 475, 130, 490)
 
     #   The boxes are postion for taking snaps that determine the begining of an act
     # and the end of an act
-    act_b = (1410, 774, 1449, 813)
-    act_e = (1374, 290, 1413, 329)
+    act_b = (523, 370, 540, 387)
+    act_e = (507, 155, 524, 172)
 
     #   Used for determining if you are at the start screen of the game. Not used in this version
     # since save states are used to load into the game
     start_game = (654, 929, 725, 962)
 
 class StatNumberMaps(Enum):
-    score_num_map = {'385': 0, '367': 1, '444': 2, '380': 3, '545': 4,
-    '425': 5, '460': 6, '350': 7, '475': 8, '455': 9}
+    score_num_map = {'12106': 0, '5538': 1, '12170': 2, '9540': 3, '11780': 4,
+    '8908': 5, '11374': 6, '4148': 7, '11196': 8, '10854': 9}
 
-    ring_num_map = {'402': 0, '376': 1, '456': 2, '388': 3,
-    '557': 4, '428': 5, '468': 6, '359': 7, '483': 8, '458': 9}
+    ring_num_map = {'12310': 0, '5798': 1, '12546': 2, '9744': 3,
+    '10458': 4, '9572': 5, '11578': 6, '4380': 7, '11400': 8, '11058': 9}
 
-    live_num_map = {'152': 0, '191': 1, '141': [2, 7], '137': 3,
-    '253': 4, '157': 5, '177': 6, '197': 8, '181': 9}
+    live_num_map = {'260': 0, '-354': 1, '628': 2, '1448': 3,
+    '892': 4, '-540': 5, '446': 6, '-1204': 7, '442': 8, '-386': 9}
 
     #   The num maps are used to determine the begining of an act
     # and the end of an act
-    act_b_map = {'739': 1, '638': 2}
-    act_e_map = {'734': 1, '638': 2}
-
-    #   Used for determining if you are at the start screen of the game. Not used in this version
-    # since save states are used to load into the game
-    start_screen_map = {'774': 'Go'}
+    act_b_map = {'14630': 1, '10852': 2}
+    act_e_map = {'14842': 1, '10892': 2}
 
 class ActionName(Enum):
     move_left = 'left'
