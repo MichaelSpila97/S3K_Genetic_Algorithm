@@ -50,6 +50,10 @@ def replay_action(ent):
 
 def begin_training(num_of_entities, gen=None):
 
+    if not os.path.exists(f'{os.getcwd()}/entity_data'):
+        print('Making entity_data dir...')
+        os.mkdir(f'{os.getcwd()}/entity_data')
+
     gen_num = 0
     total_entities = num_of_entities
 
@@ -138,25 +142,24 @@ def test_process_data(data_loaction):
 
 
 def setup_game():
-        segamegadriveclassics = "SEGAGameRoom.exe"
-        os.chdir("E:\Steam\steamapps\common\Sega Classics")
-        gamethread = threading.Thread(target=lambda: os.system(segamegadriveclassics), daemon=True)
 
+        # Stores Current directory so it can return to it after launching game
+        current_dir = os.getcwd()
+
+        # Goes to games directory and lauches its .exe in a thread
+        os.chdir("E:\Steam\steamapps\common\Sega Classics")
+        gamethread = threading.Thread(target=lambda: os.system("SEGAGameRoom.exe"), daemon=True)
         gamethread.start()
 
+        # Wait Five seconds to give game time to launch before obtaining window handler
+        # and setting the window to the top right corner of the screen
         time.sleep(5)
         window = win32gui.FindWindow(None, 'SEGA Mega Drive Classics')
-
-        left, top, right, bottom = win32gui.GetWindowRect(window)
-
         win32gui.SetWindowPos(window, win32con.HWND_TOPMOST, 0, 0, 646, 509, 0)
 
-        left, top, right, bottom = win32gui.GetWindowRect(window)
-
-        print(f'left: {left}')
-        print(f'top: {top}')
-        print(f'right: {right}')
-        print(f'bottom: {bottom}')
+        # Returns to original directory so the program can save and load entity data
+        # properly
+        os.chdir(current_dir)
 
 
 # ______________________________________________________________________________
