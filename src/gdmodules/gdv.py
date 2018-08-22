@@ -14,6 +14,7 @@ curr_rings = 0
 curr_score = 0
 curr_lives = 3
 curr_act = ''
+curr_entity = ''
 
 at_start_screen = False
 training_start = False
@@ -32,23 +33,30 @@ def reset_stats():
     force_update = True
 # ______________________________________________________________________________
 def get_core_stats():
-    global force_update
+    global force_update, curr_entity
     while True:
         lives = deepcopy(curr_lives)
         rings = deepcopy(curr_rings)
         score = deepcopy(curr_score)
         act = deepcopy(curr_act)
+        entity = trainingdriver.entity_playing
 
         validate_lives(gdr.grab_stat(live_info))
         validate_score(gdr.grab_stat(score_info))
         validate_rings(gdr.grab_stat(ring_info))
         validate_act()
 
-        detect_change = lives != curr_lives or rings != curr_rings or score != curr_score or act != curr_act
+        detect_change = lives != curr_lives or \
+                        rings != curr_rings or \
+                        score != curr_score or \
+                        act != curr_act or \
+                        curr_entity != entity
+
         if detect_change or force_update:
             trainingdriver.gui_func_qu.put('Update Texts')
             #   If thier was a foce update set force_update to false to stop another force update
             # from occuring immediatly afterwards
+            curr_entity = trainingdriver.entity_playing
             if force_update:
                 force_update = False
 
@@ -137,6 +145,8 @@ def validate_act():
         curr_act = f'Transitioning to next Zone...'
 
     return curr_act
+
+
 # _____________________________________________________________________________
 # Function responsible for finiding out if training is aloud to start
 #

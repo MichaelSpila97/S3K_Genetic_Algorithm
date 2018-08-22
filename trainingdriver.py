@@ -9,6 +9,7 @@ from src.buttonpress import load_state
 
 gui_func_qu = queue.Queue(maxsize=5)
 continue_training = 0
+entity_playing = ''
 
 # ______________________________________________________________________________
 #   This contains the function responsible for facilitating the training and processing
@@ -47,7 +48,7 @@ def replay_action(ent):
 #       num_of_entities: Passes number of entities that will train
 
 def begin_training(num_of_entities, gen=None):
-
+    global entity_playing
     if not os.path.exists(f'{os.getcwd()}/entity_data'):
         print('Making entity_data dir...')
         os.mkdir(f'{os.getcwd()}/entity_data')
@@ -67,6 +68,8 @@ def begin_training(num_of_entities, gen=None):
         print(f'Generation {gen_num} training has begun:\n')
         for entities in gen:
             gdv.reset_stats()
+            entity_playing = entities.getName()
+            print(f'This entity is playing: {entity_playing}')
             entities.play_game()
 
     #       Else need to create a variable number of new entities, form num_of_entities,
@@ -76,6 +79,8 @@ def begin_training(num_of_entities, gen=None):
         while num_of_entities > 0:
 
             ent = entity.Entity(name=f'G0E{total_entities - (num_of_entities - 1)}')
+            entity_playing = ent.getName()
+            print(f'This entity is playing: {entity_playing}')
             gdv.reset_stats()
             ent.play_game()
             gen.append(ent)

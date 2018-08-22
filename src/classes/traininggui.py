@@ -14,9 +14,9 @@ class GUI:
 
     def __init__(self):
         self.root = tkinter.Tk()
-        self.root.geometry('600x500+700+0')
+        self.root.geometry('900x300+700+0')
 
-        myfont = font.Font(family='Helvetica', size=36, weight='bold')
+        myfont = font.Font(family='Helvetica', size=20, weight='bold')
 
         self.root.title("S3K Genetic Algorithm")
         # Statistics Labels
@@ -24,6 +24,7 @@ class GUI:
         self.ring_label = tkinter.Label(self.root, text=f'Rings: {gdv.curr_rings}', font=myfont)
         self.lives_label = tkinter.Label(self.root, text=f'Lives: {gdv.curr_lives}', font=myfont)
         self.act_label = tkinter.Label(self.root, text=f'{gdv.curr_act}', font=myfont)
+        self.ent_label = tkinter.Label(self.root, text=f'', font=myfont)
 
         self.entity_num_L = tkinter.Label(self.root, text='Enter Number Of Entities(Default=10): ')
         self.entity_num_E = tkinter.Entry(self.root)
@@ -52,7 +53,7 @@ class GUI:
                                             command=lambda: self.load_data(replay=True))
         #   Object List for the packer method to use when packing all object into the GUI
         self.obj_list = [self.score_label, self.ring_label, self.lives_label,
-                        self.act_label, [self.entity_num_L, self.entity_num_E],
+                        self.act_label, self.ent_label, [self.entity_num_L, self.entity_num_E],
                         [self.ent_rp_L, self.ent_rp_E],
                         [self.conRB, self.noncRB],
                         [self.ndtrain_button, self.ldtrain_button, self.replay_button]]
@@ -100,6 +101,7 @@ class GUI:
         labels[1].config(text=f'Rings: {gdv.curr_rings}')
         labels[2].config(text=f'Lives: {gdv.curr_lives}')
         labels[3].config(text=f'{gdv.curr_act}')
+        labels[4].config(text=f'Current Entity Playing: {gdv.curr_entity}')
 
     #   Method that handles the chanining of state of the two regular button when
     # a request is made
@@ -178,7 +180,7 @@ class GUI:
         return [self.ndtrain_button, self.ldtrain_button, self.replay_button]
 
     def getLabels(self):
-        return [self.score_label, self.ring_label, self.lives_label, self.act_label]
+        return [self.score_label, self.ring_label, self.lives_label, self.act_label, self.ent_label]
 
     def getIsContinuous(self):
         return self.iscontinuous.get()
