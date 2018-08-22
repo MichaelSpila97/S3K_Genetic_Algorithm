@@ -73,7 +73,7 @@ def clean_dna(generation):
         ring_keeper = 0
 
     gen_num = generation[0].getGeneration()
-    filehandler.save_data(generation, f'entity_data/Generation_{gen_num}/Clean_gen_{gen_num}')
+    filehandler.save_data(generation, f'entity_data/Generation_{gen_num}/Clean_Gen_{gen_num}')
 # ____________________________________________________________________________________________
 #   Wrapper function that execute all evaluation functions and saves the state of
 # the generation object after evaluation
@@ -84,7 +84,7 @@ def eval_entity(generation):
     gen_num = generation[0].getGeneration()
     fgen = calc_fitness(deepcopy(pgen), gen_num)
 
-    filehandler.save_data(fgen, f'entity_data/Generation_{gen_num}/Eval_gen_{gen_num}')
+    filehandler.save_data(fgen, f'entity_data/Generation_{gen_num}/Eval_Gen_{gen_num}')
 
 
 # ____________________________________________________________________________________________
@@ -113,7 +113,7 @@ def reproduce(generation, num_of_entities):
         new_generation = assign_master(mating_pool, gen_num, num_of_entities)
 
     print('\n')
-    filehandler.save_data(new_generation, f'entity_data/Generation_{gen_num}/Offspring_gen_{gen_num}')
+    filehandler.save_data(new_generation, f'entity_data/Generation_{gen_num}/Offspring_Gen_{gen_num}')
 
 # Generic function for print out list of objects. Mainly used to print out generation of entities
 def print_list(lis):

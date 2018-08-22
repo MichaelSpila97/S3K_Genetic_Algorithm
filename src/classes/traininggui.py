@@ -5,6 +5,7 @@ import tkinter.font as font
 
 import os
 import threading
+import re
 
 import trainingdriver
 from ..gdmodules import gdv
@@ -143,16 +144,23 @@ class GUI:
         gen = gen or []
         num_entity = 0
 
-        # Trys to begin training and fails if user inputed a invaild number of entities
-        try:
-            num_entity = int(self.entity_num_E.get())
-            if num_entity < 1 or num_entity > 10:
-                raise ValueError
-            training_thread = threading.Thread(target=trainingdriver.begin_training, args=[num_entity, gen], daemon=True)
-            training_thread.start()
+        nodatamessage = 'WARING data in the entity_data directory will be overwritten during training.\n Abort training if you have not made a copy of the data currently in the entity_data directory.\n Press ok once you are ready'
+        decision = messagebox.askokcancel(title='Are You Sure', message=nodatamessage)
 
-        except ValueError:
-            messagebox.showerror("Error", "Inputed Invalid Value.\nPlease enter an positve non-zero Integer <= 10")
+        print(decision)
+        if decision:
+            print('Begining Training')
+            # Trys to begin training and fails if user inputed a invaild number of entities
+            try:
+                num_entity = int(self.entity_num_E.get())
+                if num_entity < 1 or num_entity > 10:
+                    raise ValueError
+
+                training_thread = threading.Thread(target=trainingdriver.begin_training, args=[num_entity, gen], daemon=True)
+                training_thread.start()
+
+            except ValueError:
+                messagebox.showerror("Error", "Inputed Invalid Value.\nPlease enter an positve non-zero Integer <= 10")
 
     #   Method that starts a thread that will replay an entiteis actions
     # Passes:
@@ -177,15 +185,25 @@ class GUI:
     #                 replaying an entities actions
     def load_data(self, replay=False):
         data = []
+        offsprig_file = r'\s*\S*Offspring_Gen_\d*.pickle'
+        raw_file = r'\s*\S*Raw_Gen_\d*.pickle'
 
-        answer = filedialog.askopenfilename(parent=self.root, initialdir=os.getcwd(),
-        title="Please select a folder")
+        try:
+            answer = filedialog.askopenfilename(parent=self.root, initialdir=os.getcwd(),
+            title="Please select a RAW or Offspring generation file you wish to load")
 
-        data = filehandler.load_data(answer)
-        if replay:
-            self.request_replay(data)
-        else:
-            self.request_training(data)
+            print(answer)
+            if re.findall(offsprig_file, answer) == [] and re.findall(raw_file, answer) == []:
+                raise ValueError
+
+            data = filehandler.load_data(answer)
+            if replay:
+                self.request_replay(data)
+            else:
+                self.request_training(data)
+
+        except ValueError:
+            messagebox.showerror("Error", "Must selcet a .pickle file that contains the raw or offspring data of a generation")
 
     # ---------------------------------------Getter Methods-----------------------------------------------
     def getRoot(self):

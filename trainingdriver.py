@@ -86,7 +86,9 @@ def begin_training(num_of_entities, gen=None):
             gen.append(ent)
             num_of_entities -= 1
 
-    os.mkdir(f'{os.getcwd()}/entity_data/Generation_{gen_num}')
+    if not os.path.exists(f'{os.getcwd()}/entity_data/Generation_{gen_num}'):
+        os.mkdir(f'{os.getcwd()}/entity_data/Generation_{gen_num}')
+
     filehandler.save_data(gen, f'entity_data/Generation_{gen_num}/Raw_Gen_{gen_num}')
 
     print(f'Generation {gen_num} training has ended\n')

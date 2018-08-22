@@ -11,80 +11,123 @@ These statists are:
 4. Act beginning
 5. Act End
 
-No other forms of statics such as Sonic's positions and any object's position were used.
+No other forms of statics such as Sonic's positions or any object's position were used.
 
-### What were the results?
+## Getting started
 
-The algorithm did display improved play as each generation passed by. Rings and score would guide the algorithm to move Sonic in the right direction of the stage.
+### Note: ONLY WORKS ON WINDOWS MACHINES AS OF NOW
 
-However; even though the algorithm was improving from it first attempt at the game over each generation, the improvement were not enough to guide it through an entire act, let alone the entire game.
+Here the following steps to run this project on your machine:
 
-The algorithm would constantly leave rings and enemies behind when attempting to move through the stage. When it would be trying new sets of action after reinforcing it previous action the algorithm would inevitable move sonic back towards those rings and enemies and gain score, reinforcing bad actions.
-
-Also there were periods in the act where rings and/or score would not be available until after a set of obstacles that was very difficult for the algorithm to overcome. Even if it got lucky and cleared it the algorithm would move on to the next entity before having a chance to reinforce the action.
-
-This is why through all the training and test done the algorithm could only even make it up to hole in Angel Island Act 1 that lead to the first giant ring to the left of the stage and a bunch of ledges with trampolines to the left of the screen.
-
-In its current state the genetic algorithm can modify the way it moves sonic based on the rings and score its receive. However, it is far from using those statistic to improve its play to the point where it can beat an entire act.
-
-### Futute Plans
-
-As such, the project is far from being completed and still needs many improvements.
-
-These are the list of improvements I'm planning for:
-
-1. Improve easy of use over multiple computers by:
-    * Getting data from the games process to remove screen reader entirely
-    * Send keyboard inputs to game's process so computer can run algorithm while screen is off focus
-    * Better looking and functioning GUI
-
-2. Create better way to display algorithm's data
-
-3. Improve algorithms logic by:
-    * Using previous action to influence the which action the algorithm will choose when generating new actions
-    * Implement way for algorithm to backtrack if it gets stuck
-
-4. Improve time it take to run each training session
-
-If you have any more suggestion on how I can improve this project just shoot me a message and we can discuss your recommendation.
-
-## Getting Started
-
-These are the following steps to set up the algorithm on your machine:
-
-1. Have the Steam Version of Sonic 3 & Knuckles and change the following options in the
-   Room Launcher:
-
-	 * Display: Windowed
-	 * Window Size: 640 X 480
-	 * Vsync: On
+1. Install the following dependencies for this project:
+  * PIL module: https://pillow.readthedocs.io/en/latest/installation.html
+  * Keyboard module: https://pypi.org/project/keyboard/
+  * pywin32 module: https://pypi.org/project/pywin32/
 
 
-2. Have the following dependencies installed on your machine:
+2. Obtain the steam version of Sonic 3 & Knuckles and adjust the setting in the
+   room launcher accordingly:
 
-	* PIL module: https://pillow.readthedocs.io/en/latest/installation.html
-	* Keyboard module: https://pypi.org/project/keyboard/
+   * Room Settings:
+        1. Windowed Mode: ON
+        2. Resolution: 640 X  480
 
-3. Set your display settings as the following:
+   * Input Settings:
+        * Change key binding for the following:
+          * Save State: R
+          * Load State: T
 
-    * Change the size of text, apps, and other items: 100%
-		* Resolution: 1920 X 1080
-		* Orientation: Landscape
+   * Other:
+      * Create a save state at the beginning of any act in the game before or as the
+        act title card is on screen
 
-### What if I Just want to see an entity play the game?
-If you only want to see a prerecorded example of the algorithm playing the game then you can skip step 3 and just use the entity data I provided in the entity_data folder.
+3. If your display setting for you machines are not the following change them
+   to the following settings:
 
-Before running trainningdriver.py make a save state at the very beginning of Angel Island Act 1. If I add any more data for more acts do the exact same thing for the corresponding acts.
+   * Screen Resolution: 1920 X 1080
+   * Size of text, apps, and other items: 100%
 
-Then just simple run tranningdriver.py, pick a entity between 1 - 10 and select the raw or offspring version of the entity file. Make sure Sonic 3 & Knuckles window is active when you finish selecting the programming and it should start playing the game.
+4. Change the exe_location global variable in window_handler.py to reflect the location
+   of SEGAGameRoom.exe on your machine.
 
-**Note:** If you are not using the steam version of Sonic 3 & Knuckles you will have to slight modify the load and save state 	 
-button press in buttonpress.py.
+      * NOTE: Open the properties of SEGA Mega Drive & Genesis Collection in Steam,
+              go to the local files tab in the window that popped up and press the
+              "browse local file" button to go to the location of SEGAGameRoom.exe on your machine
 
-Simply open buttonpress.py, go to the bottom of the file and change 'F2' to what button is save state for you and 'F3' to what ever button is load state for you.
+5. Then save window_handler.py and run trainingdriver.py to launch the game and the   
+   traininggui
 
-If any other button presses do match up with how the controls are set up for your version of Sonic 3 & Knuckles then off course change those corresponding button in the file to whatever they are for you.
+6. If done correctly Sega Mega Drive and Genesis Collection should launch and  
+   reposition it self in the top right corner of the screen and the traininggui
+   should open up right next to it.
 
+7. Then launch Sonic 3 and Knuckles in the room launcher and leave it at the title
+   screen
+
+8. Then simply select you setting in the traininggui and press No Data Training or   
+   Load Data Training button to begin training entities
+
+
+## The Training GUI
+
+Here are a few explanation of the Training GUI functionality:
+    * No Data Training: Training that starts at Generation 0 with no previous entity  
+                        data to use.
+
+    * Load Data Training: Training that starts at the Generation the user selects in
+                          the file dialog.
+
+                          Note: The user must select either the offspring
+                                or raw file of a generation when choosing to load in data for training purposes
+
+    * Continuous and Non-Continuous Training: If continuous training is selected the
+                                              program will continue to train and creates new generation for ever.
+
+                                              If non-continuous training is selected then the program will stop training after the current generation is done training.
+
+                                              Note: It is recommended to stop continuous training through selecting the non-continuous training option when the user wish to stop training.
+
+   * Entities per Generation Entry box: This is used to define how many entities a
+                                        user wants generation to be composed of.
+
+                                        Note: The default is 10 entities and the
+                                              user cannot define a generation to be equal to more than the default
+
+  * Entity to Replay Entry Box: This is used to tell the program which numbered   
+                                entity, in the generation that user selects, will have its actions replayed if the Replay Entity button is pressed.
+
+                                Ex: 5 is entered in the Entity to Replay Entry box and
+                                      the user chooses generation 5 when selection the generation from the file dialog.
+                                      The entity that would have its actions replayed would be Entity G5E5.
+
+  * Replay Entity Button: When pressed a file dialog appears asking the user to select
+                          a generation of entities. Then after the user selects a generation the program replays the entity that was identified in the Entity to Replay Entry Box.
+
+                          Note: The user must select either the offspring
+                                or raw file of a generation when choosing to load in data for replay purposes
+
+
+## Future Plans
+The following is a list of improvements I plan to implement in the future:
+
+1. Project is compatible with machines that runs Mac and Linux Os
+2. Better Looking GUI
+3. Improving genetic algorithm by:
+    * Implementing a smart action generator that will choose action based off of data
+      from previous generation
+
+    * Adding Sonics, Enemies and objects positions to the data set the algorithm uses
+      to evaluate and reproduce new entities
+
+    * Devise better solution to combat stagnation
+
+4. Document how the genetic algorithm functions in the wiki of this repository
+
+5. Document my current finding from the genetic algorithm in the wiki
+
+6. Improve the style and structure of the code in this projects
+
+If you have an idea for how to improve this project please message me with you suggestions
 ## Author
 
  **Michael Spila**: Undergrad Computer Science Major at the University of Pittsburgh

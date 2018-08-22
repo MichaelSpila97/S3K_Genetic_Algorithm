@@ -9,6 +9,7 @@ win_hwnd = None
 win_pos = []
 orig_win_pos = []
 
+exe_location = "E:\Steam\steamapps\common\Sega Classics"
 # Fuction that executes and setups the inital postion of the game window on the screen
 def setup_game():
         global win_hwnd, win_pos, orig_win_pos
@@ -17,7 +18,7 @@ def setup_game():
         current_dir = os.getcwd()
 
         # Goes to games directory and lauches its .exe in a thread
-        os.chdir("E:\Steam\steamapps\common\Sega Classics")
+        os.chdir(exe_location)
         gamethread = threading.Thread(target=lambda: os.system("SEGAGameRoom.exe"), daemon=True)
         gamethread.start()
 
