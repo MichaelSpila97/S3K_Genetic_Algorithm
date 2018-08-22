@@ -1,14 +1,12 @@
 import threading
 import queue
 import os
-import win32gui
-import win32con
-import time
 
 from src.classes import entity, traininggui
-from src.handlers import filehandler, entity_handler
+from src.handlers import filehandler, entity_handler, window_handler
 from src.gdmodules import gdv
 from src.buttonpress import load_state
+
 gui_func_qu = queue.Queue(maxsize=5)
 continue_training = 0
 
@@ -30,7 +28,7 @@ def main():
     # Creates and starts thread responsible for obtaining ingame stats
     stat_thread = threading.Thread(target=gdv.get_core_stats, daemon=True)
     stat_thread.start()
-    setup_game()
+    window_handler.setup_game()
     # Builds Gui that displays in game stats and used to start test
     traininggui.GUI()
 
@@ -139,27 +137,6 @@ def process_data(gen, num_of_entities):
 def test_process_data(data_loaction):
     gen = filehandler.load_data('entity_data/Generation_0/Raw_Gen_0.pickle')
     process_data(gen, 10)
-
-
-def setup_game():
-
-        # Stores Current directory so it can return to it after launching game
-        current_dir = os.getcwd()
-
-        # Goes to games directory and lauches its .exe in a thread
-        os.chdir("E:\Steam\steamapps\common\Sega Classics")
-        gamethread = threading.Thread(target=lambda: os.system("SEGAGameRoom.exe"), daemon=True)
-        gamethread.start()
-
-        # Wait Five seconds to give game time to launch before obtaining window handler
-        # and setting the window to the top right corner of the screen
-        time.sleep(5)
-        window = win32gui.FindWindow(None, 'SEGA Mega Drive Classics')
-        win32gui.SetWindowPos(window, win32con.HWND_TOPMOST, 0, 0, 646, 509, 0)
-
-        # Returns to original directory so the program can save and load entity data
-        # properly
-        os.chdir(current_dir)
 
 
 # ______________________________________________________________________________
