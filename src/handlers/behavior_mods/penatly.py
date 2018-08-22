@@ -1,3 +1,4 @@
+# Penatlies used to evaluates and entities action_list in evaluation_handler.py
 
 def isDefenseless(curr_rings, prev_rings):
     return curr_rings == 0 and prev_rings != 0

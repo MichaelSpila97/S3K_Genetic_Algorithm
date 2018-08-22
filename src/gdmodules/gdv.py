@@ -1,5 +1,4 @@
 import time
-from copy import deepcopy
 
 from src.enumval import StatNumberMaps, StatScreenPos
 from ..gdmodules import gdr
@@ -16,14 +15,18 @@ curr_lives = 3
 curr_act = ''
 curr_entity = ''
 
-at_start_screen = False
+# Booleans vars used to determine if training has started and if the global stats
+# need to be updated by force
 training_start = False
 force_update = False
 
+# Global tuples that contains the basic info needed for the screen reader, in gdv.py,
+# to function properly
 live_info = ('lives', StatNumberMaps.live_num_map.value, StatScreenPos.lives.value)
 score_info = ('score', StatNumberMaps.score_num_map.value, StatScreenPos.score.value)
 ring_info = ('rings', StatNumberMaps.ring_num_map.value, StatScreenPos.rings.value)
 
+# Reset Stats to intial values when called on
 def reset_stats():
     print('Reseting Stats for next Training Session')
     global curr_rings, curr_score, curr_lives, curr_act, force_update
@@ -32,15 +35,24 @@ def reset_stats():
     curr_lives = 3
     force_update = True
 # ______________________________________________________________________________
+
+# Function obtain core stats through screen readers grab_stat() functions and
+# tells the GUI to update the labels of the stats if the one of stats
+# has changed values
 def get_core_stats():
     global force_update, curr_entity
-    while True:
-        lives = deepcopy(curr_lives)
-        rings = deepcopy(curr_rings)
-        score = deepcopy(curr_score)
-        act = deepcopy(curr_act)
-        entity = trainingdriver.entity_playing
 
+    while True:
+        # Stores previous values of global for purpose of dectecting a change
+        # each statistic
+        lives = curr_lives
+        rings = curr_rings
+        score = curr_score
+        act = curr_act
+
+        # Obtains the current values of each statists from the screen reader
+        # or trainingdriver
+        entity = trainingdriver.entity_playing
         validate_lives(gdr.grab_stat(live_info))
         validate_score(gdr.grab_stat(score_info))
         validate_rings(gdr.grab_stat(ring_info))
@@ -52,14 +64,20 @@ def get_core_stats():
                         act != curr_act or \
                         curr_entity != entity
 
+        # If change is detected or update is forced the GUI will be told to update
+        # its labels that display the statists to the current values stored in the
+        # globals
         if detect_change or force_update:
             trainingdriver.gui_func_qu.put('Update Texts')
-            #   If thier was a foce update set force_update to false to stop another force update
-            # from occuring immediatly afterwards
             curr_entity = trainingdriver.entity_playing
+
+            # Reset force_update to false so force update doesn't immediatly trigger
+            # an update again
             if force_update:
                 force_update = False
 
+        # Makes thread sleep so the function isn't constatly calling the screen reader
+        # and slowing the program down in the process
         time.sleep(0.1)
 # ______________________________________________________________________________
 # Passes:
@@ -170,18 +188,3 @@ def isTrainingStarted():
         training_start = True
 
     return training_start
-# _____________________________________________________________________________
-# Function responsible for finiding out if the game is at the start screen
-#
-# Returns:
-#        at_start_screen: a boolean variable that tells wheather the game is at
-#                         the start screen
-def isAtStartScreen():
-    global at_start_screen
-
-    if gdr.grab_stat(('ss', StatNumberMaps.start_screen_map.value, StatScreenPos.start_game.value)) == 'Go':
-        at_start_screen = True
-    else:
-        at_start_screen = False
-
-    return at_start_screen

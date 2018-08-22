@@ -1,4 +1,4 @@
-
+# Rewards used to evaluates and entities action_list in evaluation_handler.py
 def ringsOrScoreIncreased(curr_rings, curr_score, prev_rings, prev_score):
     return prev_rings < curr_rings or \
            prev_score < curr_score

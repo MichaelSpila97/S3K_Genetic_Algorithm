@@ -43,7 +43,7 @@ def calc_num_total(num_map, pos_box):
     num_id = 0
     num = 0
     distance_between = 16
-    x_pad, y_pad = adjust_box()
+    x_pad, y_pad = wh.adjust_box()
 
     curr_box = [pos_box[0] + x_pad, pos_box[1] + y_pad, pos_box[2] + x_pad, pos_box[3] + y_pad]
 
@@ -106,12 +106,3 @@ def calc_num_id(num_image, num_map):
             result += pix_val
 
     return result
-
-
-def adjust_box():
-    if wh.win_pos != wh.orig_win_pos:
-        x_pad = wh.win_pos[0] - wh.orig_win_pos[0]
-        y_pad = wh.win_pos[1] - wh.orig_win_pos[1]
-
-        return x_pad, y_pad
-    return 0, 0

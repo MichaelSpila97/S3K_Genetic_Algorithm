@@ -1,7 +1,7 @@
 *.pyc
 Snaps/
 __pycache__/
-snapgetter.py
+snap_miner.py
 test.py
 output
 out*

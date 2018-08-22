@@ -1,4 +1,5 @@
 import tkinter
+from tkinter import ttk
 from tkinter import filedialog, messagebox
 import tkinter.font as font
 
@@ -6,7 +7,6 @@ import os
 import threading
 
 import trainingdriver
-
 from ..gdmodules import gdv
 from src.handlers import filehandler
 
@@ -14,43 +14,13 @@ class GUI:
 
     def __init__(self):
         self.root = tkinter.Tk()
-        self.root.geometry('900x300+700+0')
-
-        myfont = font.Font(family='Helvetica', size=20, weight='bold')
+        self.root.geometry('600x300+700+0')
 
         self.root.title("S3K Genetic Algorithm")
-        # Statistics Labels
-        self.score_label = tkinter.Label(self.root, text=f'Score: {gdv.curr_score}', font=myfont)
-        self.ring_label = tkinter.Label(self.root, text=f'Rings: {gdv.curr_rings}', font=myfont)
-        self.lives_label = tkinter.Label(self.root, text=f'Lives: {gdv.curr_lives}', font=myfont)
-        self.act_label = tkinter.Label(self.root, text=f'{gdv.curr_act}', font=myfont)
-        self.ent_label = tkinter.Label(self.root, text=f'', font=myfont)
+        self.init_labels()
+        self.init_buttons()
+        self.init_entry()
 
-        self.entity_num_L = tkinter.Label(self.root, text='Enter Number Of Entities(Default=10): ')
-        self.entity_num_E = tkinter.Entry(self.root)
-        self.entity_num_E.insert(2, 10)
-
-        self.ent_rp_L = tkinter.Label(self.root, text='Enter Entity Num for replay: ')
-        self.ent_rp_E = tkinter.Entry(self.root)
-
-        #   The Radio Buttons for deciding between Continuous Traning and Non-Continuous Training and
-        # the variable the buttons will modifying when they are pressed on
-        self.iscontinuous = tkinter.IntVar()
-        self.conRB = tkinter.Radiobutton(self.root, text='Continuous Traning',
-                     variable=self.iscontinuous, value=1,
-                     command=self.radio_selection)
-
-        self.noncRB = tkinter.Radiobutton(self.root, text='Non-Continuous Training',
-                      variable=self.iscontinuous, value=0,
-                      command=self.radio_selection)
-
-        # No-Data Training Button and Load_data Training Button
-        self.ndtrain_button = tkinter.Button(self.root, text="No Data Training",
-                                            command=self.request_training)
-        self.ldtrain_button = tkinter.Button(self.root, text="Load Data Training",
-                                            command=self.load_data)
-        self.replay_button = tkinter.Button(self.root, text="Replay Entity",
-                                            command=lambda: self.load_data(replay=True))
         #   Object List for the packer method to use when packing all object into the GUI
         self.obj_list = [self.score_label, self.ring_label, self.lives_label,
                         self.act_label, self.ent_label, [self.entity_num_L, self.entity_num_E],
@@ -66,6 +36,51 @@ class GUI:
 
         self.root.mainloop()
 
+# ---------------------------------------Sub Init Methods-----------------------------------------------
+    def init_labels(self):
+        statfont = font.Font(family='Helvetica', size=20, weight='bold')
+
+        # Display Statistic Labels
+        self.score_label = ttk.Label(self.root, text=f'Score: {gdv.curr_score}', font=statfont)
+        self.ring_label = ttk.Label(self.root, text=f'Rings: {gdv.curr_rings}', font=statfont)
+        self.lives_label = ttk.Label(self.root, text=f'Lives: {gdv.curr_lives}', font=statfont)
+        self.act_label = ttk.Label(self.root, text=f'{gdv.curr_act}', font=statfont)
+        self.ent_label = ttk.Label(self.root, text=f'', font=statfont)
+
+        # Entry Box Labels
+        self.entity_num_L = ttk.Label(self.root, text='Entities Per Generation: ')
+        self.ent_rp_L = ttk.Label(self.root, text='Entity to Replay: ')
+
+    def init_buttons(self):
+
+        # Radio Buttons
+        self.iscontinuous = tkinter.IntVar()
+        self.conRB = ttk.Radiobutton(self.root, text='Continuous Traning',
+                    variable=self.iscontinuous, value=1,
+                    command=self.radio_selection)
+
+        self.noncRB = ttk.Radiobutton(self.root, text='Non-Continuous Training',
+                    variable=self.iscontinuous, value=0,
+                    command=self.radio_selection)
+
+        # Regular Buttons
+        self.ndtrain_button = ttk.Button(self.root, text="No Data Training",
+                                            command=self.request_training)
+        self.ldtrain_button = ttk.Button(self.root, text="Load Data Training",
+                                            command=self.load_data)
+        self.replay_button = ttk.Button(self.root, text="Replay Entity",
+                                            command=lambda: self.load_data(replay=True))
+
+    def init_entry(self):
+        # Entry for the number of entities that comprise one generation
+        self.entity_num_E = ttk.Entry(self.root)
+        self.entity_num_E.insert(2, 10)
+
+        # Entry that recivie the identification number for an entity that will replay
+        # its actions
+        self.ent_rp_E = ttk.Entry(self.root)
+
+# ---------------------------------------Other Methods-----------------------------------------------
     #   Method packs all GUI Objects
     def create_grid(self):
         for row_count, obj in enumerate(self.obj_list):
