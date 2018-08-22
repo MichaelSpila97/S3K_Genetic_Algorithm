@@ -27,7 +27,7 @@ def setup_game():
 
         left, top, right, bottom = win32gui.GetWindowRect(win_hwnd)
         orig_win_pos = [left, top, right, bottom]
-        curr_win_pos = [left, top, right, bottom]
+        win_pos = [left, top, right, bottom]
 
         # Returns to original directory so the program can save and load entity data
         # properly
