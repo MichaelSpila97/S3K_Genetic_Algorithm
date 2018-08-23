@@ -2,7 +2,8 @@
 
 Hello welcome to my first every independent programming project!!!
 
-The project's goal was to see if a Genetic Algorithm could successfully play S3&K only off the basic in game statistics show on the screen.
+The project's goal was to see if a Genetic Algorithm could successfully play S3&K
+only off the basic in game statistics show on the screen.
 
 These statists are:
 1. Rings
@@ -71,40 +72,46 @@ Here are the following steps to run this project on your machine:
 ## The Training GUI
 
 Here are a few explanation of the Training GUI functionality:
-    * No Data Training: Training that starts at Generation 0 with no previous entity  
+* No Data Training: Training that starts at Generation 0 with no previous entity  
                         data to use.
 
-    * Load Data Training: Training that starts at the Generation the user selects in
+* Load Data Training: Training that starts at the Generation the user selects in
                           the file dialog.
 
-                          Note: The user must select either the offspring
-                                or raw file of a generation when choosing to load in data for training purposes
+    * Note: The user must select either the offspringor raw file of a generation
+             when choosing to load in data for training purposes
 
-    * Continuous and Non-Continuous Training: If continuous training is selected the
-                                              program will continue to train and creates new generation for ever.
+* Continuous and Non-Continuous Training: 
 
-                                              If non-continuous training is selected then the program will stop training after the current generation is done training.
+    * If continuous training is selected the program will continue to train and 
+      creates new generation for ever.
 
-                                              Note: It is recommended to stop continuous training through selecting the non-continuous training option when the user wishes to stop training.
+    * If non-continuous training is selected then the program will stop training 
+      after the current generation is done training.
 
-   * Entities per Generation Entry box: This is used to define how many entities a
+    * Note: It is recommended to stop continuous training through selecting the 
+            non-continuous training option when the user wishes to stop training.
+            
+* Entities per Generation Entry box: This is used to define how many entities a
                                         user wants a generation to be composed of.
 
-                                        Note: The default is 10 entities and the
-                                              user cannot define a generation to contain more that 10 entities
+    * Note: The default is 10 entities and the user cannot define a generation to 
+            contain more that 10 entities
 
-  * Entity to Replay Entry Box: This is used to tell the program which numbered   
-                                entity, in the generation that user selects, will have its actions replayed if the Replay Entity button is pressed.
+* Entity to Replay Entry Box: This is used to tell the program which numbered entity, 
+                              in the generation that user selects, will have its actions 
+                              replayed if the Replay Entity button is pressed.
 
-                                Ex: 5 is entered in the Entity to Replay Entry box and
-                                      the user chooses generation 5 when selecting the generation from the file dialog.
-                                      The entity that would have its actions replayed would be Entity G5E5.
+    * Ex: 5 is entered in the Entity to Replay Entry box and the user chooses generation 5 
+          when selecting the generation from the file dialog. The entity that would have its 
+          actions replayed would be Entity G5E5.
 
-  * Replay Entity Button: When pressed a file dialog appears asking the user to select
-                          a generation of entities. Then after the user selects a generation the program replays the entity that was identified in the Entity to Replay Entry Box.
-
-                          Note: The user must select either the offspring
-                                or raw file of a generation when choosing to load in generational data for replay purposes
+* Replay Entity Button: When pressed a file dialog appears asking the user to select a generation 
+                        of entities. Then after the user selects a generation the program replays 
+                        the entity that was identified in the Entity to Replay Entry Box.
+                        
+    * Note: The user must select either the offspring or raw file of a generation when choosing to 
+             load in generational data for replay purposes
 
 
 ## Future Plans
