@@ -10,11 +10,12 @@ win_pos = []
 orig_win_pos = []
 
 exe_location = "E:\Steam\steamapps\common\Sega Classics"
-# Fuction that executes and setups the inital postion of the game window on the screen
+
+# Fuction that executes and sets up the inital postion of the game window on the screen
 def setup_game():
         global win_hwnd, win_pos, orig_win_pos
 
-        # Stores Current directory so it can return to it after launching game
+        # Stores the current directory so it can return to it after launching game
         current_dir = os.getcwd()
 
         # Goes to games directory and lauches its .exe in a thread
@@ -22,7 +23,7 @@ def setup_game():
         gamethread = threading.Thread(target=lambda: os.system("SEGAGameRoom.exe"), daemon=True)
         gamethread.start()
 
-        # Wait Five seconds to give game time to launch before obtaining window handler
+        # Wait five seconds to give game time to launch before obtaining window handler
         # and setting the window to the top right corner of the screen
         time.sleep(5)
         win_hwnd = win32gui.FindWindow(None, 'SEGA Mega Drive Classics')
@@ -31,7 +32,7 @@ def setup_game():
         # Obtains starting window position values and sets them to orig_win_pos
         # and win_pos.
         #
-        # Win_pos and orig_win_pos will be used to reajdust  the screen
+        # Win_pos and orig_win_pos will be used to reajdust the screen
         # reader if the window moves
         left, top, right, bottom = win32gui.GetWindowRect(win_hwnd)
         orig_win_pos = [left, top, right, bottom]
@@ -41,11 +42,11 @@ def setup_game():
         # properly
         os.chdir(current_dir)
 
-        # Lauches thread that keeps tracks of the games window position
+        # Lauches thread that keeps tracks of the game window position
         window_thread = threading.Thread(target=update_window_pos, daemon=True)
         window_thread.start()
 
-# Function that keeps tracks of windows postion through constant polling
+# Function that keeps tracks of game window postion through constant polling
 # Updates win_pos if win_pos does not equal the updated_pos that was just read in
 def update_window_pos():
     global win_pos

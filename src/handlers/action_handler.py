@@ -10,17 +10,17 @@ from ..classes import action
 ng = random.Random()
 
 # _______________________________________________________________________________________________________________________________
-# Function responsible for generating random action
+# Function responsible for generating a random action
 def generate_action():
     return ng.choice(list(ActionName))
 
 # _______________________________________________________________________________________________________________________________
-# Function responsible for generating random delay
+# Function responsible for generating a random delay
 def generate_delay():
     return ng.random()
 
 # _______________________________________________________________________________________________________________________________
-# Function responsible for checking weather an entity died
+# Function responsible for checking if an entity died
 # Passes:
 #       entity:     an Entity object
 #       list_place: index value representing which action is being executed

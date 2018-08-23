@@ -33,12 +33,11 @@ def pos_dna_eval(generation):
             in_last_five_seconds = delay_keeper <= 2
 
             delay_keeper = delay_keeper + actions.getDelay()
-            #   Positive evaluation for the current action and previous action
-            # will occur if the ring or score count has increased
+
             if ringsOrScoreIncreased(curr_rings, curr_score, prev_rings, prev_score):
 
-                #   If the increases occured within five seconds of previous increase
-                #   Then the positive reward for the current action an previous
+                #   If the increases occured within five seconds of the previous
+                # increase  Then the positive reward for the current action and previous
                 # action will increase to 0.100
                 if in_last_five_seconds:
                     ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.100, 3, 'dec'))
@@ -74,13 +73,13 @@ def pos_dna_eval(generation):
 
     return generation
 
-#   Function handles the negavtive evaluation of the dna sequence
+#   Function that handles the negavtive evaluation of the dna sequence
 # of each enitiy in the generation gen_list
 # Passes:
-#        Generation: List of entities that belong to the same Generation
+#        Generation: List of entities that belong to the same generation
 #
 # Returns:
-#        neg_gen: the evaluated Generation
+#        neg_gen: the evaluated generation
 def neg_dna_eval(generation):
 
     for ent in generation:
@@ -104,7 +103,8 @@ def neg_dna_eval(generation):
 
                 ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.050, 2, 'inc'))
 
-            # Penilize the current actions and previous action if the entities rings has not changed
+            # Penilize the current actions and previous action if the entities rings
+            # have not changed over a certain period of time
             if ringsAreStagnating(rdelay_keeper, actions.getRingCount(), prev_rings):
 
                 # If the entity has been holding no rings for awhile give them higher penility
@@ -116,6 +116,7 @@ def neg_dna_eval(generation):
 
                 reset_rdelay_keeper = True
 
+            # Make sure lost life penatly is only administered only once in a entities life
             if past_start:
                 if lostLife(actions.getLivesCount(), prev_lives, penilize_life):
                     ent.setActionList(mutation_adjuster(ent.getActionList(), i, 0.25, 10, 'inc'))
@@ -131,8 +132,9 @@ def neg_dna_eval(generation):
 
     return generation
 
-#   Function Calculates the fitness of each entity in a generation and creates a file
-# that contains the generation fitness average that is used to detect staganation.
+#   Function that calculates the fitness of each entity in a generation and
+# creates a file that contains the generation fitness average for use in
+# detecting staganation.
 #
 # Passes:
 #        generation: the list of entities that make up a generation
@@ -159,9 +161,10 @@ def calc_fitness(generation, gen_num):
     filehandler.save_data(fit_avg, f'entity_data/Generation_{gen_num}/Avg_Fitness')
     return fitgen
 
-# Function controls the adjustment of mutation values of action object from an action_list
+# Function that controls the adjustment of mutation values of an action object from
+# an action_list
 # Passes:
-#        action_list: a list of action that an entity executed during its session
+#        action_list: a list of action that an entity executed during its game attempt
 #        index:       The place where the modification to the mutatin values will
 #                     begin in the action_list
 #        amount:      The amount the mutation value will increase or decrease
@@ -175,12 +178,12 @@ def mutation_adjuster(action_list, index, amount, delay, direction):
 
     while delay > 0 and index >= 0:
 
-        # Decreases a range of mutation, defined by the delay, by the defined amount
+        # Decreases a range of mutation, defined by the delay and by the defined amount
         if direction == 'dec':
             new_mutation = float(format(action_list[index].getMutation() - amount, '.2f'))
             action_list[index].setMutation(new_mutation)
 
-        # Increases a range of mutation, defined by the delay, by the defined amount
+        # Increases a range of mutation, defined by the delay and by the defined amount
         elif direction == 'inc':
             new_mutation = float(format(action_list[index].getMutation() + amount, '.2f'))
             action_list[index].setMutation(new_mutation)
@@ -193,7 +196,7 @@ def mutation_adjuster(action_list, index, amount, delay, direction):
         elif action_list[index].getMutation() < 0:
             action_list[index].setMutation(0)
 
-        # delay is subtracted from the delay kept in the action list
+        # delay is subtracted from the delay stored in the current action
         delay = delay - action_list[index].getDelay()
         index = index - 1
 

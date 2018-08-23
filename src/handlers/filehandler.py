@@ -1,8 +1,8 @@
 import pickle
 # ______________________________________________________________________________
 # File Handler
-#   Contain functions responsible for saving and loading the state of
-# generation. Probably extend its useablility to handle naming of files
+#   Contain functions responsible for saving and loading the state of a
+# generation.
 # ______________________________________________________________________________
 
 def save_data(data, filename):

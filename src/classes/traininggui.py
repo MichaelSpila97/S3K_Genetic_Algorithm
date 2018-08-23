@@ -16,8 +16,9 @@ class GUI:
     def __init__(self):
         self.root = tkinter.Tk()
         self.root.geometry('600x300+700+0')
-
         self.root.title("S3K Genetic Algorithm")
+
+        # Initilizes all GUI objects before packing
         self.init_labels()
         self.init_buttons()
         self.init_entry()
@@ -29,10 +30,13 @@ class GUI:
                         [self.conRB, self.noncRB],
                         [self.ndtrain_button, self.ldtrain_button, self.replay_button]]
 
+        # Packs all objects into the GUI grid
         self.create_grid()
 
-        #   Queue and method to handle quene request are initlized here
+        # Queue used to take request from other threads is initilized here
         self.queue = trainingdriver.gui_func_qu
+
+        # Then function responisble for handling queue request is lauched
         self.gui_request_handler()
 
         self.root.mainloop()
@@ -93,7 +97,7 @@ class GUI:
 
     #       Method handles the request that come in to the self.queue
     # Request Supported:
-    #                  1) Updating Text On gui
+    #                  1) Updating Data Labels On GUI
     #                  2) Toggling Buttons State
     def gui_request_handler(self):
         if not self.queue.empty():
@@ -119,7 +123,7 @@ class GUI:
         labels[3].config(text=f'{gdv.curr_act}')
         labels[4].config(text=f'Current Entity Playing: {gdv.curr_entity}')
 
-    #   Method that handles the chanining of state of the two regular button when
+    #   Method that handles the chanining of state of the buttons when
     # a request is made
     def toggle_buttons_state(self):
         buttons = self.getButtons()
@@ -131,7 +135,7 @@ class GUI:
             elif state == "disabled":
                 button.config(state="normal")
 
-    #   Method sets the global Test Driver continue_training varibale to the value of
+    #   Method sets the global continue_training varibale to the value of
     # self.iscontinuous
     def radio_selection(self):
         trainingdriver.continue_training = self.getIsContinuous()
@@ -144,13 +148,15 @@ class GUI:
         gen = gen or []
         num_entity = 0
 
+        # Message that warns users that their data in the entity_data directory
+        # will be overwritten if training proceedes
         nodatamessage = 'WARING data in the entity_data directory will be overwritten during training.\n Abort training if you have not made a copy of the data currently in the entity_data directory.\n Press ok once you are ready'
-        decision = messagebox.askokcancel(title='Are You Sure', message=nodatamessage)
+        proceed_to_training = messagebox.askokcancel(title='Are You Sure', message=nodatamessage)
 
-        print(decision)
-        if decision:
+        if proceed_to_training:
             print('Begining Training')
-            # Trys to begin training and fails if user inputed a invaild number of entities
+            # Trys to begin training and fails if user
+            # inputed a invaild number of entities
             try:
                 num_entity = int(self.entity_num_E.get())
                 if num_entity < 1 or num_entity > 10:
@@ -167,7 +173,8 @@ class GUI:
     #           gen: a list of entities
     def request_replay(self, gen):
 
-        # Trys to begin replay of entities actions and fails if user inputed a invaild entity id
+        # Trys to begin replay of entities actions and fails if user
+        # inputed an invaild entity ID
         try:
             entity_id = int(self.ent_rp_E.get())
             if entity_id < 0 or entity_id > len(gen) - 1:
@@ -185,6 +192,8 @@ class GUI:
     #                 replaying an entities actions
     def load_data(self, replay=False):
         data = []
+
+        # These are the defined valid file types
         offsprig_file = r'\s*\S*Offspring_Gen_\d*.pickle'
         raw_file = r'\s*\S*Raw_Gen_\d*.pickle'
 
@@ -192,8 +201,8 @@ class GUI:
             answer = filedialog.askopenfilename(parent=self.root, initialdir=os.getcwd(),
             title="Please select a RAW or Offspring generation file you wish to load")
 
-            print(answer)
-            if re.findall(offsprig_file, answer) == [] and re.findall(raw_file, answer) == []:
+            invalid_file_type = re.findall(offsprig_file, answer) == [] and re.findall(raw_file, answer) == []
+            if invalid_file_type:
                 raise ValueError
 
             data = filehandler.load_data(answer)

@@ -12,44 +12,43 @@ continue_training = 0
 entity_playing = ''
 
 # ______________________________________________________________________________
-#   This contains the function responsible for facilitating the training and processing
-# of entities and thier data. Also responsible for automating the process of training
-# so the user does not need to be present at all times while training is occuring
+# This file is responsible for:
+#       1) Launching the game window in the correct place on screen
+#       2) Lauching the Training GUI
+#       3) Handeling the Training process of each generation
+#       4) Processing a generation's data
+#       5) Automating the training process for multiple generation
 # ______________________________________________________________________________
-#   The main creates and execute thread responsible for capturing data from game screen
-# and call Test_GUI to build the programs gui
+#   The main creates and executes the thread responsible for capturing data from
+# the game screen, calls the window handler to lauch the game windows, and Lauches
+# the Training GUI
 def main():
 
-    #    Uncomment this function below and comment everthing else out if you just want
-    # to test the process data function. Change paramater to data file you want evaluate
-    # by process data function
-    # -----------------------------------------------------------------------------------
-    # test_process_data('entity_data/Generation_0/Raw_Gen_0.pickle')
-    # -----------------------------------------------------------------------------------
-    # Creates and starts thread responsible for obtaining ingame stats
+    # Creates and starts thread responsible for obtaining in game data
     stat_thread = threading.Thread(target=gdv.get_core_stats, daemon=True)
     stat_thread.start()
+
     window_handler.setup_game()
-    # Builds Gui that displays in game stats and used to start test
+
+    # Launches the Training GUI
     traininggui.GUI()
 
-
+# Function that replays the passed in entity's actions
 def replay_action(ent):
     ent.resurrect()
     ent.play_game()
 
 # ______________________________________________________________________________
-#   Function that runs each entities attempt until all of the entities complete their attempt.
-# After every entitiy is done training the entire generations state is saved in a pickle file, denoted Raw,
-# and is then set to be processed by the process data method
-#
-# Passes:
-#       gen: the list that contains entities from a single generation. Is empty list if nothing is passed.
-#       num_of_entities: Passes number of entities that will train
 
+# This function handles the training of an generation that is either passed in
+# or created inside this function. Passes the generation to the process data
+# method once training is finished for a generation
 def begin_training(num_of_entities, gen=None):
     global entity_playing
-    if not os.path.exists(f'{os.getcwd()}/entity_data'):
+
+    no_entity_data_dir = not os.path.exists(f'{os.getcwd()}/entity_data')
+
+    if no_entity_data_dir:
         print('Making entity_data dir...')
         os.mkdir(f'{os.getcwd()}/entity_data')
 
@@ -86,7 +85,9 @@ def begin_training(num_of_entities, gen=None):
             gen.append(ent)
             num_of_entities -= 1
 
-    if not os.path.exists(f'{os.getcwd()}/entity_data/Generation_{gen_num}'):
+    no_current_generation_dir = os.path.exists(f'{os.getcwd()}/entity_data/Generation_{gen_num}')
+
+    if no_current_generation_dir:
         os.mkdir(f'{os.getcwd()}/entity_data/Generation_{gen_num}')
 
     filehandler.save_data(gen, f'entity_data/Generation_{gen_num}/Raw_Gen_{gen_num}')
@@ -97,20 +98,18 @@ def begin_training(num_of_entities, gen=None):
 
     process_data(gen, total_entities)
 # ______________________________________________________________________________
-#   Function that process the newly generated generation data from a training session .
-# It Cleans the data of errors, evaluated each entities data and fitness, and then
-# creates the generation offsprigs. If continuous training was selected the function will
-# proceed to start up a new game an begin training again. If it wasn't then training will be
-# over.
-#
-# Passes:
-#        gen = List that contains entities that belong to the same generation
-#        gen_num: The number of the gneration that is being passed in.
+# This function handles:
+#        1) The cleaning of each entities data in the generation
+#        2) The evaulation of each entities data in the generation
+#        3) The creatation of the next generations from the current generations
+#           data
+# This function will either save the data and quit training all together or pass
+# the new generations data to the begin_training function.
 def process_data(gen, num_of_entities):
     gen_num = gen[0].getGeneration()
     print(f'\nProcessing Generation {gen_num} data...\n')
 
-    # Cleans Data
+    # Cleans the data
     entity_handler.clean_dna(gen)
     clean_gen = filehandler.load_data(f'entity_data/Generation_{gen_num}/Clean_gen_{gen_num}.pickle')
 
@@ -118,7 +117,7 @@ def process_data(gen, num_of_entities):
     entity_handler.eval_entity(clean_gen)
     eval_gen = filehandler.load_data(f'entity_data/Generation_{gen_num}/Eval_gen_{gen_num}.pickle')
 
-    # Prints out entities from fittess to least fit
+    # Prints out each entities from the fittess to least fit
     eval_gen.sort(key=lambda fit: fit.getFitness(), reverse=True)
     print(f'ENTITIES OF GENERATION {gen_num}:\n')
     for count, ent in enumerate(eval_gen):
@@ -127,8 +126,8 @@ def process_data(gen, num_of_entities):
     # Creates Offspring for next generation
     entity_handler.reproduce(eval_gen, num_of_entities)
 
-    #   Loads next Generation from offspring file and begins next game if continuous training was
-    # choosen
+    #   Loads next Generation from offspring file and begins next training session
+    # if continuous training was choosen
     if continue_training == 1:
         offspring = filehandler.load_data(f'entity_data/Generation_{gen_num}/Offspring_gen_{gen_num}.pickle')
         gen_num = offspring[0].getGeneration()
@@ -137,13 +136,6 @@ def process_data(gen, num_of_entities):
         gdv.reset_stats()
 
         begin_training(num_of_entities, offspring)
-
-# ______________________________________________________________________________
-#   Function test the process data functinon with data specfied by paramater of load data
-# in this function
-def test_process_data(data_loaction):
-    gen = filehandler.load_data('entity_data/Generation_0/Raw_Gen_0.pickle')
-    process_data(gen, 10)
 
 
 # ______________________________________________________________________________

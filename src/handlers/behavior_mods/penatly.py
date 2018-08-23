@@ -1,8 +1,10 @@
-# Penatlies used to evaluates and entities action_list in evaluation_handler.py
+# Penatlies used to evaluates an entities action_list in evaluation_handler.py
 
+# Has no rings
 def isDefenseless(curr_rings, prev_rings):
     return curr_rings == 0 and prev_rings != 0
 
+# Hasn't gained rings for a certain amount of time
 def ringsAreStagnating(time_wr, curr_rings, prev_rings):
     return time_wr >= 1 and curr_rings == prev_rings
 

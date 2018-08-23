@@ -4,15 +4,17 @@ from .. import buttonpress as bp
 
 # ______________________________________________________________________________
 #   Action is an object that represent a single action executed by the computer
-# during a session of Sonic 3 and Knukles
-# Each Action have the following attributes to them:
-#   action:      the string or list of strings, from the enumerated action_name
-#                class, that contain the buttons need when executing an
-#                action_name
+# during an attempt of Sonic 3 and Knukles. Each action is a component of a
+# entity's Action List/DNA strand
 #
-#   delay:       The time that is required in between pressing and releasing
-#                the button for an action to be preformed. Also can be used to
-#                represent the time need to execute a particular action
+# Each Action have the following attributes to them:
+#   action:      the string or list of strings, from the enumerated ActionName
+#                class, that contains the buttons needed when executing an
+#                action
+#
+#   delay:       The time that the computer waits in between pressing and releasing
+#                the button for an action. Also can be used to
+#                represent the time needed to execute a particular action
 #
 #   ring_count:  The ring_count that is recorded during the execution of the
 #                action

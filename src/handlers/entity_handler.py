@@ -30,7 +30,7 @@ def clean_dna(generation):
 
         for count, dna in enumerate(entities.action_list):
         # ---------------------------------------------------------------------
-        # Beggining of Score Cleaning Block
+        # Begining of Score Cleaning Block
 
             adjusted_score = dna.getScoreCount() - previous_starting_score
             # If the score is legit then score_keeper var should be set to
@@ -43,7 +43,7 @@ def clean_dna(generation):
                     dna.setScoreCount(score_keeper)
 
             # If the score count is not legit than the current actions score
-            # count should be set to the ring keepers value
+            # count should be set to the score keeper value
             elif score_keeper > (adjusted_score):
                 dna.setScoreCount(score_keeper)
 
@@ -52,7 +52,7 @@ def clean_dna(generation):
         # Beggining of Ring Cleaning Block
 
             #  If the ring count is legit then ring_keeper var should be set to
-            # equal the current actions score count
+            # equal the current actions ring count
             if ring_keeper == dna.getRingCount() or \
                  ring_keeper < dna.getRingCount() or \
                  dna.getRingCount() == 0:
@@ -60,7 +60,7 @@ def clean_dna(generation):
                 ring_keeper = dna.getRingCount()
 
             #       If the ring count is not legit than the current action ring count
-            # should be set to the ring keepers value
+            # should be set to the ring keeper value
             elif ring_keeper > dna.getRingCount() and dna.getRingCount() != 0:
                 dna.setRingCount(ring_keeper)
 
@@ -79,12 +79,14 @@ def clean_dna(generation):
 # the generation object after evaluation
 def eval_entity(generation):
 
-    ngen = neg_dna_eval(deepcopy(generation))
-    pgen = pos_dna_eval(deepcopy(ngen))
-    gen_num = generation[0].getGeneration()
-    fgen = calc_fitness(deepcopy(pgen), gen_num)
+    negative_eval = neg_dna_eval(deepcopy(generation))
+    positive_eval = pos_dna_eval(deepcopy(negative_eval))
 
-    filehandler.save_data(fgen, f'entity_data/Generation_{gen_num}/Eval_Gen_{gen_num}')
+    gen_num = generation[0].getGeneration()
+
+    fitness_eval = calc_fitness(deepcopy(positive_eval), gen_num)
+
+    filehandler.save_data(fitness_eval, f'entity_data/Generation_{gen_num}/Eval_Gen_{gen_num}')
 
 
 # ____________________________________________________________________________________________
@@ -93,6 +95,8 @@ def eval_entity(generation):
 def reproduce(generation, num_of_entities):
 
     gen_num = generation[0].getGeneration()
+
+    # Assign each entity to one of four mating pools
     mating_pool = assign_entities_to_pools(generation)
 
     print('Maiting Pool:')
@@ -100,11 +104,17 @@ def reproduce(generation, num_of_entities):
 
     new_generation = []
 
-    # Creates next generation with current dna data if no master was created
-    if isinstance(mating_pool, list):
+    no_master_was_created = isinstance(mating_pool, list)
+
+    if no_master_was_created:
+
+        # Adjust percents of mating pools so that no empty mating pool has
+        # a chance to mate
         config_mp = configure_mating_percents(deepcopy(mating_pool))
         print('Config Pool:')
         print_list(config_mp)
+
+        # Creates new generation of entities
         new_generation = choose_and_mate(config_mp, gen_num, num_of_entities)
 
     # Creates next generation with no dna data and appends new master if a master was created
@@ -115,7 +125,8 @@ def reproduce(generation, num_of_entities):
     print('\n')
     filehandler.save_data(new_generation, f'entity_data/Generation_{gen_num}/Offspring_Gen_{gen_num}')
 
-# Generic function for print out list of objects. Mainly used to print out generation of entities
+# Generic function for the printing of a list of objects.
+# Mainly used to print out a generation of entities
 def print_list(lis):
     if isinstance(lis, list):
         for count, item in enumerate(lis):

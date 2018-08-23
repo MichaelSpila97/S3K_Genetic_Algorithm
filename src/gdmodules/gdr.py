@@ -6,16 +6,13 @@ from src.handlers import window_handler as wh
 # through screenshots and pixel addition
 # ______________________________________________________________________________
 
-
-# --------------------------------Grabber Methods-------------------------
-# General description:
-#   Each grab method will get thier respective enum value from the Static_obj_Pos
-# and send that enum value and its num map to the calc_num_total method. If a value returns
-# the grab method will return that values. If nothing returns than each grabber method will
-# return thier respective 'Could not get' string
-
-# ______________________________________________________________________________
-
+# The function that parses out the info list for the calc_num_total function and
+# for the return value when no data was found
+#
+# Info list:
+#           [0]: Name of Statistic
+#           [1]: The Number Map
+#           [2]: Statisitic position on screen
 def grab_stat(info):
 
     stat_total = calc_num_total(num_map=info[1], pos_box=info[2])
@@ -28,28 +25,41 @@ def grab_stat(info):
 # ------------------------Number identification methods--------------------------
 
 # ______________________________________________________________________________
-#   The Function that calculates the total for any numeric in game value
+#   The function that obtains and translate the screenshots of the in game
+# statistics
 # Passes:
 #       num_map: The dictionary that contains the pixel additions totals
-#                and the value 0-9 which they map to
-#       box:     The box that defines where the screenshot will be taken
+#                and the values which they map to
+#       box:     The box that defines the on screen postion
+#                of a in game statistic
 # Returns:
-#       total: if there was value
-#       none:  if nothing was nothing
+#       total: if there was value obtained from the screenshot
+#       none:  if nothing was obtained from the screenshot
 def calc_num_total(num_map, pos_box):
 
+    # The number place of the current screenshot
     numbers_place = 1
-    total = 0
-    num_id = 0
-    num = 0
-    distance_between = 16
-    x_pad, y_pad = wh.adjust_box()
 
+    # The grand total of the in game statistics when screen reading is complete
+    total = 0
+
+    # The calculated number id from the pixel calculation
+    num_id = 0
+
+    # The number that the num_id maps to in the number map
+    num = 0
+
+    # The distance in pixel between each digit of an on screen statistic
+    distance_between = 16
+
+    # Adjust x and y position of in game statists if the game window was moved
+    # from its initial position
+    x_pad, y_pad = wh.adjust_box()
     curr_box = [pos_box[0] + x_pad, pos_box[1] + y_pad, pos_box[2] + x_pad, pos_box[3] + y_pad]
 
     while True:
 
-        # Screenshot
+        # Takes Screenshot
         num_image = ImageGrab.grab(curr_box)
 
         # Calculated the number id
@@ -59,11 +69,8 @@ def calc_num_total(num_map, pos_box):
         # Will be none if nothing maps to the num_id
         num = num_map.get(str(num_id))
 
-        #   Need to determine if two or seven if num_id pulls the list from the
-        # the live num map since thier is no distince pixel addtion for two and
-        # seven for lives
-
-        # Reaches end of number and will break
+        # If nothing can be read in then either obtained faulty screenshot
+        # or has read in the full in game statistic
         if num is None:
             break
 
@@ -73,11 +80,12 @@ def calc_num_total(num_map, pos_box):
             total = (num * numbers_place) + total
             numbers_place = numbers_place * 10
 
-        # Adjust boxes for next number to be screenshotted
+        # Adjust boxes for next number to be screenshoted
         curr_box[0] = curr_box[0] - distance_between
         curr_box[2] = curr_box[2] - distance_between
 
-    if total == 0 and numbers_place == 1:
+    nothing_was_read_in = total == 0 and numbers_place == 1
+    if nothing_was_read_in:
         return None
     else:
         return total
@@ -87,7 +95,7 @@ def calc_num_total(num_map, pos_box):
 # Passes:
 #       num_image: The screenshot of the particular number that needs to be identified
 #       num_map:   The dictionary that contains the pixel additions totals and
-#                  the value 0-9 which they map to
+#                  the values which they map to
 #
 # Returns:
 #       result: the result of the calculation functions

@@ -8,14 +8,14 @@ import trainingdriver
 #        This contains the collection of funciton that validate and stores the
 #  core in game statistic that is used by the Aciton objects
 # ______________________________________________________________________________
-# Global Variables used to keep track of current in game values
+# Global Variables used to keep track of the current in game values
 curr_rings = 0
 curr_score = 0
 curr_lives = 3
 curr_act = ''
 curr_entity = ''
 
-# Booleans vars used to determine if training has started and if the global stats
+# Booleans vars used to determine if training has started and if the global statistics
 # need to be updated by force
 training_start = False
 force_update = False
@@ -36,22 +36,21 @@ def reset_stats():
     force_update = True
 # ______________________________________________________________________________
 
-# Function obtain core stats through screen readers grab_stat() functions and
-# tells the GUI to update the labels of the stats if the one of stats
-# has changed values
+# Function obtains core stats through the grab_stat() function.
+# It will tell the GUI to update the labels of the statistics if the one of
+# their values have changed
 def get_core_stats():
     global force_update, curr_entity
 
     while True:
         # Stores previous values of global for purpose of dectecting a change
-        # each statistic
+        # in each of the statistic
         lives = curr_lives
         rings = curr_rings
         score = curr_score
         act = curr_act
 
-        # Obtains the current values of each statists from the screen reader
-        # or trainingdriver
+        # Obtains the current value of each statistic
         entity = trainingdriver.entity_playing
         validate_lives(gdr.grab_stat(live_info))
         validate_score(gdr.grab_stat(score_info))
@@ -64,9 +63,9 @@ def get_core_stats():
                         act != curr_act or \
                         curr_entity != entity
 
-        # If change is detected or update is forced the GUI will be told to update
-        # its labels that display the statists to the current values stored in the
-        # globals
+        # If  a change is detected or an update is forced the GUI
+        # will be told to update its labels that display the statists
+        # to the current values stored in the globals
         if detect_change or force_update:
             trainingdriver.gui_func_qu.put('Update Texts')
             curr_entity = trainingdriver.entity_playing
@@ -76,8 +75,7 @@ def get_core_stats():
             if force_update:
                 force_update = False
 
-        # Makes thread sleep so the function isn't constatly calling the screen reader
-        # and slowing the program down in the process
+        # Makes thread sleep so the function isn't constantly calling the screen reader
         time.sleep(0.1)
 # ______________________________________________________________________________
 # Passes:

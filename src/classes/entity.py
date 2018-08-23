@@ -3,15 +3,22 @@ from ..handlers import action_handler
 from ..buttonpress import load_state
 # _______________________________________________________________________________________________________________________________
 # Entity is an object that represent a single attempt by the computer to complete Sonic 3 and Knunkles
+#
 # Each Entity have the following attributes to them:
-#     action_list: This is a list of the actions, represented by an action object, that an entity took during its life
-#     fitness:     This represent the fitness of an entity and is used to determine how easily the entity will be able to reproduce
+#     action_list: This is a list of the actions, represented by an action object,
+#                  that an entity took during its attempt at the game
+#     fitness:     This represent the fitness of an entity and is used to determine
+#                  how easily the entity will be able to reproduce during reproduction
 #     generation:  This represent the generation the entity belongs to
-#     parents:     This is a list that contains the parents to the entity. Will be empty if the entity belongs to Gen 0
-#     alive:       This represent wheater the entity living status. Used to stop entities run if it dies during the game
-#     dnacap:      This is the number of action an entities is allowed to take before its ingame attempt is over
-#     master_ent:  The entity that is used to play out action sequences that were evaluated as being the fittess
-#                  set of actions for previous generations play attempts
+#     parents:     This is a list that contains the parents to the entity.
+#                  Will be empty if the entity belongs to Gen 0
+#     alive:       This represent the entity's living status.
+#                  Used to stop entities run if it dies during the game
+#     dnacap:      This is the number of action an entities is allowed to take
+#                  before its in game attempt is over
+#     master_ent:  The entity that is used to play out an action sequences that
+#                  was evaluated as being the fittess set of actions from previous
+#                  generations' play attempts.
 # _______________________________________________________________________________________________________________________________
 
 class Entity:
@@ -41,7 +48,7 @@ class Entity:
 
 
 # ______________________________________________________________________________________________________________________________
-    # This function directs living entities to attempt Sonic 3 and Knuckles
+    # This function handles an entity's attempt at Sonic 3 & Knuckles
     def play_game(self):
         print(f'    {self.name} is Training....')
         if self.isAlive():
@@ -76,13 +83,13 @@ class Entity:
         return self.alive
 
 # ______________________________________________________________________________________________________________________________
-    # Sets alive variable to false if it died in game
+    # Sets alive variable to false if an entity died in game
     def died(self):
         print(f'    {self.name} is dead\n')
         self.alive = False
 
 # ___________________________________________________________________________________________________________________________
-    # Sets alive variable to true if enitites needs to reattempt the game
+    # Sets alive variable to true if  an enitity needs to reattempt the game
     def resurrect(self):
         self.alive = True
 
