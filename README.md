@@ -29,29 +29,29 @@ Here are the following steps to run this project on your machine:
 2. Obtain the Steam version of Sonic 3 & Knuckles and adjust the setting in the
    room launcher accordingly:
 
-   * Room Settings:
+   * **Room Settings:**
         1. Windowed Mode: ON
         2. Resolution: 640 X  480
 
-   * Input Settings:
+   * **Input Settings:**
         * Change key binding for the following:
           * Save State: R
           * Load State: T
 
-   * Other:
+   * **Other:**
       * Create a save state at the beginning of any act before or as the
         act title card is drop down on to screen.
 
 3. If your display settings for you machines are not the following change them
    to the following settings:
 
-   * Screen Resolution: 1920 X 1080
-   * Size of text, apps, and other items: 100%
+   * **Screen Resolution:** 1920 X 1080
+   * **Size of text, apps, and other items:** 100%
 
 4. Change the exe_location global variable in window_handler.py to reflect the location
    of SEGAGameRoom.exe on your machine.
 
-      * NOTE: Open the properties of SEGA Mega Drive & Genesis Collection in Steam,
+      * **NOTE:** Open the properties of SEGA Mega Drive & Genesis Collection in Steam,
               go to the local files tab in the window that popped up and press the
               "browse local file" button to go to the location of SEGAGameRoom.exe on your machine
 
