@@ -72,16 +72,16 @@ Here are the following steps to run this project on your machine:
 ## The Training GUI
 
 Here are a few explanation of the Training GUI functionality:
-* No Data Training: Training that starts at Generation 0 with no previous entity  
+* **No Data Training:** Training that starts at Generation 0 with no previous entity  
                         data to use.
 
-* Load Data Training: Training that starts at the Generation the user selects in
+* **Load Data Training:** Training that starts at the Generation the user selects in
                           the file dialog.
 
-    * Note: The user must select either the offspringor raw file of a generation
+    * **Note:** The user must select either the offspringor raw file of a generation
              when choosing to load in data for training purposes
 
-* Continuous and Non-Continuous Training: 
+* **Continuous and Non-Continuous Training:** 
 
     * If continuous training is selected the program will continue to train and 
       creates new generation for ever.
@@ -92,25 +92,25 @@ Here are a few explanation of the Training GUI functionality:
     * Note: It is recommended to stop continuous training through selecting the 
             non-continuous training option when the user wishes to stop training.
             
-* Entities per Generation Entry box: This is used to define how many entities a
+* **Entities per Generation Entry box:** This is used to define how many entities a
                                         user wants a generation to be composed of.
 
-    * Note: The default is 10 entities and the user cannot define a generation to 
+    * **Note:** The default is 10 entities and the user cannot define a generation to 
             contain more that 10 entities
 
-* Entity to Replay Entry Box: This is used to tell the program which numbered entity, 
+* **Entity to Replay Entry Box:** This is used to tell the program which numbered entity, 
                               in the generation that user selects, will have its actions 
                               replayed if the Replay Entity button is pressed.
 
-    * Ex: 5 is entered in the Entity to Replay Entry box and the user chooses generation 5 
+    * **Ex:** 5 is entered in the Entity to Replay Entry box and the user chooses generation 5 
           when selecting the generation from the file dialog. The entity that would have its 
           actions replayed would be Entity G5E5.
 
-* Replay Entity Button: When pressed a file dialog appears asking the user to select a generation 
+* **Replay Entity Button:** When pressed a file dialog appears asking the user to select a generation 
                         of entities. Then after the user selects a generation the program replays 
                         the entity that was identified in the Entity to Replay Entry Box.
                         
-    * Note: The user must select either the offspring or raw file of a generation when choosing to 
+    * **Note:** The user must select either the offspring or raw file of a generation when choosing to 
              load in generational data for replay purposes
 
 
