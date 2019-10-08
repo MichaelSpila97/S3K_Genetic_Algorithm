@@ -96,7 +96,7 @@ Here are a few explanation of the Training GUI functionality:
                                         user wants a generation to be composed of.
 
     * **Note:** The default is 10 entities and the user cannot define a generation to 
-            contain more that 10 entities
+            contain more than 10 entities
 
 * **Entity to Replay Entry Box:** This is used to tell the program which numbered entity, 
                               in the generation that user selects, will have its actions 
@@ -117,7 +117,7 @@ Here are a few explanation of the Training GUI functionality:
 ## Future Plans
 The following is a list of improvements I plan to implement in the future:
 
-1. Project is compatible with machines that runs Mac and Linux Os
+1. Project is compatible with machines that runs Mac and Linux OS
 2. Better Looking GUI
 3. Improve the Genetic Algorithm by:
     * Implementing a smart action generator that will choose action based off of data
